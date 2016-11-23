@@ -1,0 +1,193 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+
+\usepackage{import}
+%\usepackage{fontspec}
+%\usepackage{polyglossia}
+%\setmainfont[]{DejaVu Serif}
+
+%\usepackage{showframe}
+
+\usepackage{color}   %May be necessary if you want to color links
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    linkcolor=black,  %choose some color if you want links to stand out
+    linktocpage=true
+}
+\usepackage[top=20mm, bottom=30mm, left=30mm, right=30mm]{geometry}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{RF Immunity Test System}
+\lhead{David Lutton}
+\rfoot{Page \thepage}
+
+
+\title{Project - RF Immunity Test System}
+%\subtitle{}
+\author{David Lutton}
+
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+\end{tableofcontents}
+
+\newpage
+\section{Mode}
+I will record dates in \href{https://en.wikipedia.org/wiki/ISO_8601}{ISO 8601} format\\
+YYYY-MM-DD\\
+
+
+\section{Initial Project Ideas - 2016/09/03}
+I have been advised to for our initial ideas in a mind map\\
+TODO: Attach IMAGE OF Mind map\\
+
+\section{Engineering Project - Requirements - 2016/09/20}
+The project consists or both project management and communications\\
+This will require:\\
+A logbook will all entrys dated\\
+Project specification\\
+\\
+Logbook will itemise all comms:
+\begin{itemize*}
+  \item Initial ideas and justification of project
+  \item Specifications
+  \item Technical drawings
+  \item schematic
+  \item calculations
+  \item component spec
+  \item simulation
+  \item Planning
+  \item Decisions
+  \item Customer Communications
+  \item Websites used
+  \item decision matrix for solutions
+  \item SWOT analysis
+  \item GANTT chart for planning / timeline
+\end{itemize*}
+\\
+Have processes of:
+\begin{itemize*}
+  \item Specify
+  \item design
+  \item Build
+  \item Test
+  \item Modify
+  \item Evaluate
+\end{itemize*}
+
+\section{Project - Selection Critical - 2016/09/27}
+Should:\\
+Provide something\\
+Have design choices\\
+be achievable (could)\\
+Possibly as I do in my workplace\\
+Could use a project in work for project\\
+ Where naturally accessible at work\\
+
+\section{Project - Selection Critical - 2016/10/04}
+Could:\\
+A physical product\\
+A system product, a remote monitoring system\\
+A service product, a engineering service\\
+\\
+Replication or extension of an existing product to enhance the service\\
+
+\section{Project Selection}
+TODO?\\
+
+\newpage
+
+\section{Project Final Idea - 2016/10/11}
+RF Immunity test system\\
+\begin{itemize*}
+  \item Control test equipment
+  \item Monitor and control via feedback path
+  \item Produce test report data
+  \item Use Calibration factors
+  \item Apply test standard EN61000-4-6:2014
+\end{itemize*}\\
+Customers will be test engineers at work\\
+TODO: embed TestSystemNetwork.xlsx  = \\
+Diagram showing Normal testing setup and calibration setup\\
+
+\section{Needs analysis - 2016/10/18}
+To access is there a commercial or technical market\\
+A survey may be used to derive a set of design specifications\\
+product performs in a repeatable manner\\
+product uses proven technology\\
+low incremental running cost - per runtime\\
+simple to maintain\\
+adaptable to new tests\\
+must stop/abort a test in a safe manner\\
+must apply correction factors\\
+
+Project spec from customer:\\
+Time scale\\
+constraint dates\\
+availability of test set up for development\\
+plan installation\\
+set up drawing / work instructions\\
+
+\section{Select solution 2016/10/25}
+select from three solutions
+This business sector has a couple of ready made platform products\\
+LabVIEW by NI\\
+VEE Pro by Keysight\\
+Python 3 By Python Foundation\\
+  With addition of some modules to communicate with test equipment\\
+
+\section{Test process - Calculations 2016/11/01}
+Calibrations are performed a higher amplitude than the test level we need to calculate the level that we need to apply\\
+Calibration\\
+TODO: TABLE\\
+Frequency Hz, level V, siggen dBm, forward power dBm\\
+\\
+For a calibration performed at 18V\\
+For a test run to be performed at 10V\\
+Offset V = Cal power V - Wanted power V\\
+Offset dBm = V2dBm(offset dBm)\\
+Target forward power = forward power dBm - Offset dBm\\
+
+Levelling performed without and with any AM applied\\
+Dwell for time in both CW and AM modulation?\\
+
+\section{Estimated time 2016/11/08}
+TODO:
+
+\section{Unit conversion 2016/11/08}
+TODO:
+
+\section{Project Specification Revised 2016/11/15}
+TODO:
+
+\newpage
+
+\section{Terminology  /  Nomenclature}
+\begin{itemize*}
+  \subsection{RF \& Testing}
+  \item Hz = frequency
+  \item dBm = 10 * log10(power / 0.001) Power referenced to 1mW
+  \item EUT: Equipment under test
+  \item CDN: Coupling Decoupling Network - Interface in-between a power or signal line and injected RF
+  \item AM: Amplitude modulation \%80 - typical
+  \end{itemize*}
+
+  \subsection{Software}
+  \begin{itemize*}
+  \item Python: A programming language
+  \item pypi: Python package index
+  \item pip: install modules from pypi
+  \item venv: virtual environment for Python applications
+  \item Git: version control system https://git-scm.com
+  \end{itemize*}
+
+
+\end{document}
