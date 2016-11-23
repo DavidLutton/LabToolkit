@@ -16,7 +16,7 @@
     linkcolor=black,  %choose some color if you want links to stand out
     linktocpage=true
 }
-\usepackage[top=20mm, bottom=30mm, left=30mm, right=30mm]{geometry}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=30mm]{geometry}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
@@ -171,23 +171,27 @@ TODO:
 \newpage
 
 \section{Terminology  /  Nomenclature}
-\begin{itemize*}
-  \subsection{RF \& Testing}
-  \item Hz = frequency
-  \item dBm = 10 * log10(power / 0.001) Power referenced to 1mW
-  \item EUT: Equipment under test
-  \item CDN: Coupling Decoupling Network - Interface in-between a power or signal line and injected RF
-  \item AM: Amplitude modulation \%80 - typical
-  \end{itemize*}
 
-  \subsection{Software}
-  \begin{itemize*}
-  \item Python: A programming language
-  \item pypi: Python package index
-  \item pip: install modules from pypi
-  \item venv: virtual environment for Python applications
-  \item Git: version control system https://git-scm.com
-  \end{itemize*}
+
+\subsection{RF \& Testing}
+\begin{itemize}
+\item CDN: Coupling Decoupling Network - Interface in-between a power or signal line and injected RF
+\item Hz = frequency
+\item dBm = 10 * log10(power / 0.001) Power referenced to 1mW
+\item EUT: Equipment under test
+\item AM: Amplitude modulation \%80 - typical
+\end{itemize}
+
+\subsection{Software}
+\begin{itemize}
+\item \href{https://www.python.org/}{Python}: A programming language
+\item \href{https://pypi.python.org/pypi}{pypi}: Python package index
+\item \href{https://pypi.python.org/pypi/pip}{pip}: install modules from pypi
+\item \href{https://docs.python.org/3/library/venv.html}{venv}: virtual environment for Python applications
+\item Git: version control system \href{https://git-scm.com}{git-scm.com}
+\end{itemize}
+
+
 
 
 \end{document}
