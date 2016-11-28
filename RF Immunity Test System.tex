@@ -13,7 +13,7 @@
 \makeglossaries
 
 \begin{document}
-\maketitle\tableofcontents\listoftables
+\maketitle\tableofcontents
 \newpage\input{abstract}
 \input{ModusOperandi}
 
@@ -159,8 +159,21 @@ TODO:
 It should not be possible to encounter a bug, without also being able to reproduce a bugs state. In order to fix it.\\
 Furthermore this system should sink it's state when encountering a exception\\
 
+%\renewcommand{\ttdefault}{pcr}
+\begin{lstlisting}
+foo = False
+\end{lstlisting}
+
+\lstinputlisting[language=Python, caption=Python example]{x.py}
+
+
+
+
+
 \newpage\input{AboutPython}
 \newpage\input{AboutRFC2119}
 
 \newpage\glsaddall\printglossaries
+\newpage\listoftables\lstlistoflistings
+
 \end{document}
