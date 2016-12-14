@@ -1,6 +1,15 @@
 \usepackage{import}
 %\usepackage{showframe}
 
+\setlength{\parindent}{0em}
+%\setlength{\parskip}{1em}
+
+\usepackage{datetime}
+
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+
+
 \usepackage{listings}
 \usepackage{color}
 
@@ -20,7 +29,7 @@
     breaklines=true,
     captionpos=b,
     keepspaces=true,
-    numbers=left,
+    numbers=none,
     numbersep=5pt,
     showspaces=false,
     showstringspaces=false,
@@ -51,3 +60,23 @@
 
 \pagestyle{fancy}
 \fancyhf{}
+
+
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+
+\colorlet{helpful}{lime!70}
+\colorlet{harmful}{red!30}
+\colorlet{internal}{yellow!20}
+\colorlet{external}{cyan!30}
+\colorlet{S}{helpful!50!internal}
+\colorlet{W}{harmful!50!internal}
+\colorlet{O}{helpful!50!external}
+\colorlet{T}{harmful!50!external}
+
+\newcommand{\texta}{Strengths\\\par}
+\newcommand{\textb}{Weaknesses\\\par}
+\newcommand{\textcn}{Opportunities\\\par}
+\newcommand{\textdn}{Threats\\\par}
+
+\newcommand{\back}[1]{\fontsize{60}{70}\selectfont #1}
