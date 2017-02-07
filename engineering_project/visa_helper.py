@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import traceback
 import sys
-
+import visa
 
 def enumerate(rm):
     try:
@@ -20,7 +20,8 @@ def enumerate(rm):
                 IDN = inst.query("*IDN?")
 
             except visa.VisaIOError:  # This was found with print(dir(visa))
-                traceback.print_exc(file=sys.stdout)
+                pass  # traceback.print_exc(file=sys.stdout)
+                IDN = "NONE"
             finally:
                 pool[inst] = IDN
 

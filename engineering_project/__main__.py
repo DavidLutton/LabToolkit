@@ -47,13 +47,14 @@ ws.append([
     "hfreqset", "hfreqmeas", "hmean", "hstdev",
     ])
 # rm, pool = visa_helper.enumerate(visa.ResourceManager('@py'))
-# rm, pool = visa_helper.enumerate(visa.ResourceManager())
-rm, pool = visa_helper.enumerate(visa.ResourceManager('Sim/default.yaml@sim'))
+rm, pool = visa_helper.enumerate(visa.ResourceManager())
+#rm, pool = visa_helper.enumerate(visa.ResourceManager('Sim/default.yaml@sim'))
+
 pprint(pool)
 
 generator = visa_helper.driverdispatcher(pool, {
     "HEWLETT-PACKARD,8657A,": Instrument.SignalGenerator.HP8657A,
-    "HEWLETT-PACKARD,8664A,": Instrument.SignalGenerator.HP8664A,
+    "HEWLETT_PACKARD,8664A,": Instrument.SignalGenerator.HP8664A,
 
     # "Agilent Technologies, E4422B,": Instrument.SignalGenerator.E4422B,
 })
@@ -74,7 +75,7 @@ log.info("Discovered " + str(len(PowerMeter)) + " PowerMeters")
 
 log.info("Discovered " + str(len(PSAPowerMeter)) + " PowerMeters")
 
-generator[0].amplimit = 8
+generator[0].amplimit = 10
 pprint(generator)
 pprint(PowerMeter)
 '''PowerMeter[0].correctionfactorinterpolateload(
@@ -98,7 +99,7 @@ Display table during test - of last ten points # pandas
 Display graph during test # matplotlib
 '''
 
-filetorunharmonicscheckagainst = Fle.file.fileopen(title="File to run harmonics check against", filetypes=(("CAL files", "*.CAL;*.cal"), ("All files", "*.*")))
+filetorunharmonicscheckagainst = File.file.fileopen(title="File to run harmonics check against", filetypes=(("CAL files", "*.CAL;*.cal"), ("All files", "*.*")))
 # filetorunharmonicscheckagainst = "Dataset/20170113-K/CALS/140115V7.CAL"
 print(filetorunharmonicscheckagainst)
 
@@ -146,7 +147,7 @@ try:
         Target Stress      6.300
         '''
 
-        print(row['Frequency'])
+        freq = row['Frequency']
         print()
         print(row['Generator Level'])
 
@@ -166,7 +167,7 @@ try:
         while measure is not True:
             errorpwr, errorcent, newlevel = leveler(
                     PowerMeter[0].measure(),
-                    row['Forward Power']-50,
+                    float(row['Forward Power'])-50.0,
                     generator[0].amplitude,
             )
             print(newlevel)
@@ -179,12 +180,12 @@ try:
                 measurements = []
                 measurementfreq = []
 
-                freqmeas, amp = PSAPowerMeter.measure(freq)
-                PSAPowerMeter.reflvl(float(amp) + 10)
+                freqmeas, amp = PSAPowerMeter[0].measure(freq)
+                PSAPowerMeter[0].reflvl(float(amp) + 10)
 
                 for reads in range(5):
                     time.sleep(.1)
-                    freqmeas, amp = PSAPowerMeter.measure(freq)
+                    freqmeas, amp = PSAPowerMeter[0].measure(freq)
 
                     # measurements[reads] = {float(freq): float(amp)}
                     measurements.append(float(amp))
@@ -212,7 +213,7 @@ try:
                 meas = float(freqmeas) * 3
                 for reads in range(5):
                     time.sleep(.1)
-                    freqmeas, amp = PSAPowerMeter.measure(meas)
+                    freqmeas, amp = PSAPowerMeter[0].measure(meas)
 
                     # measurements[reads] = {float(freq): float(amp)}
                     measurements.append(float(amp))
