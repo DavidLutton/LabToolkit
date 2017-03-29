@@ -11,6 +11,7 @@ Contents:
    usage
    contributing
    authorshistory
+   pages
 
 Indices and tables
 ==================

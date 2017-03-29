@@ -1,0 +1,37 @@
+Initial 
+replay calibrations from BS EN 61000-4-6:2014 and BS EN 61000-4-3:2006+A2:2010
+
+Requirements for the software comes from ISO/IEC 17025:2005
+
+
+The Python module Cookiecutter can be used to generate the boilerplate files to used Sphinx-doc et al
+https://github.com/audreyr/cookiecutter
+https://github.com/audreyr/cookiecutter-pypackage
+
+
+https://pypi.python.org/pypi/requirements-parser
+
+
+
+http://pep8.org/
+https://www.kennethreitz.org/essays/if-i-could-amend-pep-8
+https://www.kennethreitz.org/essays/the-reality-of-developer-burnout
+https://www.kennethreitz.org/essays/introducing-maya-datetimes-for-humans
+
+http://docs.python-guide.org/en/latest/
+http://docs.python-requests.org/en/master/
+https://github.com/kennethreitz/records
+https://certifi.io/en/latest/
+http://httpbin.org/
+
+
+Documentation can be generated with 
+http://www.sphinx-doc.org/en/stable/
+
+https://media.readthedocs.org/pdf/sphinx/stable/sphinx.pdf
+http://www.sphinx-doc.org/en/stable/tutorial.html
+http://www.sphinx-doc.org/en/stable/ext/doctest.html
+
+code can be tested using the pytest module
+http://doc.pytest.org/en/latest/goodpractices.html
+http://doc.pytest.org/en/latest/

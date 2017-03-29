@@ -18,11 +18,22 @@ Engineering Project
      :alt: Updates
 
 
-Engineering project to operate a test system to IEC 61000-4-6:2014 and IEC 61000-4-3:2006+A2:2010 and ISO/IEC 17025:2005
+
+Engineering project to operate a test system to requirements of IEC 61000-4-6:2014 and IEC 61000-4-3:2006+A2:2010
+With requirements from ISO/IEC 17025:2005
 
 
 * Free software: MIT license
 * Documentation: https://engineering-project.readthedocs.io.
+
+Modules
+--------
+
+* `Numpy <http://www.numpy.org/>`_
+* `Pandas <http://pandas.pydata.org/>`_
+* `PyVISA <http://pyvisa.readthedocs.io/en/stable/>`_ : communicating with instruments
+* `py-test <http://doc.pytest.org/en/latest/>`_
+* `OpenPyXL <https://openpyxl.readthedocs.io/en/default/>`_
 
 
 Features
@@ -37,4 +48,3 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
-

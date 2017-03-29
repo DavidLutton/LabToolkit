@@ -1,0 +1,61 @@
+# http://earmark.net/gesr/opamp/db_calc.htm
+# https://en.wikipedia.org/wiki/Decibel
+# dBpW = dBm; offset: -30
+
+dBm = [] #	power	dB referenced to a milliwatt
+dBW = dBm; offset: 30
+dBk = dBm; offset: 60
+
+
+# Bel = []
+#    = log10 power / power
+# decibel = Bel / 10 = dB- = dB
+
+decibel- = [] = dB-
+
+# dBpW = log10: 1 pW
+# dBµW = log10: 1 µW = dBuW
+# dBm = log10: 1 mW
+# dBW = log10: 1 W
+# dBk = log10: 1 kW
+
+
+# dBV = []
+# dBpV = []
+# dBµV = []
+
+# dBk = []
+
+# dBd = []
+
+# dBμA = []
+
+# dBHz = []
+
+# dB- = log20
+# dB- = log10
+
+# dBFS = []
+
+# dBA = [] #	 	The dB SPL figure with a weighting curve applied to it
+# dBc = [] #	 	dB referenced to a carrier (voltage or power)
+# dBf = [] # 	power	dB referenced to a femtowatt
+# dBi = [] #	power	dB change of an antenna system relative to an isotropic radiator
+# dBK = [] #	power	dB referenced to a kilowatt
+
+# dBmV = [] #	voltage	dB referenced to 1 mVrms across 75 ohms
+# dBSPL = [] #	power	dB referenced to 20 uPascals
+# dBu = [] #	voltage	dB referenced to 0.775 Vrms across 600 ohms
+# dBv = [] #	voltage	Alternate for terminology for dBu (referenced to 0.775 Vrms)
+# dBV = [] #	voltage	dB referenced to 1 Vrms
+
+# dBx = [] #	 	dB above reference coupling (crosstalk)
+
+#dBΩ = []
+#VSWR = []
+
+# @context (impedance=50) frequency = radio = rf = audio = sound = optical = ohmslaw
+@context frequency = radio = rf = optical = ohmslaw
+    [length] <-> [frequency]: speed_of_light / value
+    # [energy] -> [power]: volt ** 2 / impedance
+@end

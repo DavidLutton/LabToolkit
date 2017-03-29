@@ -1,0 +1,82 @@
+\usepackage{import}
+%\usepackage{showframe}
+
+\setlength{\parindent}{0em}
+%\setlength{\parskip}{1em}
+
+\usepackage{datetime}
+
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\bfseries,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=none,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+%\footnotesize
+\lstset{style=mystyle}
+
+
+% \usepackage{minted}
+% \usepackage{tracklang}
+\usepackage{amsmath}
+\usepackage[tableposition=top]{caption}
+
+\usepackage{color}   %May be necessary if you want to colour links
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    linkcolor=blue,  %choose some color if you want links to stand out
+    linktocpage=true
+}
+\usepackage[toc, nopostdot, nonumberlist]{glossaries} % sort=def,
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=30mm]{geometry}
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+
+
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+
+\colorlet{helpful}{lime!70}
+\colorlet{harmful}{red!30}
+\colorlet{internal}{yellow!20}
+\colorlet{external}{cyan!30}
+\colorlet{S}{helpful!50!internal}
+\colorlet{W}{harmful!50!internal}
+\colorlet{O}{helpful!50!external}
+\colorlet{T}{harmful!50!external}
+
+\newcommand{\texta}{Strengths\\\par}
+\newcommand{\textb}{Weaknesses\\\par}
+\newcommand{\textcn}{Opportunities\\\par}
+\newcommand{\textdn}{Threats\\\par}
+
+\newcommand{\back}[1]{\fontsize{60}{70}\selectfont #1}

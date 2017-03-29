@@ -52,14 +52,14 @@ lint: ## check style with flake8
 
 test: ## run tests quickly with the default Python
 	py.test
-	
+
 
 test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source engineering_project -m pytest
-	
+
 		coverage report -m
 		coverage html
 		$(BROWSER) htmlcov/index.html
@@ -70,7 +70,14 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	sphinx-apidoc -o docs/ engineering_project
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
-	$(BROWSER) docs/_build/html/index.html
+	######  $(BROWSER) docs/_build/html/index.html
+
+docspdf: ## generate Sphinx PDF documentation, including API docs
+	rm -f docs/engineering_project.rst
+	rm -f docs/modules.rst
+	sphinx-apidoc -o docs/ engineering_project
+	$(MAKE) -C docs clean
+	$(MAKE) -C docs latexpdf
 
 servedocs: docs ## compile the docs watching for changes
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .

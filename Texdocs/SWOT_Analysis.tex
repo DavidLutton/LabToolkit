@@ -1,0 +1,27 @@
+\section{SWOT Analysis}\textbf{2016/11/27}\\
+\begin{tikzpicture}[
+    any/.style={minimum width=8cm,minimum height=8cm,%
+                 text width=7.5cm,align=center,outer sep=0pt},
+    header/.style={any,minimum height=1cm,fill=black!10},
+    leftcol/.style={header,rotate=90},
+    mycolor/.style={fill=#1, text=#1!60!black}
+]
+
+\matrix (SWOT) [matrix of nodes,nodes={any,anchor=center},%
+                column sep=-\pgflinewidth,%
+                row sep=-\pgflinewidth,%
+                row 1/.style={nodes=header},%
+                column 1/.style={nodes=leftcol},
+                inner sep=0pt]
+{
+          &|[fill=helpful]| {\texta} & |[fill=harmful]| {\textb} \\
+|[fill=internal]| {\textcn} & |[mycolor=S]| & |[mycolor=W]| \\
+|[fill=external]| {\textdn} & |[mycolor=O]| & |[mycolor=T]| \\
+};
+
+\node[any, anchor=center] at (SWOT-2-2) {Project will build on existing experience\\Can reuse some existing code\\};
+\node[any, anchor=center] at (SWOT-2-3) {Experence with control faults\\Experience with larger scale applications\\};
+\node[any, anchor=center] at (SWOT-3-2) {Low operational expense\\ No Licensing expense from this project\\ };
+\node[any, anchor=center] at (SWOT-3-3) {Intgeration with existing testing platform\\};
+
+\end{tikzpicture}

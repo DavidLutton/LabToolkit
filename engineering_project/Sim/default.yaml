@@ -1,0 +1,17 @@
+spec: "1.0"
+resources:
+  GPIB::11::INSTR:
+    device: device 1
+    filename: PowerMeter HP 437B.yaml
+
+  GPIB::13::INSTR:
+    device: device 1
+    filename: PowerMeter HP 437B.yaml
+
+  #GPIB::9::INSTR:
+  #  device: device 1
+  #  filename: SignalGenerator HP 8657A.yaml
+
+  GPIB::8::INSTR:
+    device: device 1
+    filename: SignalGenerator HP 8657A.yaml
