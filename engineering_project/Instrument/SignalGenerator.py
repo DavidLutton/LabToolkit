@@ -171,3 +171,51 @@ class E4422B(SignalGenerator):
 
     def disable(self):
         self.write("OUTP:STAT OFF")
+        
+        
+class MG3691B(SignalGenerator):  # ANRITSU,MG3691B,
+    # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        assert self.IDN.startswith('ANRITSU,MG3691B,')
+
+        self.frequency = self.query("OF1")
+        self.amplitude = self.query("OLO")
+        self.amps = [-110, 30]
+        self.freqs = [10e6, 10e9]
+        self.write("*CLS")  # clear error status
+        self.__preset__()
+
+    def __preset__(self):
+        self.safe()
+        self.write('RL1')  # Release to Local
+
+    def freq(self, freq):
+        if self.frequency != freq:  # prevent resubmitting request to set the same frequency
+            self.write("F1{0:.0f} HZ".format(freq))
+            self.frequency = freq
+            time.sleep(.3)  # after retuneing wait time for settling
+
+    def amp(self, amplitude):
+        if self.amplitude != amplitude:
+            if amplitude <= self.amplimit:  # prevent resubmitting request to set the same frequency
+                self.write("L0{0:.1f}DM".format(amplitude))
+                self.amplitude = amplitude
+
+                time.sleep(.3)  # after leveling wait time for settling
+            else:
+                self.log.warn("on " + self.IDN + " exceeded amplimit")
+
+    def enable(self):
+        self.write("RF1")
+
+    def disable(self):
+        self.write("RF0")
+    
