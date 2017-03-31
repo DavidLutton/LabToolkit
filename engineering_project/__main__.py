@@ -148,7 +148,7 @@ with ResourceManager('') as rm:
     # pprint(reso)
     # pool = visaenumerate(rm, reso)
 
-    pool = visaenumerate(rm, visaaddresslist([5, 18]))
+    pool = visaenumerate(rm, visaaddresslist([5, 18], suffix="::INSTR"))
 
     pprint(pool)
     for each in pool:
