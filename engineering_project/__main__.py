@@ -38,6 +38,7 @@ import MeasurePwr
 
 import Instrument.PowerMeter
 import Instrument.SignalGenerator
+import Instrument.SpectrumAnalyser
 
 # import Instrument.FunctionGenerator
 '''
@@ -97,6 +98,7 @@ E4406A
 
 __author__ = "David Lutton"
 __license__ = "MIT"
+
 # logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("RCI")  # Radiated e Conducted e Testing
 log.setLevel(logging.DEBUG)
@@ -106,6 +108,10 @@ formatter = logging.Formatter(formatstr)
 #  %(name)s
 
 logger = datetime.now().isoformat() + ".log"
+import re
+# re.sub(r'[]/\;,><&*:%=+@!#^()|?^', '', logger)
+logger = re.sub(r':', '', logger)
+# print(logger)
 # python3.6 isoformat(timespec='seconds')
 
 fh = logging.FileHandler(logger)
@@ -122,7 +128,7 @@ log.addHandler(ch)
 
 
 # visa.log_to_screen()
-log.info("Starting Radiated & Conducted Immunity")
+log.info("Starting Radiated & Conducted Instrumentation")
 log.info("Software by {}".format(__author__))
 log.info('! EN 61000-4-6:2014')
 log.info('! EN 61000-4-3:2006+A1+A2:2010')
@@ -134,13 +140,17 @@ log.info('Creating a log file in {}'.format(logger))
 wb = Workbook()
 ws = wb.active
 
-with ResourceManager('Sim/default.yaml@sim') as rm:
+# with ResourceManager('Sim/default.yaml@sim') as rm:
+with ResourceManager('') as rm:
     # 'Sim/default.yaml@sim' '@py', 'ni'
 
-    # pool = visaenumerate(rm, rm.list_resources())
-    pool = visaenumerate(rm, visaaddresslist([8, 13, 11]))
+    # reso = rm.list_resources()
+    # pprint(reso)
+    # pool = visaenumerate(rm, reso)
 
-    # print(pool)
+    pool = visaenumerate(rm, visaaddresslist([5, 18]))
+
+    pprint(pool)
     for each in pool:
         log.info("Discovered {}".format(each))
         # log.info(each)
@@ -150,6 +160,8 @@ with ResourceManager('Sim/default.yaml@sim') as rm:
     generator = driverdispatcher(pool, {
         "HEWLETT-PACKARD,8657A,": Instrument.SignalGenerator.HP8657A,
         "HEWLETT_PACKARD,8664A,": Instrument.SignalGenerator.HP8664A,
+        "ANRITSU,MG3691B,": Instrument.SignalGenerator.MG3691B,
+
         # 8665B
 
         # "Agilent Technologies, E4422B,": Instrument.SignalGenerator.E4422B,
@@ -165,7 +177,10 @@ with ResourceManager('Sim/default.yaml@sim') as rm:
         # E4418B
         # NVRS
     })
-
+    SpectrumAnalyser = driverdispatcher(pool, {
+        "Hewlett-Packard,E4406A,": Instrument.SpectrumAnalyser.E4406A
+        
+    })
     PSAPowerMeter = driverdispatcher(pool, {
         "Agilent Technologies, E4440A,": MeasurePwr.MeasurePwrE4440A,  # For measuring harmonics
 
@@ -173,18 +188,20 @@ with ResourceManager('Sim/default.yaml@sim') as rm:
 
     log.info("Discovered " + str(len(generator)) + " SignalGenerators")
     log.info("Discovered " + str(len(PowerMeter)) + " PowerMeters")
-
+    log.info("Discovered " + str(len(SpectrumAnalyser)) + " SpectrumAnalysers")
     log.info("Discovered " + str(len(PSAPowerMeter)) + " PowerMeters")
 
     pprint(generator)
     pprint(PowerMeter)
+    pprint(SpectrumAnalyser)
+    pprint(PSAPowerMeter)
 
     ws.append([
         "ffreqset", "ffreqmeas", "fmean", "fstdev",
         "hfreqset", "hfreqmeas", "hmean", "hstdev",
         "Generator level dBm"
         ])
-    generator[0].amplimit = 10
+    # generator[0].amplimit = 10
 
     '''PowerMeter[0].correctionfactorinterpolateload(
                                                 [100e3, 300e3, 1e6, 3e6, 10e6, 30e6, 50e6, 100e6, 300e6, 1000e6, 2000e6, 3000e6, 4200e6],
@@ -196,7 +213,7 @@ with ResourceManager('Sim/default.yaml@sim') as rm:
 
     # print(generator[each].instrument.query("AP?"))
     # print(PowerMeter[0].measure())
-    assert len(generator) >= 1
+    # assert len(generator) >= 1
     # assert len(PowerMeter) >= 1
 
     # print(dir(generator[0]))
