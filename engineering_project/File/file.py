@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 
-def fileopen(title="Open", filetypes=(("All files", "*.*"), )):
+def pickfileopen(title="Open", filetypes=(("All files", "*.*"), )):
     root = tk.Tk()
     root.withdraw()
     return(filedialog.askopenfilename(title=title, filetypes=filetypes))
@@ -10,7 +10,7 @@ def fileopen(title="Open", filetypes=(("All files", "*.*"), )):
     # initialdir = "E:/Images",
 
 
-def filesave(title="Save", filetypes=(("All files", "*.*"), )):
+def pickfilesave(title="Save", filetypes=(("All files", "*.*"), )):
     root = tk.Tk()
     root.withdraw()
     return(filedialog.asksaveasfilename(title=title, filetypes=filetypes))
