@@ -14,9 +14,60 @@ class SpectrumAnalyser(GenericInstrument):
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
-    
 
-class E4406A(SpectrumAnalyser):
+class AgilentE4440A(SpectrumAnalyser):
+    def __init__(self, instrument, logger=None):
+        super().__init__(instrument)
+        # self.log =logging.getLogger(__name__)
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        # self.log.info('Creating an instance of\t' + str(__class__))
+
+        assert self.IDN.startswith('Agilent Technologies, E4440A,')
+        self.write("*CLS")  # clear error status
+
+    def setup(input):
+        if setup = "Narrow CW Power + 10MHz output enabled":
+            self.refout(True)
+            # self.write(":RBW 1kHz")
+            self.write(":BAND 1kHz")
+            self.write(":FREQuency:SPAN 1KHz")  # maybe too narrow if analyser and siggen are not on same ref clock
+
+    def cf(freq):
+        freq = "{0:.0f}".format(freq)
+
+        if self.freq != freq:  # prevent resubmitting request to set the same frequency
+            self.write(":FREQuency:CENT " + freq)
+            self.freq = freq
+            time.sleep(.3)  # after retuneing wait time for settling
+
+    def measure(self, freq):
+        freq = "{0:.0f}".format(freq)
+        self.cf(freq)
+
+        self.write(":CALCulate:MARKer1: 1")
+        self.write(":CALCulate:MARKer1:MAX")
+
+        amp = self.query(":CALCulate:MARKer1:Y?").strip()  # AMP
+        freqmeas = self.query(":CALCulate:MARKer1:X?").strip()  # FREQ
+
+        return(freqmeas, amp)
+
+    def reflvl(self, lvl):
+        self.instrument.write(":DISP:WIND:TRACE:Y:RLEV " + str(int(lvl)))
+        # used for seting reference level to a reasonable amount above the measured value
+        # and therefor prevent recording clipped values
+        time.sleep(.2)  # settling time
+
+    def refout(bool):
+        self.query(':SENSe:ROSCillator:OUTPUT?')
+
+        if bool is True:
+            self.write(':SENSe:ROSCillator:OUTPUT:STATe 1')
+        else:
+            self.write(':SENSe:ROSCillator:OUTPUT:STATe 0')
+
+
+class HPE4406A(SpectrumAnalyser):
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
