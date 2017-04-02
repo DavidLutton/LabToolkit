@@ -189,7 +189,7 @@ with ResourceManager('') as rm:
     # SignalGenerator[0].enable()
     # SpectrumAnalyser[0].CF(freq)
 
-    while input("Manual peak hold, y when ready to sweep") is not "y":
+    while input("Manual peak hold, y when ready to sweep --> ") is not "y":
         pass
 
     EstimatedTime = ETC((18e9-1e9)/100e6)
