@@ -35,8 +35,6 @@ from estimatedtime import estimatedtime
 from pandas_helper import dfiteronrows, dflistfrequencyswithin
 from immunity import leveler
 
-import MeasurePwr
-
 import Instrument.PowerMeter
 import Instrument.SignalGenerator
 import Instrument.SpectrumAnalyser
@@ -65,7 +63,6 @@ EMC-20
 SI-100
 EMCO 7110
 '''
-
 # import Instrument.Positioner
 '''
 2090 H
@@ -85,8 +82,6 @@ E8357A
 '''
 8594E 9e3-40e9
 8653E -26.5e9
-E4440A 3-26.5e9
-E4406A
 '''
 # import Instrument.Osciliscope  # TDS 544A 500e5, DSO5052A 500e6 4GSa/s
 # import Instrument.SourceDC  # 6632A 0-20V 0-5A 100W
@@ -172,23 +167,17 @@ with ResourceManager('') as rm:
         # NVRS
     })
     SpectrumAnalyser = driverdispatcher(pool, {
-        "Hewlett-Packard,E4406A,": Instrument.SpectrumAnalyser.E4406A
-
-    })
-    PSAPowerMeter = driverdispatcher(pool, {
-        "Agilent Technologies, E4440A,": MeasurePwr.MeasurePwrE4440A,  # For measuring harmonics
+        "Hewlett-Packard,E4406A,": Instrument.SpectrumAnalyser.HPE4406A,
+        "Agilent Technologies, E4440A,": Instrument.SpectrumAnalyser.AgilentE4440A,
 
     })
 
     log.info("Discovered " + str(len(generator)) + " SignalGenerators")
-    log.info("Discovered " + str(len(PowerMeter)) + " PowerMeters")
-    log.info("Discovered " + str(len(SpectrumAnalyser)) + " SpectrumAnalysers")
-    log.info("Discovered " + str(len(PSAPowerMeter)) + " PowerMeters")
-
     pprint(generator)
+    log.info("Discovered " + str(len(PowerMeter)) + " PowerMeters")
     pprint(PowerMeter)
+    log.info("Discovered " + str(len(SpectrumAnalyser)) + " SpectrumAnalysers")
     pprint(SpectrumAnalyser)
-    pprint(PSAPowerMeter)
 
     ws.append([
         "ffreqset", "ffreqmeas", "fmean", "fstdev",
@@ -204,8 +193,21 @@ with ResourceManager('') as rm:
     print("Interpolate")
     print(PowerMeter[0].correctionfactorinterpolate(2431e6))
     '''
+    # SpectrumAnalyser[0].setup("Narrow CW Power + 10MHz output enabled")
+    freq = "{0:.0f}".format(float(input("Wanted frequency GHz: ")) * 1e9)
+    # SignalGenerator[0].freq(freq)
+    # SpectrumAnalyser[0].CF(freq)
 
-    try:
+    while input("Manual peek hold, y when ready to sweep") is not "y":
+        time.sleep(1)
+
+    for freq in np.arange(1e9, 18e9 + 1, 100e6):
+        freq = "{0:.0f}".format(freq)
+        print(freq)
+        # SignalGenerator[0].freq(freq)
+        # SpectrumAnalyser[0].CF(freq)
+
+    '''try:
         measure = False
         meas = []
         delay = 0.1
@@ -227,6 +229,7 @@ with ResourceManager('') as rm:
         print(meas)
         print(stddev)
         print(statistics.mean(meas))
+    '''
     # print(generator[each].instrument.query("AP?"))
     # print(PowerMeter[0].measure())
     # assert len(generator) >= 1
