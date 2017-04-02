@@ -24,6 +24,7 @@ class AgilentE4440A(SpectrumAnalyser):
         # self.log.info('Creating an instance of\t' + str(__class__))
 
         assert self.IDN.startswith('Agilent Technologies, E4440A,')
+        self.query(":SYSTem:OPTions?")
         self.write("*CLS")  # clear error status
 
     def setup(setup):
