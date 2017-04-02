@@ -24,6 +24,33 @@ class PowerMeter(GenericInstrument):
         return (UnivariateSpline(self.correctionfactorsx, self.correctionfactorsy, k=5, s=.05))(frequencyofwantedfactor)
 
 
+class AgilentE4418B(PowerMeter):
+    def __init__(self, instrument, logger=None):
+        super().__init__(instrument)
+        # self.log = logging.getLogger(__name__)
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        # self.log.info('Creating an instance of\t' + str(__class__))
+
+        assert self.IDN.startswith("Agilent Technologies,E4418B,")
+
+        # print(self.query(':SENSe:SCALar:POWer:AC?'))
+        # print(float(self.query(':FETCh:SCALar:POWer:AC?')))
+        # print(self.query('UNIT:POWer?'))
+        # self.write('UNIT:POWer DBM')
+        # self.write('UNIT:POWer W')
+        # print(self.query('SYST:ERR?'))
+
+        # :SENSe:CORRection:GAIN1:INPut:MAGNitude? 99.8
+
+        # :SENSe:FREQuency:CW?
+        # SENSe:FREQuency:CW 50MHz
+        # SENSe:FREQuency:CW 26.5GHzs
+        # self.__preset__()
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+
 class HP437B(PowerMeter):
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
