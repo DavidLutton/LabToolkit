@@ -2,10 +2,11 @@
 import statistics
 
 
-class estimatedtime:
+class ETC:
+    ''' Estimated Time to Completion '''
     def __init__(self, numberofpoints):
         self.listoftimes = []
-        self.points = numberofpoints
+        self.points = numberofpoints + 1
 
     def append(self, timeinseconds, inferprogress=True):
         # print(timeinseconds)
@@ -13,5 +14,5 @@ class estimatedtime:
         if inferprogress is True:
             self.points -= 1
 
-    def ETA(self):
+    def ETC(self):
         return("{0:.5f}".format((statistics.mean(self.listoftimes) * self.points)))
