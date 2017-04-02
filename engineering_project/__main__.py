@@ -5,6 +5,8 @@ import traceback
 import sys
 import logging
 import time
+import re
+import statistics
 
 # Functions from standard modules
 from pprint import pprint
@@ -14,7 +16,6 @@ from datetime import datetime
 
 # Imports from modules installed by pip
 import visa  # [bindings to the "Virtual Instrument Software Architecture" in order to control measurement devices and test equipment via GPIB, RS232, or USB.](https://github.com/hgrecco/pyvisa/)
-#
 import numpy as np  # [NumPy](http://www.numpy.org/)
 import pandas as pd  # [pandas: Python Data Analysis Library](http://pandas.pydata.org/)
 from openpyxl import Workbook  # [openpyxl - A Python library to read/write Excel 2010 xlsx/xlsm files — openpyxl documentation](https://openpyxl.readthedocs.io/en/default/)
@@ -50,13 +51,9 @@ HP 8116A 50MHz
 '''
 HP 8673M 2-18GHz
 Anritsu MG3710A 100e3, 6e9
-Anritsu MG 10e6, 10e9
-Anritsu MG 2e9, 30e9
-Anritsu MG 10e6, 20e9
 Agilent N5182A 100e3, 6e9
 Marconi 2031 10e3-2.7e9
 Marconi 20nn 10e3-5.4e9
-HP 8664A 100e3, 3e9
 '''
 # import Instrument.PowerMeter
 '''
@@ -100,7 +97,7 @@ __author__ = "David Lutton"
 __license__ = "MIT"
 
 # logging.basicConfig(level=logging.INFO)
-log = logging.getLogger("RCI")  # Radiated e Conducted e Testing
+log = logging.getLogger("RCI")  # Radiated & Conducted Instrumentation
 log.setLevel(logging.DEBUG)
 formatstr = ['asctime)', 'module)18', 'funcName)12', 'levelname)', 'message)']
 formatstr = '%(' + "s - %(".join(formatstr) + 's'
@@ -108,7 +105,6 @@ formatter = logging.Formatter(formatstr)
 #  %(name)s
 
 logger = datetime.now().isoformat() + ".log"
-import re
 # re.sub(r'[]/\;,><&*:%=+@!#^()|?^', '', logger)
 logger = re.sub(r':', '', logger)
 # print(logger)
@@ -144,12 +140,12 @@ ws = wb.active
 with ResourceManager('') as rm:
     # 'Sim/default.yaml@sim' '@py', 'ni'
 
-    # reso = rm.list_resources()
-    # pprint(reso)
-    # pool = visaenumerate(rm, reso)
+    reso = rm.list_resources()
+    pprint(reso)
+    pool = visaenumerate(rm, reso)
 
-    pool = visaenumerate(rm, visaaddresslist([5, 18], suffix="::INSTR"))
-
+    # pool = visaenumerate(rm, visaaddresslist([5, 18], suffix="::INSTR"))
+    # pool = visaenumerate(rm, visaaddresslist([13], suffix="::INSTR"))
     pprint(pool)
     for each in pool:
         log.info("Discovered {}".format(each))
@@ -160,26 +156,24 @@ with ResourceManager('') as rm:
     generator = driverdispatcher(pool, {
         "HEWLETT-PACKARD,8657A,": Instrument.SignalGenerator.HP8657A,
         "HEWLETT_PACKARD,8664A,": Instrument.SignalGenerator.HP8664A,
-        "ANRITSU,MG3691B,": Instrument.SignalGenerator.MG3691B,
-
-        # 8665B
-
-        # "Agilent Technologies, E4422B,": Instrument.SignalGenerator.E4422B,
-        # MG3691B 10e6, 10e9
-        # MG3692, 2e9?, 20e9
-        # MG3693, 2e9, 30e9
+        "HEWLETT_PACKARD,8665B,": Instrument.SignalGenerator.HP8665B,
+        "ANRITSU,MG3691B,": Instrument.SignalGenerator.AnritsuMG3691B,
+        "ANRITSU,MG3692A,": Instrument.SignalGenerator.AnritsuMG3692A,
+        "ANRITSU,MG3693A,": Instrument.SignalGenerator.AnritsuMG3693A,
+        "Agilent Technologies, E4422B,": Instrument.SignalGenerator.AgilentE4422B,
         # Willtron 10e6, 40e9
     })
 
     PowerMeter = driverdispatcher(pool, {
         # "Agilent Technologies, E4440A,": MeasurePwr.MeasurePwrE4440A,  # For measuring harmonics
         "HEWLETT-PACKARD,437B,": Instrument.PowerMeter.HP437B,
+        "Agilent Technologies,E4418B,": Instrument.PowerMeter.AgilentE4418B,
         # E4418B
         # NVRS
     })
     SpectrumAnalyser = driverdispatcher(pool, {
         "Hewlett-Packard,E4406A,": Instrument.SpectrumAnalyser.E4406A
-        
+
     })
     PSAPowerMeter = driverdispatcher(pool, {
         "Agilent Technologies, E4440A,": MeasurePwr.MeasurePwrE4440A,  # For measuring harmonics
@@ -211,6 +205,28 @@ with ResourceManager('') as rm:
     print(PowerMeter[0].correctionfactorinterpolate(2431e6))
     '''
 
+    try:
+        measure = False
+        meas = []
+        delay = 0.1
+        stddevtolerance = 0.001
+        readings = 10
+        while measure is not True:
+            value = float(PowerMeter[0].query(':FETCh:SCALar:POWer:AC?'))
+            # print(value)
+            meas.append(value)
+            # print(meas)
+            if len(meas) > readings:
+                meas.pop(0)  # remove item at index 0
+                stddev = statistics.stdev(meas)
+                # print(stddev)
+                if stddev < stddevtolerance:
+                    measure = True
+            time.sleep(delay)
+    finally:
+        print(meas)
+        print(stddev)
+        print(statistics.mean(meas))
     # print(generator[each].instrument.query("AP?"))
     # print(PowerMeter[0].measure())
     # assert len(generator) >= 1
