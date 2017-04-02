@@ -74,7 +74,7 @@ class HP8664A(SignalGenerator):
                 self.write("AMPL:OUT:LEV {0:.1f}DBM".format(amplitude))
                 self.amplitude = amplitude
 
-                time.sleep(.3)  # after leveling wait time for settling
+                # time.sleep(.3)  # after leveling wait time for settling
             else:
                 self.log.warn("on " + self.IDN + " exceeded amplimit")
 
@@ -122,7 +122,7 @@ class HP8665B(SignalGenerator):
                 self.write("AMPL:OUT:LEV {0:.1f}DBM".format(amplitude))
                 self.amplitude = amplitude
 
-                time.sleep(.3)  # after leveling wait time for settling
+                # time.sleep(.3)  # after leveling wait time for settling
             else:
                 self.log.warn("on " + self.IDN + " exceeded amplimit")
 
@@ -169,7 +169,7 @@ class HP8657A(SignalGenerator):
                 self.write("AP {0:.1f}DM".format(amplitude))
                 self.amplitude = amplitude
 
-                time.sleep(.3)  # after leveling wait time for settling
+                # time.sleep(.3)  # after leveling wait time for settling
             else:
                 self.log.warn("on " + self.IDN + " exceeded amplimit")
 
@@ -210,7 +210,7 @@ class AgilentE4422B(SignalGenerator):
                 self.write("POW:AMPL {0:.1f} dBm".format(amplitude))
                 self.amplitude = amplitude
 
-                time.sleep(.3)  # after leveling wait time for settling
+                # time.sleep(.3)  # after leveling wait time for settling
             else:
                 self.log.warn("on " + self.IDN + " exceeded amplimit")
 
@@ -234,7 +234,7 @@ class AnritsuMG3691B(SignalGenerator):  # ANRITSU,MG3691B,
 
         assert self.IDN.startswith('ANRITSU,MG3691B,')
 
-        self.frequency = self.query("OF1")
+        self.frequency = self.query("OF0")
         self.amplitude = self.query("OLO")
         self.amps = [-110, 30]
         self.freqs = [10e6, 10e9]
@@ -247,7 +247,7 @@ class AnritsuMG3691B(SignalGenerator):  # ANRITSU,MG3691B,
 
     def freq(self, freq):
         if self.frequency != freq:  # prevent resubmitting request to set the same frequency
-            self.write("F1{0:.0f} HZ".format(freq))
+            self.write("F0{0:.0f} HZ".format(freq))
             self.frequency = freq
             time.sleep(.3)  # after retuneing wait time for settling
 
@@ -257,7 +257,7 @@ class AnritsuMG3691B(SignalGenerator):  # ANRITSU,MG3691B,
                 self.write("L0{0:.1f}DM".format(amplitude))
                 self.amplitude = amplitude
 
-                time.sleep(.3)  # after leveling wait time for settling
+                # time.sleep(.3)  # after leveling wait time for settling
             else:
                 self.log.warn("on " + self.IDN + " exceeded amplimit")
 
@@ -304,7 +304,7 @@ class AnritsuMG3693A(SignalGenerator):  # ANRITSU,MG3693A,
                 self.write("L0{0:.1f}DM".format(amplitude))
                 self.amplitude = amplitude
 
-                time.sleep(.3)  # after leveling wait time for settling
+                # time.sleep(.3)  # after leveling wait time for settling
             else:
                 self.log.warn("on " + self.IDN + " exceeded amplimit")
 
@@ -351,7 +351,7 @@ class AnritsuMG3692A(SignalGenerator):  # ANRITSU,MG3692A,
                 self.write("L0{0:.1f}DM".format(amplitude))
                 self.amplitude = amplitude
 
-                time.sleep(.3)  # after leveling wait time for settling
+                # time.sleep(.3)  # after leveling wait time for settling
             else:
                 self.log.warn("on " + self.IDN + " exceeded amplimit")
 
