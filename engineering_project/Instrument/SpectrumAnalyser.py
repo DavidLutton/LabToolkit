@@ -19,14 +19,15 @@ class AgilentE4440A(SpectrumAnalyser):
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log =logging.getLogger(__name__)
+        self.freqs = [3, 26.5e9]
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
         # self.log.info('Creating an instance of\t' + str(__class__))
 
         assert self.IDN.startswith('Agilent Technologies, E4440A,')
         self.write("*CLS")  # clear error status
 
-    def setup(input):
-        if setup = "Narrow CW Power + 10MHz output enabled":
+    def setup(setup):
+        if setup is "Narrow CW Power + 10MHz output enabled":
             self.refout(True)
             # self.write(":RBW 1kHz")
             self.write(":BAND 1kHz")
@@ -71,6 +72,7 @@ class HPE4406A(SpectrumAnalyser):
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
+        self.freqs = [7e6, 4e9]
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
         # self.log.info('Creating an instance of\t' + str(__class__))
 

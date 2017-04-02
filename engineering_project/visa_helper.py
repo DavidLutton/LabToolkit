@@ -84,6 +84,7 @@ class Instrument(object):
     def __exit__(self, exc_type, exc, exc_tb):
         self.inst.close()
 
+
 '''
 print()
 print()
