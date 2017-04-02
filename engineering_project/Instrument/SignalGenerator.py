@@ -85,6 +85,54 @@ class HP8664A(SignalGenerator):
         pass  # self.write("OUTP:STAT OFF")
 
 
+class HP8665B(SignalGenerator):
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        # self.log = logging.getLogger(__name__)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        assert self.IDN.startswith('HEWLETT_PACKARD,8665B,')
+        self.amps = [-140, 17]
+        self.freqs = [100e3, 6e9]
+        self.frequency = self.query("FREQ:CW?")
+        self.amplitude = self.query("AMPL:OUT:LEV?")
+        # self.siggen.write("*CLS")  # clear error status
+
+    def __preset__(self):
+        self.safe()
+
+    '''
+    def freq(self, freq):
+        if self.frequency != freq:  # prevent resubmitting request to set the same frequency
+            self.write("FREQ:CW {0:.0f}Hz".format(freq))
+            self.frequency = freq
+            time.sleep(.3)  # after retuneing wait time for settling
+    '''
+    def freq(self, freq):
+        self.freqsetter("FREQ:CW {0:.0f}Hz".format(freq))
+
+    def amp(self, amplitude):
+        if self.amplitude != amplitude:
+            if amplitude <= self.amplimit:  # prevent resubmitting request to set the same frequency
+                self.write("AMPL:OUT:LEV {0:.1f}DBM".format(amplitude))
+                self.amplitude = amplitude
+
+                time.sleep(.3)  # after leveling wait time for settling
+            else:
+                self.log.warn("on " + self.IDN + " exceeded amplimit")
+
+    def enable(self):
+        pass  # self.write("OUTP:STAT ON")
+
+    def disable(self):
+        pass  # self.write("OUTP:STAT OFF")
+
+
 class HP8657A(SignalGenerator):
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
@@ -132,7 +180,7 @@ class HP8657A(SignalGenerator):
         pass  # self.write("OUTP:STAT OFF")
 
 
-class E4422B(SignalGenerator):
+class AgilentE4422B(SignalGenerator):
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
@@ -171,9 +219,9 @@ class E4422B(SignalGenerator):
 
     def disable(self):
         self.write("OUTP:STAT OFF")
-        
-        
-class MG3691B(SignalGenerator):  # ANRITSU,MG3691B,
+
+
+class AnritsuMG3691B(SignalGenerator):  # ANRITSU,MG3691B,
     # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
 
     def __repr__(self):
@@ -218,4 +266,97 @@ class MG3691B(SignalGenerator):  # ANRITSU,MG3691B,
 
     def disable(self):
         self.write("RF0")
-    
+
+
+class AnritsuMG3693A(SignalGenerator):  # ANRITSU,MG3693A,
+    # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        assert self.IDN.startswith('ANRITSU,MG3693A,')
+
+        self.frequency = self.query("OF0")
+        self.amplitude = self.query("OLO")
+        self.amps = [-110, 30]  # ???
+        self.freqs = [2e9, 30e9]
+        self.write("*CLS")  # clear error status
+        self.__preset__()
+
+    def __preset__(self):
+        self.safe()
+        self.write('RL1')  # Release to Local
+
+    def freq(self, freq):
+        if self.frequency != freq:  # prevent resubmitting request to set the same frequency
+            self.write("F0{0:.0f} HZ".format(freq))
+            self.frequency = freq
+            time.sleep(.3)  # after retuneing wait time for settling
+
+    def amp(self, amplitude):
+        if self.amplitude != amplitude:
+            if amplitude <= self.amplimit:  # prevent resubmitting request to set the same frequency
+                self.write("L0{0:.1f}DM".format(amplitude))
+                self.amplitude = amplitude
+
+                time.sleep(.3)  # after leveling wait time for settling
+            else:
+                self.log.warn("on " + self.IDN + " exceeded amplimit")
+
+    def enable(self):
+        self.write("RF1")
+
+    def disable(self):
+        self.write("RF0")
+
+
+class AnritsuMG3692A(SignalGenerator):  # ANRITSU,MG3692A,
+    # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        assert self.IDN.startswith('ANRITSU,MG3692A,')
+
+        self.frequency = self.query("OF0")
+        self.amplitude = self.query("OLO")
+        self.amps = [-110, 30]
+        self.freqs = [10e6, 20e9]
+        self.write("*CLS")  # clear error status
+        self.__preset__()
+
+    def __preset__(self):
+        self.safe()
+        self.write('RL1')  # Release to Local
+
+    def freq(self, freq):
+        if self.frequency != freq:  # prevent resubmitting request to set the same frequency
+            self.write("F0{0:.0f} HZ".format(freq))
+            self.frequency = freq
+            time.sleep(.3)  # after retuneing wait time for settling
+
+    def amp(self, amplitude):
+        if self.amplitude != amplitude:
+            if amplitude <= self.amplimit:  # prevent resubmitting request to set the same frequency
+                self.write("L0{0:.1f}DM".format(amplitude))
+                self.amplitude = amplitude
+
+                time.sleep(.3)  # after leveling wait time for settling
+            else:
+                self.log.warn("on " + self.IDN + " exceeded amplimit")
+
+    def enable(self):
+        self.write("RF1")
+
+    def disable(self):
+        self.write("RF0")
