@@ -128,13 +128,11 @@ with ResourceManager('') as rm:
         "ANRITSU,MG3693A,": Instrument.SignalGenerator.AnritsuMG3693A,
         "Agilent Technologies, E4422B,": Instrument.SignalGenerator.AgilentE4422B,
         # Willtron 10e6, 40e9
-        '''
-        HP 8673M 2-18GHz
-        Anritsu MG3710A 100e3, 6e9
-        Agilent N5182A 100e3, 6e9
-        Marconi 2031 10e3-2.7e9
-        Marconi 20nn 10e3-5.4e9
-        '''
+        # HP 8673M 2-18GHz
+        # Anritsu MG3710A 100e3, 6e9
+        # Agilent N5182A 100e3, 6e9
+        # Marconi 2031 10e3-2.7e9
+        # Marconi 20nn 10e3-5.4e9
     })
 
     PowerMeter = driverdispatcher(pool, {
@@ -167,14 +165,14 @@ with ResourceManager('') as rm:
     sheetname = input("Sheetname --> ")
     ws.title = sheetname
     ws.append(["Frequency", "Mean dBm", "stddev", "list dBm"])
-    SpectrumAnalyser[0].setup("Narrow CW Power + 10MHz output enabled")
-    freq = "{0:.0f}".format(float(input("Wanted frequency for peaking in GHz: ")) * 1e9)
-
+    SpectrumAnalyser[0].configure("Narrow CW Power + 10MHz output enabled")
+    freq = float("{0:.0f}".format(float(input("Wanted frequency for peaking in GHz: ")) * 1e9))
+    print(freq)
     SignalGenerator[0].freq(freq)
     SignalGenerator[0].amplimit = 10
     SignalGenerator[0].amp(10)
     SignalGenerator[0].enable()
-    SpectrumAnalyser[0].CF(freq)
+    SpectrumAnalyser[0].cf(freq)
 
     while input("Manual peak hold, y when ready to sweep --> ") is not "y":
         pass
@@ -183,9 +181,9 @@ with ResourceManager('') as rm:
 
     try:
         for freq in np.arange(1e9, 18e9 + 1, 100e6):  # arange is upto but not including max value, thus + 1
-            freq = "{0:.0f}".format(freq)  # Needed? or units filter @decorator
+            freq = float("{0:.0f}".format(freq))  # Needed? or units filter @decorator
             print(freq)
-            SpectrumAnalyser[0].CF(freq)
+            SpectrumAnalyser[0].cf(freq)
             SignalGenerator[0].freq(freq)
 
             start = timer()
@@ -195,12 +193,12 @@ with ResourceManager('') as rm:
                 measure = False
                 meas = []
                 delay = 0.1
-                stddevtolerance = 0.001
+                stddevtolerance = 0.05
                 readings = 10
                 while measure is not True:
 
                     # value = float(PowerMeter[0].query(':FETCh:SCALar:POWer:AC?'))
-                    freq, amplitude = SpectrumAnalyser[0].measure(freq)
+                    _, amplitude = SpectrumAnalyser[0].measure(freq)
                     value = amplitude
                     # print(value)
                     meas.append(value)
@@ -224,7 +222,7 @@ with ResourceManager('') as rm:
                 print()
 
     finally:
-        generator[0].disable()
+        SignalGenerator[0].disable()
         wb.save(filename + ".xlsx")
 
     '''
