@@ -22,27 +22,33 @@ class AgilentE4440A(SpectrumAnalyser):
         self.freqs = [3, 26.5e9]
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
         # self.log.info('Creating an instance of\t' + str(__class__))
+        self.freq = 12e9
 
         assert self.IDN.startswith('Agilent Technologies, E4440A,')
         self.write("*CLS")  # clear error status
 
-    def setup(setup):
-        if setup is "Narrow CW Power + 10MHz output enabled":
+    def configure(self, setup):
+        '''if setup is "Narrow CW Power + 10MHz output enabled":
+            print("SETUP")
             self.refout(True)
             # self.write(":RBW 1kHz")
             self.write(":BAND 1kHz")
-            self.write(":FREQuency:SPAN 1KHz")  # maybe too narrow if analyser and siggen are not on same ref clock
+            self.write(":FREQuency:SPAN 1KHz")  # maybe too narrow if analyser and siggen are not on same ref clock'''
+        self.refout(True)
+        # self.write(":RBW 1kHz")
+        self.write(":BAND 1kHz")
+        self.write(":FREQuency:SPAN 1KHz")  # maybe too narrow if analyser and siggen are not on same ref clock
 
-    def cf(freq):
-        freq = "{0:.0f}".format(freq)
+    def cf(self, freq):
+        # freq = "{0:.0f}".format(freq)
 
         if self.freq != freq:  # prevent resubmitting request to set the same frequency
-            self.write(":FREQuency:CENT " + freq)
+            self.write(":FREQuency:CENT {}".format(freq))
             self.freq = freq
             time.sleep(.3)  # after retuneing wait time for settling
 
     def measure(self, freq):
-        freq = "{0:.0f}".format(freq)
+        # freq = "{0:.0f}".format(freq)
         self.cf(freq)
 
         self.write(":CALCulate:MARKer1: 1")
@@ -51,7 +57,7 @@ class AgilentE4440A(SpectrumAnalyser):
         amp = self.query(":CALCulate:MARKer1:Y?").strip()  # AMP
         freqmeas = self.query(":CALCulate:MARKer1:X?").strip()  # FREQ
 
-        return(freqmeas, amp)
+        return(float(freqmeas), float(amp))
 
     def reflvl(self, lvl):
         self.instrument.write(":DISP:WIND:TRACE:Y:RLEV " + str(int(lvl)))
@@ -59,7 +65,7 @@ class AgilentE4440A(SpectrumAnalyser):
         # and therefor prevent recording clipped values
         time.sleep(.2)  # settling time
 
-    def refout(bool):
+    def refout(self, bool):
         self.query(':SENSe:ROSCillator:OUTPUT?')
 
         if bool is True:
