@@ -25,6 +25,7 @@ class AgilentE4440A(SpectrumAnalyser):
         self.freq = 12e9
 
         assert self.IDN.startswith('Agilent Technologies, E4440A,')
+        self.query(":SYSTem:OPTions?")
         self.write("*CLS")  # clear error status
 
     def configure(self, setup):
