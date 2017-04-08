@@ -37,6 +37,44 @@ class SignalGenerator(GenericInstrument):
             time.sleep(.3)  # after retuneing wait time for settling
 
 
+class SCPI(SignalGenerator):
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        # self.log = logging.getLogger(__name__)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+
+#        self.amps = [-140, 17]
+#        self.freqs = [100e3, 3e9]
+        self.frequency = self.query("SOURce:FREQuency:CW?")
+        self.amplitude = self.query("SOURce:POWer:LEVel:AMPLitude?")
+        # self.siggen.write("*CLS")  # clear error status
+
+#    def __preset__(self):
+#        self.safe()
+    def freq(self, freq):
+        self.freqsetter("SOURce:FREQuency:CW {0:.0f}Hz".format(freq))
+
+    def amp(self, amplitude):
+        if self.amplitude != amplitude:
+            if amplitude <= self.amplimit:  # prevent resubmitting request to set the same frequency
+                self.write("SOURce:POWer:LEVel:AMPLitude {0:.1f} DBM".format(amplitude))
+                self.amplitude = amplitude
+            else:
+                self.log.warn("on " + self.IDN + " exceeded amplimit")
+
+    def enable(self):
+        self.write("OUTPut:STATe 1")
+
+    def disable(self):
+        self.write("OUTPut:STATe 0")
+
+
 class HP8664A(SignalGenerator):
 
     def __repr__(self):
