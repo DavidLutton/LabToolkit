@@ -67,7 +67,8 @@ class SCPI(SignalGenerator):
     def amplitude(self):
         return(self.query("SOURce:POWer:LEVel:AMPLitude?"))
 
-    @amplitude.setter(self, amplitude):
+    @amplitude.setter
+    def amplitude(self, amplitude):
         self.write("SOURce:POWer:LEVel:AMPLitude {0:.2f} DBM".format(amplitude))
 
     '''
