@@ -11,14 +11,14 @@ class SignalGenerator(GenericInstrument):
         self.amplimit = 0
 
     def safe(self):
-        self.amp(min(self.amps))
-        self.freq(min(self.freqs))
-        self.disable()
+        self.amplitude = min(self.amps)
+        self.frequency = min(self.freqs)
+        self.output = False
 
     def start(self, lvl=-50):
-        self.amp(lvl)
+        self.amplitude = lvl
 
-    def ampsetter(self, targetlevel):
+    '''def ampsetter(self, targetlevel):
         if (self.amplitude - 10) <= targetlevel <= (self.amplitude + 3):
             self.amp(targetlevel)
         else:
@@ -35,6 +35,7 @@ class SignalGenerator(GenericInstrument):
             self.write(freq)
             self.frequency = freq
             time.sleep(.3)  # after retuneing wait time for settling
+    '''
 
 
 class SCPI(SignalGenerator):
@@ -48,34 +49,47 @@ class SCPI(SignalGenerator):
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
 
-
-#        self.amps = [-140, 17]
-#        self.freqs = [100e3, 3e9]
-        self.frequency = self.query("SOURce:FREQuency:CW?")
-        self.amplitude = self.query("SOURce:POWer:LEVel:AMPLitude?")
+        self.amps = [-140, 17]
+        self.freqs = [100e3, 3e9]
         # self.siggen.write("*CLS")  # clear error status
 
 #    def __preset__(self):
 #        self.safe()
-    def freq(self, freq):
-        self.freqsetter("SOURce:FREQuency:CW {0:.0f}Hz".format(freq))
+    @property
+    def frequency(self):
+        return(self.query("SOURce:FREQuency:CW?"))
 
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("SOURce:FREQuency:CW {0:.0f} Hz".format(frequency))
+
+    @property
+    def amplitude(self):
+        return(self.query("SOURce:POWer:LEVel:AMPLitude?"))
+
+    @amplitude.setter(self, amplitude):
+        self.write("SOURce:POWer:LEVel:AMPLitude {0:.2f} DBM".format(amplitude))
+
+    '''
     def amp(self, amplitude):
         if self.amplitude != amplitude:
             if amplitude <= self.amplimit:  # prevent resubmitting request to set the same frequency
-                self.write("SOURce:POWer:LEVel:AMPLitude {0:.1f} DBM".format(amplitude))
+
                 self.amplitude = amplitude
             else:
                 self.log.warn("on " + self.IDN + " exceeded amplimit")
+    '''
 
-    def enable(self):
-        self.write("OUTPut:STATe 1")
+    @property
+    def output(self):
+        self.query("OUTPut:STATe?")
 
-    def disable(self):
-        self.write("OUTPut:STATe 0")
+    @output.setter
+    def output(self, boolean):
+        self.write("OUTPut:STATe {}".format(boolean))
 
 
-class HP8664A(SignalGenerator):
+'''class HP8664A(SignalGenerator):
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
@@ -96,13 +110,6 @@ class HP8664A(SignalGenerator):
     def __preset__(self):
         self.safe()
 
-    '''
-    def freq(self, freq):
-        if self.frequency != freq:  # prevent resubmitting request to set the same frequency
-            self.write("FREQ:CW {0:.0f}Hz".format(freq))
-            self.frequency = freq
-            time.sleep(.3)  # after retuneing wait time for settling
-    '''
     def freq(self, freq):
         self.freqsetter("FREQ:CW {0:.0f}Hz".format(freq))
 
@@ -144,13 +151,6 @@ class HP8665B(SignalGenerator):
     def __preset__(self):
         self.safe()
 
-    '''
-    def freq(self, freq):
-        if self.frequency != freq:  # prevent resubmitting request to set the same frequency
-            self.write("FREQ:CW {0:.0f}Hz".format(freq))
-            self.frequency = freq
-            time.sleep(.3)  # after retuneing wait time for settling
-    '''
     def freq(self, freq):
         self.freqsetter("FREQ:CW {0:.0f}Hz".format(freq))
 
@@ -189,14 +189,6 @@ class HP8657A(SignalGenerator):
 
     def __preset__(self):
         self.safe()
-
-    '''
-    def freq(self, freq):
-        if self.frequency != freq:  # prevent resubmitting request to set the same frequency
-            self.write("FR {0:.0f}Hz".format(freq))
-            self.frequency = freq
-            time.sleep(.3)  # after retuneing wait time for settling
-    '''
 
     def freq(self, freq):
         self.freqsetter("FR {0:.0f}Hz".format(freq))
@@ -398,3 +390,4 @@ class AnritsuMG3692A(SignalGenerator):  # ANRITSU,MG3692A,
 
     def disable(self):
         self.write("RF0")
+'''
