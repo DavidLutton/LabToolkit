@@ -9,15 +9,11 @@ class GenericInstrument(object):
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
-
         self.instrument = instrument
-
         self.log = logging.getLogger("RCI")
-        # self.log.debug(self.instrument)
 
         self.IDN = self.instrument.query('*IDN?')
-
-        # self.log.info('Instrument IDN\t' + self.IDN)
+        self.options = self.query("*OPT?").strip().split(',')
 
     def query(self, query):
         self.log.debug("Query {}: {}".format(self.instrument.resource_name, query))

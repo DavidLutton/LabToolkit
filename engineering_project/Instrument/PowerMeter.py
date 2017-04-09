@@ -218,3 +218,10 @@ TR2 trigger with delay
 @2 Learn mode prefix
 % Percent
 '''
+register = {
+    "HEWLETT-PACKARD,437B,": HP437B,
+    "Agilent Technologies,E4418B,": AgilentE4418B,
+    # NVRS
+    # R&S ???4
+    # Bird 4421
+}

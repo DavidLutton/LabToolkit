@@ -7,7 +7,7 @@ import logging
 from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
 
 
-class ElectronicAttenuator(GenericInstrument):
+class EnviromentalChamber(GenericInstrument):
     def __init__(self, instrument):
         super().__init__(instrument)
 
@@ -15,27 +15,25 @@ class ElectronicAttenuator(GenericInstrument):
         return("{}, {}".format(__class__, self.instrument))
 
 
-class Marconi2187(ElectronicAttenuator):
+class ZZZ(EnviromentalChamber):
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
         # self.log.info('Creating an instance of\t' + str(__class__))
 
-        assert self.IDN.startswith("MARCONI INSTRUMENTS,2187,")
+        assert self.IDN.startswith("ZZZ")
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
     @property
-    def attenuation(self):
-        return(float(self.query("ATTN?")))
+    def temperature(self):
+        return(float(self.query("THERM?")))
 
-    @attenuation.setter
-    def attenuation(self, attenuation):
-        self.write("ATTN {0:.1f}DB".format(attenuation))
+    @temperature.setter
+    def temperature(self, temperature):
+        self.write("THERM {0:.0f}".format(temperature))
 
-register = {
-    "MARCONI INSTRUMENTS,2187,": Marconi2187,
 
-}
+register = {}

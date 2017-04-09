@@ -15,6 +15,15 @@ class SpectrumAnalyser(GenericInstrument):
         return("{}, {}".format(__class__, self.instrument))
 
 
+class KeysightN9030B(SpectrumAnalyser):
+
+    def __init__(self, instrument, logger=None):
+        super().__init__(instrument)
+        self.freqs = [3, 50e9]
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        # assert self.IDN.startswith('Agilent Technologies, E4440A,')
+
+
 class AgilentE4440A(SpectrumAnalyser):
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
@@ -25,7 +34,7 @@ class AgilentE4440A(SpectrumAnalyser):
         self.freq = 12e9
 
         assert self.IDN.startswith('Agilent Technologies, E4440A,')
-        self.query(":SYSTem:OPTions?")
+        # self.query(":SYSTem:OPTions?")
         self.write("*CLS")  # clear error status
 
     def configure(self, setup):
@@ -107,3 +116,13 @@ print(inst.query(":READ:SPECtrum7?"))
 ":READ:SPECtrum7"
 ":READ:SPECtrum4?"
 '''
+
+
+register = {
+    "Hewlett-Packard,E4406A,": HPE4406A,
+    "Agilent Technologies, E4440A,": AgilentE4440A,
+    # HP 8594E 9e3-40e9
+    # HP 8653E -26.5e9
+
+
+}

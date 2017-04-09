@@ -79,3 +79,7 @@ class HP34401(DigitalMultimeter):  # HP 34401
     @rangeauto.setter
     def rangeauto(self, impedanceauto=False):
         self.write("INPut:IMPedance:AUTO {}".format(impedanceauto))
+
+register = {
+    "IDN": HP34401,
+}

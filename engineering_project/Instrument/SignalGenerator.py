@@ -308,6 +308,7 @@ class AnritsuMG369nx(SignalGenerator):  # ANRITSU,MG369nx
         super().__init__(instrument)
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        # self.options = self.query("*OPT?").strip().split(',')
 
         # self.amps = [-110, 30]
         self.freqs = [2e9, 10e9]
@@ -394,3 +395,65 @@ class AnritsuMG3693A(AnritsuMG369nx):  # ANRITSU,MG3693A,
 
         self.amps = [-110, 30]
         self.freqs = [2e9, 30e9]
+
+
+class Willtronnnnn(SignalGenerator):
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        # self.log = logging.getLogger(__name__)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        self.amps = [-140, 17]
+        self.freqs = [10e6, 40e9]
+        # self.siggen.write("*CLS")  # clear error status
+        # self.frequency = min(self.freqs)
+
+    @property
+    def frequency(self):
+        return(self.query("OF0"))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("F0{0:.2f}GH".format(frequency))
+
+    @property
+    def amplitude(self):
+        return(self.query("OL0"))
+
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("L0{0:.2f}DM".format(amplitude))
+
+    '''@property
+    def output(self):
+        if self.query("OUTPut:STATe?") == "1":
+            return(True)
+        else:
+            return(False)
+
+    @output.setter
+    def output(self, boolean=False):
+        self.write("OUTPut:STATe {:d}".format(boolean))
+    '''
+
+register = {
+    "HEWLETT-PACKARD,8657A,": HP8657A,
+    "HEWLETT_PACKARD,8664A,": HP8664A,
+    "HEWLETT_PACKARD,8665B,": HP8665B,
+    "ANRITSU,MG3691B,": AnritsuMG3691B,
+    "ANRITSU,MG3692A,": AnritsuMG3692A,
+    "ANRITSU,MG3693A,": AnritsuMG3693A,
+    "Agilent Technologies, E4422B,": AgilentE4422B,
+    "Willtron ZZZZ,": Willtronnnnn,
+    # Willtron 10e6, 40e9
+    # HP 8673M 2-18GHz
+    # Anritsu MG3710A 100e3, 6e9
+    # Agilent N5182A 100e3, 6e9
+    # Marconi 2031 10e3-2.7e9
+    # Marconi 20nn 10e3-5.4e9
+}

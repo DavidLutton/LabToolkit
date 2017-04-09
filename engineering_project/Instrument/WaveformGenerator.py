@@ -113,3 +113,7 @@ class HP33120A(WaveformGenerator):  # HP 33120A 15MHz
 
 # class HP 8116A(WaveformGenerator):  # HP 8116A 50MHz
 # class Keysight33500B(WaveformGenerator):  # Keysight 33500B 20MHz
+
+register = {
+    "IDN": HP33120A,
+}
