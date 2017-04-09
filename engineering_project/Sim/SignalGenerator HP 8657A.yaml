@@ -22,6 +22,8 @@ devices:
     dialogues:
       - q: "*IDN?"
         r: "HEWLETT-PACKARD,8657A,,3.14"
+      - q: "*OPT?"
+        r: ""
     properties:
       power:
         default: -80
