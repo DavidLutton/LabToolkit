@@ -13,7 +13,7 @@ class ElectronicAttenuator(GenericInstrument):
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
-        
+
 
 class Marconi2187(ElectronicAttenuator):
     def __init__(self, instrument, logger=None):
@@ -27,9 +27,8 @@ class Marconi2187(ElectronicAttenuator):
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
-        
+
     def set(self, attenuation):
         if attenuation != self.attenuation:
-            self.write("ATTN {}DB".format(attenuation))
+            self.write("ATTN  {0:.1f}DB".format(attenuation))
             self.attenuation = attenuation
-
