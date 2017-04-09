@@ -56,7 +56,7 @@ class amplitudelimiter(object):
         # print("After self.f(*args)")
 
 
-class HP33120A(WaveformGenerator):
+class HP33120A(WaveformGenerator):  # HP 33120A 15MHz
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
@@ -110,3 +110,6 @@ class HP33120A(WaveformGenerator):
     def amplitude(self, amplitude, unit="VPP"):
         # VPP|VRMS|DBM|DEF
         self.write("SOURce:VOLTage {0:.6f}".format(amplitude, unit))
+
+# class HP 8116A(WaveformGenerator):  # HP 8116A 50MHz
+# class Keysight33500B(WaveformGenerator):  # Keysight 33500B 20MHz
