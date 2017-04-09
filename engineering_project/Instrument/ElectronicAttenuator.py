@@ -23,12 +23,14 @@ class Marconi2187(ElectronicAttenuator):
         # self.log.info('Creating an instance of\t' + str(__class__))
 
         assert self.IDN.startswith("MARCONI INSTRUMENTS,2187,")
-        self.attenuation = float(self.query("ATTN?"))
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
-    def set(self, attenuation):
-        if attenuation != self.attenuation:
-            self.write("ATTN  {0:.1f}DB".format(attenuation))
-            self.attenuation = attenuation
+    @property
+    def attenuation(self):
+        return(float(self.query("ATTN?")))
+
+    @attenuation.setter
+    def attenuation(self, frequency):
+        self.write("ATTN  {0:.1f}DB".format(attenuation))
