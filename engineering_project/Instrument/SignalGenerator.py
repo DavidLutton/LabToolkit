@@ -134,9 +134,6 @@ class HP8657A(SignalGenerator):
 
         # self.siggen.write("*CLS")  # clear error status
 
-        self.safe()
-        # self.state()
-
     @property
     def frequency(self):
         return(self.query("FR?"))
@@ -271,7 +268,6 @@ class AgilentE4422B(SignalGenerator):
         self.amps = [-100, 16]
         self.freqs = [100e3, 4e9]
         # self.write("*CLS")  # clear error status
-        # self.safe()
 
         @property
         def frequency(self):
@@ -316,7 +312,6 @@ class AnritsuMG369nx(SignalGenerator):  # ANRITSU,MG369nx
         # self.amps = [-110, 30]
         self.freqs = [2e9, 10e9]
         # self.write("*CLS")  # clear error status
-        # self.safe()
         self.write('RL1')  # Release to Local
 
         @property
