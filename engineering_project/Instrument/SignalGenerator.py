@@ -127,7 +127,9 @@ class HP8657A(SignalGenerator):
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
 
         assert self.IDN.startswith('HEWLETT-PACKARD,8657A,')
-        self.amps = [-111, 17]
+        # self.amps = [-111, 17]
+        self.amps = [-143.5, 17]  # HP 8657A, 8657B
+        # self.amps = [-127, 17]  # HP 8656B
         self.freqs = [100e3, 1040e6]
 
         # self.siggen.write("*CLS")  # clear error status
@@ -152,18 +154,17 @@ class HP8657A(SignalGenerator):
     def amplitude(self, amplitude):
         self.write("AP {0:.1f}DM".format(amplitude))
 
-    '''
     @property
     def output(self):
-        if self.query("OUTPut:STATe?") == "1":
-            return(True)
-        else:
-            return(False)
+        pass
 
     @output.setter
     def output(self, boolean=False):
-        self.write("OUTPut:STATe {:d}".format(boolean))
-    '''
+        if boolean is False:
+            self.write("R2")
+        else:
+            if boolean is True:
+                self.write("R3")
 
 
 class HP8664A(SignalGenerator):
