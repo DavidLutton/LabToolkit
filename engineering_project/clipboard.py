@@ -1,7 +1,7 @@
 from tkinter import Tk
 
 
-class clipboard:
+class clipboard(object):
 
     def read():
         root = Tk()
