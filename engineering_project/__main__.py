@@ -30,62 +30,26 @@ from visa_helper import driverdispatcher, visaenumerate, visaaddresslist
 # import gitrevision
 
 import CIS9942.parse
-import File.file
-from estimatedtime import estimatedtime
+from pickfile import pickfilesave, pickfileopen
+from estimatedtime import ETC
 from pandas_helper import dfiteronrows, dflistfrequencyswithin
 from immunity import leveler
+from filters import stdevlowpass
+
 
 import Instrument.PowerMeter
 import Instrument.SignalGenerator
+import Instrument.WaveformGenerator
 import Instrument.SpectrumAnalyser
-
-# import Instrument.FunctionGenerator
-'''
-HP 33120A 15MHz
-Keysight 33500B 20MHz
-HP 8116A 50MHz
-'''
-# import Instrument.SignalGenerator
-'''
-HP 8673M 2-18GHz
-Anritsu MG3710A 100e3, 6e9
-Agilent N5182A 100e3, 6e9
-Marconi 2031 10e3-2.7e9
-Marconi 20nn 10e3-5.4e9
-'''
-# import Instrument.PowerMeter
-'''
-Bird 4421
-'''
-# import Instrument.FieldStrength
-'''
-EMC-20
-SI-100
-EMCO 7110
-'''
-# import Instrument.Positioner
-'''
-2090 H
-'''
-# import Instrument.DMM
-'''
-HP 34401
-HP 3478A
-Longscale
-'''
-# import Instrument.NetworkAnalyser
-'''
-E8357A
-4395A
-'''
-# import Instrument.SpectrumAnalyser
-'''
-8594E 9e3-40e9
-8653E -26.5e9
-'''
-# import Instrument.Osciliscope  # TDS 544A 500e5, DSO5052A 500e6 4GSa/s
-# import Instrument.SourceDC  # 6632A 0-20V 0-5A 100W
-# import Instrument.SourceAC  # 3001i, 3001iM
+import Instrument.NetworkAnalyser
+import Instrument.ElectronicAttenuator
+import Instrument.DigitalMultimeter
+import Instrument.EnviromentalChamber
+import Instrument.Osciliscope
+import Instrument.FieldStrength
+import Instrument.Positioner  # 2090 H
+import Instrument.SourceDC  # 6632A 0-20V 0-5A 100W
+import Instrument.SourceAC  # 3001i, 3001iM
 
 
 __author__ = "David Lutton"
@@ -148,29 +112,15 @@ with ResourceManager('') as rm:
     log.info("Discovered {} instruments".format(len(pool)))
     log.info("Attaching drivers to recognised instruments")
 
-    generator = driverdispatcher(pool, {
-        "HEWLETT-PACKARD,8657A,": Instrument.SignalGenerator.HP8657A,
-        "HEWLETT_PACKARD,8664A,": Instrument.SignalGenerator.HP8664A,
-        "HEWLETT_PACKARD,8665B,": Instrument.SignalGenerator.HP8665B,
-        "ANRITSU,MG3691B,": Instrument.SignalGenerator.AnritsuMG3691B,
-        "ANRITSU,MG3692A,": Instrument.SignalGenerator.AnritsuMG3692A,
-        "ANRITSU,MG3693A,": Instrument.SignalGenerator.AnritsuMG3693A,
-        "Agilent Technologies, E4422B,": Instrument.SignalGenerator.AgilentE4422B,
-        # Willtron 10e6, 40e9
-    })
-
-    PowerMeter = driverdispatcher(pool, {
-        # "Agilent Technologies, E4440A,": MeasurePwr.MeasurePwrE4440A,  # For measuring harmonics
-        "HEWLETT-PACKARD,437B,": Instrument.PowerMeter.HP437B,
-        "Agilent Technologies,E4418B,": Instrument.PowerMeter.AgilentE4418B,
-        # E4418B
-        # NVRS
-    })
-    SpectrumAnalyser = driverdispatcher(pool, {
-        "Hewlett-Packard,E4406A,": Instrument.SpectrumAnalyser.HPE4406A,
-        "Agilent Technologies, E4440A,": Instrument.SpectrumAnalyser.AgilentE4440A,
-
-    })
+    SignalGenerator = driverdispatcher(pool, Instrument.SignalGenerator.register)
+    PowerMeter = driverdispatcher(pool, Instrument.PowerMeter.register)
+    SpectrumAnalyser = driverdispatcher(pool, Instrument.SpectrumAnalyser.register)
+    WaveformGenerator = driverdispatcher(pool, Instrument.WaveformGenerator.register)
+    NetworkAnalyser = driverdispatcher(pool, Instrument.NetworkAnalyser.register)
+    ElectronicAttenuator = driverdispatcher(pool, Instrument.ElectronicAttenuator.register)
+    DigitalMultimeter = driverdispatcher(pool, Instrument.DigitalMultimeter.register)
+    EnviromentalChamber = driverdispatcher(pool, Instrument.EnviromentalChamber.register)
+    Osciliscope = driverdispatcher(pool, Instrument.Osciliscope.register)
 
     log.info("Discovered " + str(len(generator)) + " SignalGenerators")
     pprint(generator)
@@ -199,7 +149,7 @@ with ResourceManager('') as rm:
     # SpectrumAnalyser[0].CF(freq)
 
     while input("Manual peek hold, y when ready to sweep") is not "y":
-        time.sleep(1)
+        pass
 
     for freq in np.arange(1e9, 18e9 + 1, 100e6):
         freq = "{0:.0f}".format(freq)
