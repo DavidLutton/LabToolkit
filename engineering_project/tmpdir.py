@@ -3,7 +3,7 @@ from uuid import uuid4 as uuid  # https://docs.python.org/3.4/library/uuid.html
 import shutil
 
 
-class tmp():
+class tmpdir():
 
     def __init__(self):
         self.tmp = os.path.expanduser("~" + os.sep + os.path.join("Local Settings", "Temp")) + os.sep + str(uuid())
