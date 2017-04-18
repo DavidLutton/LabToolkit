@@ -40,12 +40,12 @@ def level(wantedlevel = -3.0):
     if input("level new " + str(levelnew)) == "y":
         if levelnew > levellimit:
             print("over limit")
-            
+
             GEN.write("POWer:LEVel " + str(levellimit) + "dBm")
         else:
             GEN.write("POWer:LEVel " + str(levelnew) + "dBm")
-    
-    
+
+
 
 level(wantedlevel = 33)
 time.sleep(1)

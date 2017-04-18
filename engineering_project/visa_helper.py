@@ -16,6 +16,9 @@ def visaaddresslist(listofaddresses, prefix="GPIB0::", suffix="::65535::INSTR"):
         return(instrs)
 
 
+#  'TCPIP::192.168.1.113::INSTR'
+
+
 def visaenumerate(rm, list_resources):
     try:
         pool = {}

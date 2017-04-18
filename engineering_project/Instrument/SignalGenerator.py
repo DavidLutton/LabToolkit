@@ -441,6 +441,15 @@ class Willtronnnnn(SignalGenerator):
         self.write("OUTPut:STATe {:d}".format(boolean))
     '''
 
+
+'''inst = rm.open_resource('GPIB0::6::INSTR')
+print( inst.query('*IDN?').strip() )
+print( inst.write('CFRQ:VALUE 1234.5678912MHZ') )
+
+
+# MARCONI INSTRUMENTS,2032,119500001,5.002
+# E266'''
+
 register = {
     "HEWLETT-PACKARD,8657A,": HP8657A,
     "HEWLETT_PACKARD,8664A,": HP8664A,

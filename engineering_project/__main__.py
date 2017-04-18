@@ -36,6 +36,8 @@ from pandas_helper import dfiteronrows, dflistfrequencyswithin
 from immunity import leveler
 from filters import stdevlowpass
 
+# stdevlowpass(readback=0,)
+
 
 import Instrument.PowerMeter
 import Instrument.SignalGenerator

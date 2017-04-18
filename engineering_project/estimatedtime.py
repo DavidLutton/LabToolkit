@@ -3,7 +3,8 @@ import statistics
 
 
 class ETC:
-    ''' Estimated Time to Completion '''
+    """Estimated Time to Completion."""
+
     def __init__(self, numberofpoints):
         self.listoftimes = []
         self.points = numberofpoints + 1
