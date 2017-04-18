@@ -8,6 +8,8 @@ from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
 
 
 class ElectronicAttenuator(GenericInstrument):
+    """Parent class for ElectronicAttenuators."""
+
     def __init__(self, instrument):
         super().__init__(instrument)
 
@@ -16,6 +18,8 @@ class ElectronicAttenuator(GenericInstrument):
 
 
 class Marconi2187(ElectronicAttenuator):
+    """Marconi 2187 - DC-20GHz 1W max n-type."""
+
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
@@ -34,6 +38,7 @@ class Marconi2187(ElectronicAttenuator):
     @attenuation.setter
     def attenuation(self, attenuation):
         self.write("ATTN {0:.1f}DB".format(attenuation))
+
 
 register = {
     "MARCONI INSTRUMENTS,2187,": Marconi2187,

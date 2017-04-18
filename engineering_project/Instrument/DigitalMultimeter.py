@@ -7,11 +7,15 @@ from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
 
 
 class DigitalMultimeter(GenericInstrument):
+    """Parent class for DigitalMultimeters."""
+
     def __init__(self, instrument):
         super().__init__(instrument)
 
 
-class HP34401(DigitalMultimeter):  # HP 34401
+class HP34401(DigitalMultimeter):
+    """HP 34401."""
+
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
@@ -79,6 +83,7 @@ class HP34401(DigitalMultimeter):  # HP 34401
     @rangeauto.setter
     def rangeauto(self, impedanceauto=False):
         self.write("INPut:IMPedance:AUTO {}".format(impedanceauto))
+
 
 register = {
     "IDN": HP34401,

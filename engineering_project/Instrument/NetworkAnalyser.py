@@ -5,17 +5,29 @@ import logging
 # import numpy as np
 
 from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+from Instrument.IEEE488 import IEEE488 as IEEE488
 
 
-class NetworkAnalyser(GenericInstrument):
+class NetworkAnalyser(GenericInstrument, IEEE488):
+    """Parent class for NetworkAnalysers."""
+
     def __init__(self, instrument):
         super().__init__(instrument)
 
-# class HPE8357A(NetworkAnalyser):
-# class HP4395A(NetworkAnalyser):
+
+
+
+class HPE8357A(NetworkAnalyser):
+    """HP E8357A."""
+
+
+class HP4395A(NetworkAnalyser):
+    """HP 4395A."""
 
 
 class KeysightFieldFox(NetworkAnalyser):
+    """Keysight FieldFox."""
+
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
