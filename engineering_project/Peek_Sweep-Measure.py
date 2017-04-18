@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Manual Peak hold at a given frequency then sweep predefined span."""
 
 # Standard modules
 import traceback
@@ -15,10 +16,10 @@ from datetime import datetime
 
 
 # Imports from modules installed by pip
-import visa  # [bindings to VISA to control test equipment via GPIB, RS232, IP or USB](https://github.com/hgrecco/pyvisa/)
+import visa  # [bindings to the "Virtual Instrument Software Architecture" in order to control measurement devices and test equipment via GPIB, RS232, or USB.](https://github.com/hgrecco/pyvisa/)
 import numpy as np  # [NumPy](http://www.numpy.org/)
 import pandas as pd  # [pandas: Python Data Analysis Library](http://pandas.pydata.org/)
-from openpyxl import Workbook  # [Python library to read/write Excel 2010 xlsx/xlsm files](https://openpyxl.readthedocs.io/en/default/)
+from openpyxl import Workbook  # [openpyxl - A Python library to read/write Excel 2010 xlsx/xlsm files — openpyxl documentation](https://openpyxl.readthedocs.io/en/default/)
 
 
 # --- Import of code of RCI
@@ -30,40 +31,26 @@ from visa_helper import driverdispatcher, visaenumerate, visaaddresslist
 # import gitrevision
 
 import CIS9942.parse
-from File.file import pickfilesave, pickfileopen
+from pickfile import pickfilesave, pickfileopen
 from estimatedtime import ETC
 from pandas_helper import dfiteronrows, dflistfrequencyswithin
 from immunity import leveler
+from filters import stdevlowpass
 
+# Instruments
 import Instrument.PowerMeter
 import Instrument.SignalGenerator
+import Instrument.WaveformGenerator
 import Instrument.SpectrumAnalyser
-
-# import Instrument.FunctionGenerator
-# HP 33120A 15MHz
-# Keysight 33500B 20MHz
-# HP 8116A 50MHz
-
-# import Instrument.FieldStrength
-# EMC-20 # setup & readback DONE
-# SI-100
-# EMCO 7110
-
-# import Instrument.Positioner
-# 2090 H
-
-# import Instrument.DMM
-# HP 34401  # readback
-# HP 3478A # readback
-# Longscale
-
-# import Instrument.NetworkAnalyser
-# E8357A
-# 4395A
-
-# import Instrument.Osciliscope  # TDS 544A 500e5, DSO5052A 500e6 4GSa/s
-# import Instrument.SourceDC  # 6632A 0-20V 0-5A 100W
-# import Instrument.SourceAC  # 3001i, 3001iM
+import Instrument.NetworkAnalyser
+import Instrument.ElectronicAttenuator
+import Instrument.DigitalMultimeter
+import Instrument.EnviromentalChamber
+import Instrument.Osciliscope
+import Instrument.FieldStrength
+import Instrument.Positioner  # 2090 H
+import Instrument.SourceDC  # 6632A 0-20V 0-5A 100W
+import Instrument.SourceAC  # 3001i, 3001iM
 
 __author__ = "David Lutton"
 __license__ = "MIT"
@@ -119,41 +106,18 @@ with ResourceManager('') as rm:
     log.info("Discovered {} instruments".format(len(pool)))
     log.info("Attaching drivers to recognised instruments")
 
-    SignalGenerator = driverdispatcher(pool, {
-        "HEWLETT-PACKARD,8657A,": Instrument.SignalGenerator.HP8657A,
-        "HEWLETT_PACKARD,8664A,": Instrument.SignalGenerator.HP8664A,
-        "HEWLETT_PACKARD,8665B,": Instrument.SignalGenerator.HP8665B,
-        "ANRITSU,MG3691B,": Instrument.SignalGenerator.AnritsuMG3691B,
-        "ANRITSU,MG3692A,": Instrument.SignalGenerator.AnritsuMG3692A,
-        "ANRITSU,MG3693A,": Instrument.SignalGenerator.AnritsuMG3693A,
-        "Agilent Technologies, E4422B,": Instrument.SignalGenerator.AgilentE4422B,
-        # Willtron 10e6, 40e9
-        # HP 8673M 2-18GHz
-        # Anritsu MG3710A 100e3, 6e9
-        # Agilent N5182A 100e3, 6e9
-        # Marconi 2031 10e3-2.7e9
-        # Marconi 20nn 10e3-5.4e9
-    })
+    SignalGenerator = driverdispatcher(pool, Instrument.SignalGenerator.register)
+    PowerMeter = driverdispatcher(pool, Instrument.PowerMeter.register)
+    SpectrumAnalyser = driverdispatcher(pool, Instrument.SpectrumAnalyser.register)
+    WaveformGenerator = driverdispatcher(pool, Instrument.WaveformGenerator.register)
+    NetworkAnalyser = driverdispatcher(pool, Instrument.NetworkAnalyser.register)
+    ElectronicAttenuator = driverdispatcher(pool, Instrument.ElectronicAttenuator.register)
+    DigitalMultimeter = driverdispatcher(pool, Instrument.DigitalMultimeter.register)
+    EnviromentalChamber = driverdispatcher(pool, Instrument.EnviromentalChamber.register)
+    Osciliscope = driverdispatcher(pool, Instrument.Osciliscope.register)
 
-    PowerMeter = driverdispatcher(pool, {
-        "HEWLETT-PACKARD,437B,": Instrument.PowerMeter.HP437B,
-        "Agilent Technologies,E4418B,": Instrument.PowerMeter.AgilentE4418B,
-        # NVRS
-        # R&S ???4
-        # Bird 4421
-    })
-
-    SpectrumAnalyser = driverdispatcher(pool, {
-        "Hewlett-Packard,E4406A,": Instrument.SpectrumAnalyser.HPE4406A,
-        "Agilent Technologies, E4440A,": Instrument.SpectrumAnalyser.AgilentE4440A,
-        # HP 8594E 9e3-40e9
-        # HP 8653E -26.5e9
-
-
-    })
-
-    log.info("Discovered " + str(len(SignalGenerator)) + " SignalGenerators")
-    pprint(SignalGenerator)
+    log.info("Discovered " + str(len(generator)) + " SignalGenerators")
+    pprint(generator)
     log.info("Discovered " + str(len(PowerMeter)) + " PowerMeters")
     pprint(PowerMeter)
     log.info("Discovered " + str(len(SpectrumAnalyser)) + " SpectrumAnalysers")
@@ -169,9 +133,10 @@ with ResourceManager('') as rm:
     freq = float("{0:.0f}".format(float(input("Wanted frequency for peaking in GHz: ")) * 1e9))
     print(freq)
     SignalGenerator[0].freq(freq)
+    SignalGenerator[0].freq = fre
     SignalGenerator[0].amplimit = 10
-    SignalGenerator[0].amp(10)
-    SignalGenerator[0].enable()
+    SignalGenerator[0].amp = 10
+    SignalGenerator[0].output = True
     SpectrumAnalyser[0].cf(freq)
 
     while input("Manual peak hold, y when ready to sweep --> ") is not "y":
@@ -184,7 +149,7 @@ with ResourceManager('') as rm:
             freq = float("{0:.0f}".format(freq))  # Needed? or units filter @decorator
             print(freq)
             SpectrumAnalyser[0].cf(freq)
-            SignalGenerator[0].freq(freq)
+            SignalGenerator[0].freq = freq
 
             start = timer()
             time.sleep(1)
@@ -197,7 +162,6 @@ with ResourceManager('') as rm:
                 readings = 10
                 while measure is not True:
 
-                    # value = float(PowerMeter[0].query(':FETCh:SCALar:POWer:AC?'))
                     _, amplitude = SpectrumAnalyser[0].measure(freq)
                     value = amplitude
                     # print(value)
@@ -222,7 +186,7 @@ with ResourceManager('') as rm:
                 print()
 
     finally:
-        SignalGenerator[0].disable()
+        SignalGenerator[0].output = False
         wb.save(filename + ".xlsx")
 
     '''
