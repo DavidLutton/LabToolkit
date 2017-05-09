@@ -4,7 +4,10 @@ import logging
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
 
-from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+try:
+    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+except ImportError:
+    from GenericInstrument import GenericInstrument as GenericInstrument
 
 
 class PowerMeter(GenericInstrument):
@@ -25,6 +28,11 @@ class PowerMeter(GenericInstrument):
 
 
 class AgilentE4418B(PowerMeter):
+    """Agilent E4418B.
+
+    .. figure::  images/PowerMeter/AgilentE4418B.jpg
+    """
+
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
@@ -52,6 +60,10 @@ class AgilentE4418B(PowerMeter):
 
 
 class HP437B(PowerMeter):
+    """HP 437B.
+
+    .. figure::  images/PowerMeter/HP437B.jpg
+    """
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)

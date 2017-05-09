@@ -4,29 +4,49 @@ import logging
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
 
-from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
-from Instrument.IEEE488 import IEEE488 as IEEE488
+try:
+    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+except ImportError:
+    from GenericInstrument import GenericInstrument as GenericInstrument
+
+try:
+    from Instrument.IEEE488 import IEEE488 as IEEE488
+except ImportError:
+    from IEEE488 import IEEE488 as IEEE488
 
 
 class NetworkAnalyser(GenericInstrument, IEEE488):
     """Parent class for NetworkAnalysers."""
-
     def __init__(self, instrument):
         super().__init__(instrument)
 
 
+class AgilentE8357A(NetworkAnalyser):
+    """HP E8357A.
 
-
-class HPE8357A(NetworkAnalyser):
-    """HP E8357A."""
+    .. figure::  images/NetworkAnalyser/AgilentE8357A.jpg
+    """
 
 
 class HP4395A(NetworkAnalyser):
-    """HP 4395A."""
+    """HP 4395A.
+
+    .. figure::  images/NetworkAnalyser/HP4395A.jpg
+    """
+
+
+class Wiltron360(NetworkAnalyser):
+    """Wiltron 360.
+
+    .. figure::  images/NetworkAnalyser/Wiltron360.jpg
+    """
 
 
 class KeysightFieldFox(NetworkAnalyser):
-    """Keysight FieldFox."""
+    """Keysight FieldFox.
+
+    .. figure::  images/NetworkAnalyser/KeysightFieldFoxN9928A.jpg
+   	"""
 
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)

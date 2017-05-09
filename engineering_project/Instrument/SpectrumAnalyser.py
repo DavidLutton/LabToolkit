@@ -4,7 +4,10 @@ import logging
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
 
-from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+try:
+    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+except ImportError:
+    from GenericInstrument import GenericInstrument as GenericInstrument
 
 
 class SpectrumAnalyser(GenericInstrument):
@@ -16,6 +19,10 @@ class SpectrumAnalyser(GenericInstrument):
 
 
 class KeysightN9030B(SpectrumAnalyser):
+    """Keysight N9030B, 3 to 50e9.
+
+    .. figure::  images/SpectrumAnalyser/KeysightN9030B.jpg
+    """
 
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
@@ -25,6 +32,10 @@ class KeysightN9030B(SpectrumAnalyser):
 
 
 class AgilentE4440A(SpectrumAnalyser):
+    """Agilent E4440A, 3 to 26.5e9.
+
+    .. figure::  images/SpectrumAnalyser/AgilentE4440A.jpg
+    """
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log =logging.getLogger(__name__)
@@ -37,29 +48,32 @@ class AgilentE4440A(SpectrumAnalyser):
         # self.query(":SYSTem:OPTions?")
         self.write("*CLS")  # clear error status
 
-    def configure(self, setup):
-        '''if setup is "Narrow CW Power + 10MHz output enabled":
-            print("SETUP")
-            self.refout(True)
-            # self.write(":RBW 1kHz")
-            self.write(":BAND 1kHz")
-            self.write(":FREQuency:SPAN 1KHz")  # maybe too narrow if analyser and siggen are not on same ref clock'''
-        self.refout(True)
+    def configure(self):
+        self.refout = True
         # self.write(":RBW 1kHz")
         self.write(":BAND 1kHz")
         self.write(":FREQuency:SPAN 1KHz")  # maybe too narrow if analyser and siggen are not on same ref clock
 
-    def cf(self, freq):
+    @property
+    def cf(self):
+        return(float(self.write(":FREQuency:CENT?")))
         # freq = "{0:.0f}".format(freq)
 
-        if self.freq != freq:  # prevent resubmitting request to set the same frequency
+        '''if self.freq != freq:  # prevent resubmitting request to set the same frequency
             self.write(":FREQuency:CENT {}".format(freq))
             self.freq = freq
             time.sleep(.3)  # after retuneing wait time for settling
+        '''
 
-    def measure(self, freq):
+    @cf.setter
+    def cf(self, freq):
+        self.write(":FREQuency:CENT {}".format(freq))
+
+
+    def measurepeak(self):
+        # def measure(self, freq):
+        #     self.cf(freq)
         # freq = "{0:.0f}".format(freq)
-        self.cf(freq)
 
         self.write(":CALCulate:MARKer1: 1")
         self.write(":CALCulate:MARKer1:MAX")
@@ -69,22 +83,32 @@ class AgilentE4440A(SpectrumAnalyser):
 
         return(float(freqmeas), float(amp))
 
+    @property
+    def reflvl(self):
+        return(float(self.query(':DISP:WIND:TRACE:Y:RLEV?')))
+
+    @reflvl.setter
     def reflvl(self, lvl):
-        self.instrument.write(":DISP:WIND:TRACE:Y:RLEV " + str(int(lvl)))
+        self.write(':DISP:WIND:TRACE:Y:RLEV {}'.format(lvl))
         # used for seting reference level to a reasonable amount above the measured value
         # and therefor prevent recording clipped values
         time.sleep(.2)  # settling time
 
-    def refout(self, bool):
-        self.query(':SENSe:ROSCillator:OUTPUT?')
+    @property
+    def refout(self):
+        return(bool(self.query(':SENSe:ROSCillator:OUTPUT?')))
 
-        if bool is True:
-            self.write(':SENSe:ROSCillator:OUTPUT:STATe 1')
-        else:
-            self.write(':SENSe:ROSCillator:OUTPUT:STATe 0')
+    @refout.setter
+    def refout(self, boolean=True):
+        self.write(':SENSe:ROSCillator:OUTPUT:STATe {}'.format(boolean))
+        # self.write(':SENSe:ROSCillator:OUTPUT:STATe 0')
 
 
 class HPE4406A(SpectrumAnalyser):
+    """HP E4406A, 7e6 to 4e9.
+
+    .. figure::  images/SpectrumAnalyser/AgilentE4406A.jpg
+    """
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
@@ -102,6 +126,19 @@ class HPE4406A(SpectrumAnalyser):
         # self.message("")
         self.log.info("Get   {} to known state".format(self.instrument.resource_name))
         self.write('RST')
+
+    def cf(self, freq):
+        # freq = "{0:.0f}".format(freq)
+        self.write(":FREQuency:CENT {}".format(freq))
+
+    def refout(self, bool):
+        self.query(':SENSe:ROSCillator:OUTPUT?')
+
+        if bool is True:
+            self.write(':SENSe:ROSCillator:OUTPUT:STATe 1')
+        else:
+            self.write(':SENSe:ROSCillator:OUTPUT:STATe 0')
+
 
 
 '''

@@ -3,7 +3,10 @@ import time
 import logging
 import pint
 
-from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+try:
+    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+except ImportError:
+    from GenericInstrument import GenericInstrument as GenericInstrument
 
 
 class DigitalMultimeter(GenericInstrument):
@@ -13,8 +16,55 @@ class DigitalMultimeter(GenericInstrument):
         super().__init__(instrument)
 
 
-class HP34401(DigitalMultimeter):
-    """HP 34401."""
+class HP3457A(DigitalMultimeter):
+    """HP 3457A.
+
+    .. figure::  images/DigitalMultimeter/HP3457A.jpg
+    """
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        # assert self.IDN.startswith('HEWLETT-PACKARD,???,')
+
+        # self.siggen.write("*CLS")  # clear error status
+    def state(self):
+        print("Function: {}".format(self.function))
+        print("Range: {}".format(self.range))
+        print("Trigger: {}".format(self.trigger))
+
+
+class HP3478A(DigitalMultimeter):
+    """HP 3478A.
+
+    .. figure::  images/DigitalMultimeter/HP3478A.jpg
+    """
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        # assert self.IDN.startswith('HEWLETT-PACKARD,???,')
+
+        # self.siggen.write("*CLS")  # clear error status
+    def state(self):
+        print("Function: {}".format(self.function))
+        print("Range: {}".format(self.range))
+        print("Trigger: {}".format(self.trigger))
+
+
+class HP34401A(DigitalMultimeter):
+    """HP 34401A.
+
+    .. figure::  images/DigitalMultimeter/HP34401A.jpg
+   """
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
@@ -84,7 +134,11 @@ class HP34401(DigitalMultimeter):
     def rangeauto(self, impedanceauto=False):
         self.write("INPut:IMPedance:AUTO {}".format(impedanceauto))
 
+    @property
+    def reading(self):
+        return(float(self.query('READ?')))
+
 
 register = {
-    "IDN": HP34401,
+    "IDN": HP34401A,
 }

@@ -3,7 +3,10 @@ import time
 import logging
 import pint
 
-from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+try:
+    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+except ImportError:
+    from GenericInstrument import GenericInstrument as GenericInstrument
 
 
 class SignalGenerator(GenericInstrument):
@@ -12,11 +15,13 @@ class SignalGenerator(GenericInstrument):
         self.amplimit = 0
 
     def safe(self):
+        """Make safe the SignalGenerator."""
         self.amplitude = min(self.amps)
         self.frequency = min(self.freqs)
         self.output = False
 
     def state(self):
+        """Report basic paramaters."""
         print("Amplitude: {}".format(self.amplitude))
         print("Frequency: {}".format(self.frequency))
         print("Output: {}".format(self.output))
@@ -45,7 +50,9 @@ class SignalGenerator(GenericInstrument):
 
 
 class amplitudelimiter(object):
+    """Class to limit upper amplitude value applied to a SignalGenerator.
 
+    Applied by decorator @amplitudelimiter"""
     def __init__(self, f, *args, **kwargs):
         """
         If there are no decorator arguments, the function
@@ -119,6 +126,7 @@ class SCPI(SignalGenerator):
 
 
 class HP8657A(SignalGenerator):
+    """HP 8657A 100e3, 1040e6."""
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
@@ -165,6 +173,9 @@ class HP8657A(SignalGenerator):
 
 
 class HP8664A(SignalGenerator):
+    """HP 8664A 100e3, 3e9.
+
+    .. figure::  images/SignalGenerator/HP8664A.jpg"""
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
@@ -179,37 +190,42 @@ class HP8664A(SignalGenerator):
         self.amps = [-140, 17]
         self.freqs = [100e3, 3e9]
 
-        @property
-        def frequency(self):
-            return(self.query("FREQ:CW?"))
+    @property
+    def frequency(self):
+        return(self.query("FREQ:CW?"))
 
-        @frequency.setter
-        def frequency(self, frequency):
-            self.write("FREQ:CW {0:.0f}Hz".format(frequency))
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("FREQ:CW {0:.0f}Hz".format(frequency))
 
-        @property
-        def amplitude(self):
-            return(self.query("AMPL:OUT:LEV?"))
+    @property
+    def amplitude(self):
+        return(self.query("AMPL:OUT:LEV?"))
 
-        @amplitude.setter
-        @amplitudelimiter
-        def amplitude(self, amplitude):
-            self.write("AMPL:OUT:LEV {0:.1f}DBM".format(amplitude))
-        '''
-        @property
-        def output(self):
-            if self.query("OUTPut:STATe?") == "1":
-                return(True)
-            else:
-                return(False)
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("AMPL:OUT:LEV {0:.1f}DBM".format(amplitude))
+    '''
+    @property
+    def output(self):
+        if self.query("OUTPut:STATe?") == "1":
+            return(True)
+        else:
+            return(False)
 
-        @output.setter
-        def output(self, boolean=False):
-            self.write("OUTPut:STATe {:d}".format(boolean))
-        '''
+    @output.setter
+    def output(self, boolean=False):
+        self.write("OUTPut:STATe {:d}".format(boolean))
+    '''
 
 
 class HP8665B(SignalGenerator):
+    """HP 8665B 100e3, 6e9.
+
+    .. figure::  images/SignalGenerator/HP8665B.jpg
+    """
+
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
@@ -224,37 +240,49 @@ class HP8665B(SignalGenerator):
         self.amps = [-140, 17]
         self.freqs = [100e3, 6e9]
 
-        @property
-        def frequency(self):
-            return(self.query("FREQ:CW?"))
+    @property
+    def frequency(self):
+        return(self.query("FREQ:CW?"))
 
-        @frequency.setter
-        def frequency(self, frequency):
-            self.write("FREQ:CW {0:.0f}Hz".format(frequency))
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("FREQ:CW {0:.0f}Hz".format(frequency))
 
-        @property
-        def amplitude(self):
-            return(self.query("AMPL:OUT:LEV?"))
+    @property
+    def amplitude(self):
+        return(self.query("AMPL:OUT:LEV?"))
 
-        @amplitude.setter
-        @amplitudelimiter
-        def amplitude(self, amplitude):
-            self.write("AMPL:OUT:LEV {0:.1f}DBM".format(amplitude))
-        '''
-        @property
-        def output(self):
-            if self.query("OUTPut:STATe?") == "1":
-                return(True)
-            else:
-                return(False)
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("AMPL:OUT:LEV {0:.1f}DBM".format(amplitude))
+    '''
+    @property
+    def output(self):
+        if self.query("OUTPut:STATe?") == "1":
+            return(True)
+        else:
+            return(False)
 
-        @output.setter
-        def output(self, boolean=False):
-            self.write("OUTPut:STATe {:d}".format(boolean))
-        '''
+    @output.setter
+    def output(self, boolean=False):
+        self.write("OUTPut:STATe {:d}".format(boolean))
+    '''
+
+
+class AgilentN5182A(SignalGenerator):
+    """Agilent N5182A 100e3, 6e9
+
+    .. figure::  images/SignalGenerator/AgilentN5182A.jpg
+    """
 
 
 class AgilentE4422B(SignalGenerator):
+    """Agilent E4422B 250e3, 4e9.
+
+    .. figure::  images/SignalGenerator/AgilentE4422B.jpg
+    """
+
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
@@ -269,33 +297,33 @@ class AgilentE4422B(SignalGenerator):
         self.freqs = [100e3, 4e9]
         # self.write("*CLS")  # clear error status
 
-        @property
-        def frequency(self):
-            return(self.query("FREQ?"))
+    @property
+    def frequency(self):
+        return(self.query("FREQ?"))
 
-        @frequency.setter
-        def frequency(self, frequency):
-            self.write("FREQ {0:.0f} Hz".format(frequency))
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("FREQ {0:.0f} Hz".format(frequency))
 
-        @property
-        def amplitude(self):
-            return(self.query("POW:AMPL?"))
+    @property
+    def amplitude(self):
+        return(self.query("POW:AMPL?"))
 
-        @amplitude.setter
-        @amplitudelimiter
-        def amplitude(self, amplitude):
-            self.write("POW:AMPL {0:.2f} dBm".format(amplitude))
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("POW:AMPL {0:.2f} dBm".format(amplitude))
 
-        @property
-        def output(self):
-            if self.query("OUTPut:STATe?") == "1":
-                return(True)
-            else:
-                return(False)
+    @property
+    def output(self):
+        if self.query("OUTPut:STATe?") == "1":
+            return(True)
+        else:
+            return(False)
 
-        @output.setter
-        def output(self, boolean=False):
-            self.write("OUTPut:STATe {:d}".format(boolean))  # OUTP:STAT ON // OFF
+    @output.setter
+    def output(self, boolean=False):
+        self.write("OUTPut:STATe {:d}".format(boolean))  # OUTP:STAT ON // OFF
 
 
 class AnritsuMG369nx(SignalGenerator):  # ANRITSU,MG369nx
@@ -315,38 +343,42 @@ class AnritsuMG369nx(SignalGenerator):  # ANRITSU,MG369nx
         # self.write("*CLS")  # clear error status
         self.write('RL1')  # Release to Local
 
-        @property
-        def frequency(self):
-            return(self.query("OF0"))
+    @property
+    def frequency(self):
+        return(self.query("OF0"))
 
-        @frequency.setter
-        def frequency(self, frequency):
-            self.write("F0{0:.0f} HZ".format(frequency))
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("F0{0:.0f} HZ".format(frequency))
 
-        @property
-        def amplitude(self):
-            return(self.query("OL0"))  # OLO
+    @property
+    def amplitude(self):
+        return(self.query("OL0"))  # OLO
 
-        @amplitude.setter
-        @amplitudelimiter
-        def amplitude(self, amplitude):
-            self.write("L0{0:.2f}DM".format(amplitude))
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("L0{0:.2f}DM".format(amplitude))
 
-        @property
-        def output(self):
-            pass
-            ''' ORF if self.query("OUTPut:STATe?") == "1":
-                return(True)
-            else:
-                return(False)
-            '''
+    @property
+    def output(self):
+        pass
+        ''' ORF if self.query("OUTPut:STATe?") == "1":
+            return(True)
+        else:
+            return(False)
+        '''
 
-        @output.setter
-        def output(self, boolean=False):
-            self.write("RF{:d}".format(boolean))
+    @output.setter
+    def output(self, boolean=False):
+        self.write("RF{:d}".format(boolean))
 
 
 class AnritsuMG3691B(AnritsuMG369nx):  # ANRITSU,MG3691B,
+    """Antitsu MG3691B 2e9, 10e9.
+
+    .. figure::  images/SignalGenerator/AnritsuMG3691B.jpg
+    """
     # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
 
     def __repr__(self):
@@ -364,6 +396,10 @@ class AnritsuMG3691B(AnritsuMG369nx):  # ANRITSU,MG3691B,
 
 
 class AnritsuMG3692A(AnritsuMG369nx):  # ANRITSU,MG3692A,
+    """Antitsu MG3692A 2e9, 20e9.
+
+    .. figure::  images/SignalGenerator/AnritsuMG3692A.jpg
+    """
     # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
 
     def __repr__(self):
@@ -381,6 +417,10 @@ class AnritsuMG3692A(AnritsuMG369nx):  # ANRITSU,MG3692A,
 
 
 class AnritsuMG3693A(AnritsuMG369nx):  # ANRITSU,MG3693A,
+    """Antitsu MG3693A 2e9, 30e9.
+
+    .. figure::  images/SignalGenerator/AnritsuMG3693A.jpg
+    """
     # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
 
     def __repr__(self):
@@ -398,6 +438,55 @@ class AnritsuMG3693A(AnritsuMG369nx):  # ANRITSU,MG3693A,
 
 
 class Willtronnnnn(SignalGenerator):
+    """Willtron 10e6, 40e9."""
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        # self.log = logging.getLogger(__name__)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        self.amps = [-140, 17]
+        self.freqs = [10e6, 40e9]
+        # self.siggen.write("*CLS")  # clear error status
+        # self.frequency = min(self.freqs)
+
+    @property
+    def frequency(self):
+        return(self.query("OF0"))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("F0{0:.2f}GH".format(frequency))
+
+    @property
+    def amplitude(self):
+        return(self.query("OL0"))
+
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("L0{0:.2f}DM".format(amplitude))
+
+    '''@property
+    def output(self):
+        if self.query("OUTPut:STATe?") == "1":
+            return(True)
+        else:
+            return(False)
+
+    @output.setter
+    def output(self, boolean=False):
+        self.write("OUTPut:STATe {:d}".format(boolean))
+    '''
+
+
+class WilltronHeadless(SignalGenerator):
+    """Willtron Headless 10e6, 40e9."""
+
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
@@ -459,7 +548,7 @@ register = {
     "ANRITSU,MG3693A,": AnritsuMG3693A,
     "Agilent Technologies, E4422B,": AgilentE4422B,
     "Willtron ZZZZ,": Willtronnnnn,
-    # Willtron 10e6, 40e9
+    #
     # HP 8673M 2-18GHz
     # Anritsu MG3710A 100e3, 6e9
     # Agilent N5182A 100e3, 6e9

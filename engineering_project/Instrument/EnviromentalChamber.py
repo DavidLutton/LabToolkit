@@ -4,7 +4,10 @@ import logging
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
 
-from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+try:
+    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+except ImportError:
+    from GenericInstrument import GenericInstrument as GenericInstrument
 
 
 class EnviromentalChamber(GenericInstrument):
@@ -15,7 +18,7 @@ class EnviromentalChamber(GenericInstrument):
         return("{}, {}".format(__class__, self.instrument))
 
 
-class ZZZ(EnviromentalChamber):
+'''class ZZZ(EnviromentalChamber):
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
@@ -34,6 +37,6 @@ class ZZZ(EnviromentalChamber):
     @temperature.setter
     def temperature(self, temperature):
         self.write("THERM {0:.0f}".format(temperature))
-
+'''
 
 register = {}

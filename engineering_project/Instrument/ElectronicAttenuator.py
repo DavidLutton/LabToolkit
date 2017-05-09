@@ -3,8 +3,10 @@ import time
 import logging
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
-
-from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+try:
+    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+except ImportError:
+    from GenericInstrument import GenericInstrument as GenericInstrument
 
 
 class ElectronicAttenuator(GenericInstrument):
@@ -18,7 +20,10 @@ class ElectronicAttenuator(GenericInstrument):
 
 
 class Marconi2187(ElectronicAttenuator):
-    """Marconi 2187 - DC-20GHz 1W max n-type."""
+    """Marconi 2187 - DC-20GHz 1W max N-type.
+
+    .. figure::  images/ElectronicAttenuator/Marconi2187.jpg
+    """
 
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
@@ -33,6 +38,7 @@ class Marconi2187(ElectronicAttenuator):
 
     @property
     def attenuation(self):
+        """Attenuation of instrument."""
         return(float(self.query("ATTN?")))
 
     @attenuation.setter

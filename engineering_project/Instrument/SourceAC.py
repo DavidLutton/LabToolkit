@@ -4,7 +4,10 @@ import logging
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
 
-from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+try:
+    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+except ImportError:
+    from GenericInstrument import GenericInstrument as GenericInstrument
 
 
 class SourceAC(GenericInstrument):
@@ -13,6 +16,20 @@ class SourceAC(GenericInstrument):
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
+
+
+class CaliforniaInstruments3000i(SourceAC):
+    """California Instruments 3000i.
+
+    .. figure::  images/SourceAC/CaliforniaInstruments3000i.jpg
+    """
+
+
+class CaliforniaInstruments3000iM(SourceAC):
+    """California Instruments 3000i.
+
+    .. figure::  images/SourceAC/CaliforniaInstruments3000iM.jpg
+    """
 
 
 register = {

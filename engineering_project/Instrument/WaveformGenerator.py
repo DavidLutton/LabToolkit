@@ -3,7 +3,10 @@ import time
 import logging
 import pint
 
-from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+try:
+    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+except ImportError:
+    from GenericInstrument import GenericInstrument as GenericInstrument
 
 
 class WaveformGenerator(GenericInstrument):
@@ -56,7 +59,10 @@ class amplitudelimiter(object):
         # print("After self.f(*args)")
 
 
-class HP33120A(WaveformGenerator):  # HP 33120A 15MHz
+class HP33120A(WaveformGenerator):
+    """HP 33120A, 0 to 15MHz.
+
+    .. figure::  images/WaveformGenerator/HP33120A.jpg"""
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
@@ -111,8 +117,20 @@ class HP33120A(WaveformGenerator):  # HP 33120A 15MHz
         # VPP|VRMS|DBM|DEF
         self.write("SOURce:VOLTage {0:.6f}".format(amplitude, unit))
 
-# class HP 8116A(WaveformGenerator):  # HP 8116A 50MHz
-# class Keysight33500B(WaveformGenerator):  # Keysight 33500B 20MHz
+
+class HP8116A(WaveformGenerator):
+    """HP 8116A, 0 to 50MHz.
+
+    .. figure::  images/WaveformGenerator/HP8116A.jpg
+    """
+
+
+class Keysight33500B(WaveformGenerator):
+    """Keysight 33500B, 0 to 20MHz.
+
+    .. figure::  images/WaveformGenerator/Keysight33500B.jpg
+    """
+
 
 register = {
     "IDN": HP33120A,
