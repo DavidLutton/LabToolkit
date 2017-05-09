@@ -3,6 +3,7 @@ from tkinter import filedialog
 
 
 def pickfileopen(title="Open", filetypes=(("All files", "*.*"), )):
+    """Pick a file, return the filepath."""
     root = tk.Tk()
     root.withdraw()
     return(filedialog.askopenfilename(title=title, filetypes=filetypes))
@@ -11,11 +12,13 @@ def pickfileopen(title="Open", filetypes=(("All files", "*.*"), )):
 
 
 def pickfilesave(title="Save", filetypes=(("All files", "*.*"), )):
+    """Pick a location/name to save a file."""
     root = tk.Tk()
     root.withdraw()
     return(filedialog.asksaveasfilename(title=title, filetypes=filetypes))
 
 
 def pickopendir():
+    """Pick a directory."""
     pass
     # filedialog.askdirectory

@@ -9,17 +9,25 @@ import logging
 # pip install --upgrade pip pyvisa pyvisa-sim pyvisa-py pyserial pyusb
 # python3 ../attempt.py
 # 34401A # meas:volt:dc?, SYST:ERR?
-def visaaddresslist(listofaddresses, prefix="GPIB0::", suffix="::65535::INSTR"):
-        instrs = []
-        for inst in listofaddresses:
-            instrs.append("{}{}{}".format(prefix, inst, suffix))
-        return(instrs)
+def visaaddresslist(listofaddresses, prefix="GPIB0", suffix="65535::INSTR"):
+    """Generate full address for list of bus address.
+
+    :param listofaddresses: list of integers which are instrument addresses
+    :param prefix: prefix for the bus
+    :param suffix: suffix for the bus
+    :returns: list of fully formed address of instuments
+    """
+    instrs = []
+    for inst in listofaddresses:
+        instrs.append("{}::{}::{}".format(prefix, inst, suffix))
+    return(instrs)
 
 
 #  'TCPIP::192.168.1.113::INSTR'
 
 
 def visaenumerate(rm, list_resources):
+    """Try to discover IDNs for autodiscoverd instruments on a bus."""
     try:
         pool = {}
         # if rm.list_resources() is not None:
@@ -54,6 +62,7 @@ def visaenumerate(rm, list_resources):
 
 
 def driverdispatcher(pool, driverlist):
+    """Pair IDN with corresponding driver class."""
     alloc = {}
     insts = 0
     for inst in pool:
@@ -65,6 +74,7 @@ def driverdispatcher(pool, driverlist):
 
 
 class ResourceManager(object):
+    """ResourceManager as a context manager."""
     def __init__(self, rm):
         self.rm = visa.ResourceManager(rm)
 
@@ -76,6 +86,8 @@ class ResourceManager(object):
 
 
 class Instrument(object):
+    """ResourceManager.open_resource as a context manager for instrument."""
+
     def __init__(self, rm, resource_name, read_termination='\n', write_termination='\n', **kwargs):
         self.inst = rm.open_resource(resource_name, read_termination=read_termination, write_termination=write_termination, **kwargs)
         # return(self.inst)

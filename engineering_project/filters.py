@@ -22,8 +22,16 @@ class InputError(Error):
 '''
 
 
-def stdevlowpass(stddevtolerance=0.05, delay=0.1, readings=10, readback=0, abortafter=42):
-    """Standard deviation low pass filter."""
+def stdevlowpass(*, tolerance=0.05, delay=0.1, readings=10, readback=0, abortafter=42):
+    """Standard deviation low pass filter.
+
+    :param tolerance: tolerace upper limit required to pass
+    :param delay: delay between readings
+    :param readings: readings to take before applying filter
+    :param readback: function that makes measurements
+    :param abortafter: the upper limit before bypassing this filter
+    :returns: list of values as made by readback
+    """
     try:
         measure = False
         run = 0
