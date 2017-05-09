@@ -30,13 +30,14 @@ from visa_helper import driverdispatcher, visaenumerate, visaaddresslist
 
 # import gitrevision
 
-import CIS9942.parse
+# import CIS9942.parse
 from pickfile import pickfilesave, pickfileopen
-from estimatedtime import ETC
+from ETC import ETC
 from pandas_helper import dfiteronrows, dflistfrequencyswithin
 from immunity import leveler
 from filters import stdevlowpass
 
+from IDNs import IDNs
 # Instruments
 import Instrument.PowerMeter
 import Instrument.SignalGenerator
@@ -64,7 +65,7 @@ formatter = logging.Formatter(formatstr)
 #  %(name)s
 
 # re.sub(r'[]/\;,><&*:%=+@!#^()|?^', '', logger)
-logger = re.sub(r':', '', datetime.now().isoformat() + ".log")  # use regex fix illegal filename
+logger = re.sub(r':', '', datetime.now().isoformat() + ".log")  # use regex to fix illegal filename on windows
 
 fh = logging.FileHandler(logger)
 fh.setFormatter(formatter)
@@ -113,84 +114,57 @@ with ResourceManager('') as rm:
     NetworkAnalyser = driverdispatcher(pool, Instrument.NetworkAnalyser.register)
     ElectronicAttenuator = driverdispatcher(pool, Instrument.ElectronicAttenuator.register)
     DigitalMultimeter = driverdispatcher(pool, Instrument.DigitalMultimeter.register)
-    EnviromentalChamber = driverdispatcher(pool, Instrument.EnviromentalChamber.register)
     Osciliscope = driverdispatcher(pool, Instrument.Osciliscope.register)
 
-    log.info("Discovered " + str(len(generator)) + " SignalGenerators")
-    pprint(generator)
-    log.info("Discovered " + str(len(PowerMeter)) + " PowerMeters")
-    pprint(PowerMeter)
-    log.info("Discovered " + str(len(SpectrumAnalyser)) + " SpectrumAnalysers")
-    pprint(SpectrumAnalyser)
+    # alias  IDNs, SignalGenerator, PowerMeter, SpectrumAnalyser, WaveformGenerator, NetworkAnalyser, ElectronicAttenuator, DigitalMultimeter, Osciliscope
 
     filename = pickfilesave(filetypes=(("Spreadsheet", "*.xlsx"), ))
     wb = Workbook()
     ws = wb.active
-    sheetname = input("Sheetname --> ")
-    ws.title = sheetname
+    ws.title = input("Sheetname --> ")
     ws.append(["Frequency", "Mean dBm", "stddev", "list dBm"])
-    SpectrumAnalyser[0].configure("Narrow CW Power + 10MHz output enabled")
-    freq = float("{0:.0f}".format(float(input("Wanted frequency for peaking in GHz: ")) * 1e9))
+
+    SpectrumAnalyser[0].configure()
+
+    # freq = float("{0:.0f}".format(float(input("Wanted frequency for peaking in GHz: ")) * 1e9))
+    freq = float(input("Wanted frequency for peaking in GHz: ")) * 1e9
     print(freq)
-    SignalGenerator[0].freq(freq)
-    SignalGenerator[0].freq = fre
+    SignalGenerator[0].freq = freq
+
     SignalGenerator[0].amplimit = 10
     SignalGenerator[0].amp = 10
     SignalGenerator[0].output = True
-    SpectrumAnalyser[0].cf(freq)
+    SpectrumAnalyser[0].cf = freq
 
     while input("Manual peak hold, y when ready to sweep --> ") is not "y":
         pass
 
     EstimatedTime = ETC((18e9-1e9)/100e6)  # CALCulate number of steps in test
-
     try:
         for freq in np.arange(1e9, 18e9 + 1, 100e6):  # arange is upto but not including max value, thus + 1
-            freq = float("{0:.0f}".format(freq))  # Needed? or units filter @decorator
+            # freq = float("{0:.0f}".format(freq))  # Needed? or units filter @decorator
             print(freq)
-            SpectrumAnalyser[0].cf(freq)
+            SpectrumAnalyser[0].cf = freq
             SignalGenerator[0].freq = freq
 
             start = timer()
             time.sleep(1)
-
             try:
-                measure = False
-                meas = []
-                delay = 0.1
-                stddevtolerance = 0.05
-                readings = 10
-                while measure is not True:
-
-                    _, amplitude = SpectrumAnalyser[0].measure(freq)
-                    value = amplitude
-                    # print(value)
-                    meas.append(value)
-                    # print(meas)
-                    if len(meas) > readings:
-                        meas.pop(0)  # remove item at index 0
-                        stddev = statistics.stdev(meas)
-                        print(stddev)
-                        if stddev < stddevtolerance:
-                            measure = True
-                    time.sleep(delay)
+                measurements = stdevlowpass(
+                    readback=SpectrumAnalyser[0].measure(freq)[1],
+                    tolerance=0.05,
+                    delay=0.1,
+                    readings=10,
+                    abortafter=42)
             finally:
-                print(meas)
-                print(stddev)
-                print(statistics.mean(meas))
-
-                ws.append([freq, statistics.mean(meas), stddev] + meas)
-
+                print(measurements)
+                # print(statistics.mean(measurements))
+                # print(statistics.stdev(measurements))
+                ws.append([freq, statistics.mean(measurements), statistics.stdev(measurements)] + measurements)
                 EstimatedTime.append(timer() - start)  # end - start
-                print("ETC: {} s".format(EstimatedTime.ETC()))
+                print("Estimated time to finish: {} s".format(EstimatedTime.ETC()))
                 print()
 
     finally:
         SignalGenerator[0].output = False
         wb.save(filename + ".xlsx")
-
-    '''
-    Pause off test
-    Display table during test - of last ten points # pandas
-    Display graph during test # matplotlib
-    '''
