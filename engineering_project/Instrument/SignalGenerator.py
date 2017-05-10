@@ -16,9 +16,9 @@ class SignalGenerator(GenericInstrument):
 
     def safe(self):
         """Make safe the SignalGenerator."""
+        self.output = False
         self.amplitude = min(self.amps)
         self.frequency = min(self.freqs)
-        self.output = False
 
     def state(self):
         """Report basic paramaters."""
@@ -226,7 +226,6 @@ class HP8665B(SignalGenerator):
     .. figure::  images/SignalGenerator/HP8665B.jpg
     """
 
-
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
@@ -291,7 +290,7 @@ class AgilentE4422B(SignalGenerator):
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
 
-        assert self.IDN.startswith('Agilent Technologies, E4422B')
+        # assert self.IDN.startswith('Agilent Technologies, E4422B')
 
         self.amps = [-100, 16]
         self.freqs = [100e3, 4e9]
@@ -307,12 +306,12 @@ class AgilentE4422B(SignalGenerator):
 
     @property
     def amplitude(self):
-        return(self.query("POW:AMPL?"))
+        return(self.query("POWer?"))
 
     @amplitude.setter
     @amplitudelimiter
     def amplitude(self, amplitude):
-        self.write("POW:AMPL {0:.2f} dBm".format(amplitude))
+        self.write("POWer {0:.2f} dBm".format(amplitude))
 
     @property
     def output(self):
@@ -547,6 +546,7 @@ register = {
     "ANRITSU,MG3692A,": AnritsuMG3692A,
     "ANRITSU,MG3693A,": AnritsuMG3693A,
     "Agilent Technologies, E4422B,": AgilentE4422B,
+    "Hewlett-Packard, ESG-4000B": AgilentE4422B,
     "Willtron ZZZZ,": Willtronnnnn,
     #
     # HP 8673M 2-18GHz

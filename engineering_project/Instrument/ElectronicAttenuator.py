@@ -26,6 +26,7 @@ class Marconi2187(ElectronicAttenuator):
     """
 
     def __init__(self, instrument, logger=None):
+        self.dBm = "DB"
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
@@ -43,7 +44,7 @@ class Marconi2187(ElectronicAttenuator):
 
     @attenuation.setter
     def attenuation(self, attenuation):
-        self.write("ATTN {0:.1f}DB".format(attenuation))
+        self.write("ATTN {0:.1f}{}".format(attenuation, self.dBm))
 
 
 register = {

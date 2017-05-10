@@ -13,7 +13,7 @@ class GenericInstrument(object):
         self.log = logging.getLogger("RCI")
 
         self.IDN = self.instrument.query('*IDN?')
-        self.options = self.query("*OPT?").strip().split(',')
+        # self.options = self.query("*OPT?").strip().split(',')
 
     def query(self, query):
         self.log.debug("Query {}: {}".format(self.instrument.resource_name, query))

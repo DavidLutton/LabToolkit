@@ -8,7 +8,7 @@ try:
     from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
 except ImportError:
     from GenericInstrument import GenericInstrument as GenericInstrument
-    
+
 
 class Positioner(GenericInstrument):
     def __init__(self, instrument):

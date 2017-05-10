@@ -115,7 +115,7 @@ class HP33120A(WaveformGenerator):
     @amplitudelimiter
     def amplitude(self, amplitude, unit="VPP"):
         # VPP|VRMS|DBM|DEF
-        self.write("SOURce:VOLTage {0:.6f}".format(amplitude, unit))
+        self.write("SOURce:VOLTage {0:.6f}{}".format(amplitude, unit))
 
 
 class HP8116A(WaveformGenerator):

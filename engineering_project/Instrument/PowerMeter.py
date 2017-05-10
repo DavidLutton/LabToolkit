@@ -39,7 +39,7 @@ class AgilentE4418B(PowerMeter):
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
         # self.log.info('Creating an instance of\t' + str(__class__))
 
-        assert self.IDN.startswith("Agilent Technologies,E4418B,")
+        assert self.IDN.startswith("HEWLETT-PACKARD,E4418B,")
 
         # print(self.query(':SENSe:SCALar:POWer:AC?'))
         # print(float(self.query(':FETCh:SCALar:POWer:AC?')))
@@ -50,13 +50,34 @@ class AgilentE4418B(PowerMeter):
 
         # :SENSe:CORRection:GAIN1:INPut:MAGNitude? 99.8
 
-        # :SENSe:FREQuency:CW?
-        # SENSe:FREQuency:CW 50MHz
+        # 
+        #  50MHz
         # SENSe:FREQuency:CW 26.5GHzs
         # self.__preset__()
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
+
+    @property
+    def frequency(self):
+        return(float(self.query(":SENSe:FREQuency:CW?")))
+        # freq = "{0:.0f}".format(freq)
+
+        '''if self.freq != freq:  # prevent resubmitting request to set the same frequency
+            self.write(":FREQuency:CENT {}".format(freq))
+            self.freq = freq
+            time.sleep(.3)  # after retuneing wait time for settling
+        '''
+
+    @frequency.setter
+    def frequency(self, freq):
+        self.write(":SENSe:FREQuency:CW {}".format(freq))
+
+    @property
+    def measurement(self):
+        return(float(self.query(":FETCh:SCALar:POWer:AC?")))
+
+
 
 
 class HP437B(PowerMeter):
@@ -232,7 +253,8 @@ TR2 trigger with delay
 '''
 register = {
     "HEWLETT-PACKARD,437B,": HP437B,
-    "Agilent Technologies,E4418B,": AgilentE4418B,
+    # "Agilent Technologies,E4418B,": AgilentE4418B,
+    "HEWLETT-PACKARD,E4418B,": AgilentE4418B,
     # NVRS
     # R&S ???4
     # Bird 4421
