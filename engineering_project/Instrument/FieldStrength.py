@@ -39,7 +39,7 @@ class EMR20(FieldStrength):
         pass
 
 
-register = {
+REGISTER = {
     "ZZZ": FieldStrength,
     # EMC-20 # setup & readback DONE
     # SI-100

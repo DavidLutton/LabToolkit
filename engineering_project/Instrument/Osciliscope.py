@@ -41,7 +41,7 @@ class AgilentDSO5052A(Oscilloscope):
         # assert self.IDN.startswith('Agilent Technologies, DSO5052A,')
 
 
-register = {
+REGISTER = {
     "ZZZ": AgilentDSO5052A,
 
 

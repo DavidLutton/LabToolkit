@@ -32,7 +32,7 @@ class CaliforniaInstruments3000iM(SourceAC):
     """
 
 
-register = {
+REGISTER = {
     "ZZZ": SourceAC,
 
 }

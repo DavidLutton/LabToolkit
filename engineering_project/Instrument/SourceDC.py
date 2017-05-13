@@ -25,7 +25,7 @@ class HP6632A(SourceDC):
     """
 
 
-register = {
+REGISTER = {
     "ZZZ": SourceDC,
 
 }

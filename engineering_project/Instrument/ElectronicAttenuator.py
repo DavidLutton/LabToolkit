@@ -47,7 +47,7 @@ class Marconi2187(ElectronicAttenuator):
         self.write("ATTN {0:.1f}{}".format(attenuation, self.dBm))
 
 
-register = {
+REGISTER = {
     "MARCONI INSTRUMENTS,2187,": Marconi2187,
 
 }

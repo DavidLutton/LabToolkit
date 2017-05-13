@@ -23,7 +23,7 @@ class WaveformGenerator(GenericInstrument):
         print("Frequency: {}".format(self.frequency))
         print("Shape: {}".format(self.shape))
         print("Load: {}".format(self.load))
-        print("Output: {}".format(self.output))
+        # print("Output: {}".format(self.output))
 
     def start(self, lvl=-50):
         self.amplitude = lvl
@@ -82,7 +82,7 @@ class HP33120A(WaveformGenerator):
 
     @property
     def frequency(self):
-        return(self.query("SOURce:FREQuency?"))
+        return(float(self.query("SOURce:FREQuency?")))
 
     @frequency.setter
     def frequency(self, frequency):
@@ -108,14 +108,15 @@ class HP33120A(WaveformGenerator):
 
     @property
     def amplitude(self):
-        return(self.query("SOURce:VOLTage?"))
+        self.query("SOURce:VOLTage:UNIT?")
+        return(float(self.query("SOURce:VOLTage?")))
         # return(self.query("SOURce:VOLTage:UNIT?"))
 
     @amplitude.setter
     @amplitudelimiter
     def amplitude(self, amplitude, unit="VPP"):
         # VPP|VRMS|DBM|DEF
-        self.write("SOURce:VOLTage {0:.6f}{}".format(amplitude, unit))
+        self.write("SOURce:VOLTage {0:.6f}{1}".format(amplitude, unit))
 
 
 class HP8116A(WaveformGenerator):
@@ -133,5 +134,5 @@ class Keysight33500B(WaveformGenerator):
 
 
 register = {
-    "IDN": HP33120A,
+    "HEWLETT-PACKARD,33120A,": HP33120A,
 }

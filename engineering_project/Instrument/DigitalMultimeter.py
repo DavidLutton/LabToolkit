@@ -139,6 +139,6 @@ class HP34401A(DigitalMultimeter):
         return(float(self.query('READ?')))
 
 
-register = {
+REGISTER = {
     "IDN": HP34401A,
 }

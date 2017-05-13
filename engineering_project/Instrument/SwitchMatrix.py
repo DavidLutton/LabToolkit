@@ -28,7 +28,7 @@ class HP3488A(SwitchMatrix):
     """HP 3488A Switch/Control Unit."""
 
 
-register = {
+REGISTER = {
     "ZZZ": PickeringInterface10,
     "ZZZ": HP3488A,
 

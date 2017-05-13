@@ -50,7 +50,7 @@ class AgilentE4418B(PowerMeter):
 
         # :SENSe:CORRection:GAIN1:INPut:MAGNitude? 99.8
 
-        # 
+        #
         #  50MHz
         # SENSe:FREQuency:CW 26.5GHzs
         # self.__preset__()
@@ -251,7 +251,7 @@ TR2 trigger with delay
 @2 Learn mode prefix
 % Percent
 '''
-register = {
+REGISTER = {
     "HEWLETT-PACKARD,437B,": HP437B,
     # "Agilent Technologies,E4418B,": AgilentE4418B,
     "HEWLETT-PACKARD,E4418B,": AgilentE4418B,

@@ -39,4 +39,4 @@ class EnviromentalChamber(GenericInstrument):
         self.write("THERM {0:.0f}".format(temperature))
 '''
 
-register = {}
+REGISTER = {}

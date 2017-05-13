@@ -143,7 +143,7 @@ class KeysightFieldFox(NetworkAnalyser):
     # botfreq = freq - span/2
 
 
-register = {
+REGISTER = {
     "Keysight ZZZZZZZ Fieldfox": KeysightFieldFox,
 
 }

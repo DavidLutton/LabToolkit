@@ -18,7 +18,7 @@ class Positioner(GenericInstrument):
         return("{}, {}".format(__class__, self.instrument))
 
 
-register = {
+REGISTER = {
     "ZZZ": Positioner,
 
 }
