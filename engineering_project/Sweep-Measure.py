@@ -90,8 +90,8 @@ log.info("formatstr = {}".format(formatstr))
 log.info('Creating a log file in {}'.format(logger))
 
 
-with ResourceManager('Sim/default.yaml@sim') as rm:
-# with ResourceManager('') as rm:
+# with ResourceManager('Sim/default.yaml@sim') as rm:
+with ResourceManager('') as rm:
     # 'Sim/default.yaml@sim' '@py', 'ni'
 
     reso = rm.list_resources()
@@ -129,43 +129,22 @@ with ResourceManager('Sim/default.yaml@sim') as rm:
     ws.title = input("Sheetname --> ")
     ws.append(["Frequency", "Mean dBm", "stddev", "list dBm"])
 
-    SignalGenerator[0].amplimit = -20
-    SignalGenerator[0].amplitude = -20
+    SignalGenerator[0].amplimit = 10
+    SignalGenerator[0].amplitude = 10
     SignalGenerator[0].output = True
 
-    start, stop, step = 1e9, 4e9, 100e6
-    EstimatedTime = ETC((stop-start)/step)  # CALCulate number of steps in test
+    start, stop, step = 1e9, 18e9, 100e6
+    EstimatedTime = ETC((stop-start)/step)  # Calculate number of steps in test
     try:
         for freq in np.arange(start, stop + 1, step):  # arange is upto but not including max value, thus + 1
-            # freq = float("{0:.0f}".format(freq))  # Needed? or units filter @decorator
             print(freq)
             SignalGenerator[0].frequency = freq
-            PowerMeter[0].frequency = freq
+            SpectrumAnalyser[0].frequency = freq
 
             start = timer()
             time.sleep(1)
             try:
-                measurements = stdevlowpass(instrument=PowerMeter[0], tolerance=0.05, delay=0.1, readings=10)
-
-            '''try:
-                measure = False
-                measurements = []
-                delay = 0.1
-                stddevtolerance = 0.05
-                readings = 10
-                while measure is not True:
-
-                    amplitude = PowerMeter[0].measurement
-                    measurements.append(amplitude)
-
-                    if len(measurements) > readings:
-                        measurements.pop(0)  # remove item at index 0
-                        stddev = statistics.stdev(measurements)
-                        print(stddev)
-                        if stddev < stddevtolerance:
-                            measure = True
-            '''
-
+                measurements = stdevlowpass(instrument=SpectrumAnalyser[0], tolerance=0.05, delay=0.1, readings=10)
             finally:
                 print(measurements)
                 print(statistics.mean(measurements))
