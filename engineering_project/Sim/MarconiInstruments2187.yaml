@@ -1,0 +1,39 @@
+spec: "1.0"
+devices:
+devices:
+  device 1:
+    eom:
+      ASRL INSTR:
+        q: "\r\n"
+        r: "\n"
+      USB INSTR:
+        q: "\n"
+        r: "\n"
+      TCPIP INSTR:
+        q: "\n"
+        r: "\n"
+      TCPIP SOCKET:
+        q: "\n"
+        r: "\n"
+      GPIB INSTR:
+        q: "\n"
+        r: "\n"
+    error: ERROR
+    dialogues:
+      - q: "*IDN?"
+        r: "MARCONI INSTRUMENTS,2187,SIM,SIM"
+      - q: "*OPT?"
+        r: ""
+
+    properties:
+      attenuation:
+        default: 144
+        getter:
+          q: "ATTN?"
+          r: "{:.1f}"
+        setter:
+          q: "ATTN {:.3f}DB"
+        specs:
+          min: 0
+          max: 144
+          type: float

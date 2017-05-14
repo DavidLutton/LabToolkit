@@ -15,3 +15,6 @@ resources:
   GPIB::8::INSTR:
     device: device 1
     filename: SignalGenerator HP 8657A.yaml
+  GPIB::9::INSTR:
+    device: device 1
+    filename: MarconiInstruments2187.yaml

@@ -12,7 +12,7 @@ except ImportError:
 
 
 class SpectrumAnalyser(GenericInstrument):
-    """SpectrumAnalyser SCPI/Keysight?.
+    """SpectrumAnalyser SCPI Or Keysight?.
 
     Overload methods that vary
     """
@@ -31,7 +31,6 @@ class SpectrumAnalyser(GenericInstrument):
 
     @frequency.setter
     def frequency(self, freq):
-        """Center frequency."""
         self.write(":FREQuency:CENT {}".format(freq))
 
     @property
@@ -41,7 +40,6 @@ class SpectrumAnalyser(GenericInstrument):
 
     @sweeppoints.setter
     def sweeppoints(self, points):
-        """Sweep Points."""
         # N9030B 1 to 100,001 Zero and non-zero spans
         # E4440A 101 to 8192, 2 to 8192 in zero span
         # [:SENSe]:SWEep:POINts <number of points>
@@ -50,17 +48,16 @@ class SpectrumAnalyser(GenericInstrument):
     @property
     def sweeptime(self):
         """Sweep Time."""
-        return float(self.write(":SWEep:TIME?"))
-
-    @sweeptime.setter
-    def sweeptime(self, points):
-        """Sweep Time."""
         '''Replace <meas> with the meas name, eg CHPower
         [:SENSe]:<meas>:SWEep:TIME <time>
         [:SENSe]:<meas>:SWEep:TIME?
         [:SENSe]:<meas>:SWEep:TIME:AUTO OFF|ON|0|1
         [:SENSe]:<meas>:SWEep:TIME:AUTO?
         '''
+        return float(self.write(":SWEep:TIME?"))
+
+    @sweeptime.setter
+    def sweeptime(self, points):
         self.write(":SWEep:TIME {}".format(int(points)))
 
     @property
@@ -70,7 +67,6 @@ class SpectrumAnalyser(GenericInstrument):
 
     @referenceoutput.setter
     def referenceoutput(self, boolean=True):
-        """10MHz output."""
         self.write(':SENSe:ROSCillator:OUTPUT:STATe {}'.format(boolean))
 
     @property
@@ -82,7 +78,6 @@ class SpectrumAnalyser(GenericInstrument):
 
     @referencelevel.setter
     def referencelevel(self, lvl):
-        """Reference level."""
         self.write(':DISP:WIND:TRACE:Y:RLEV {}'.format(lvl))
         # used for seting reference level to a reasonable amount above the measured value
         # and therefor prevent recording clipped values
@@ -100,7 +95,6 @@ class SpectrumAnalyser(GenericInstrument):
 
     @resolutionbandwidth.setter
     def resolutionbandwidth(self, resolutionbandwidth, *, unit='Hz'):
-        """Resolution Bandwidth."""
         self.write(':BANDwidth:RESolution {} {}'.format(resolutionbandwidth, unit))
 
     @property
@@ -112,7 +106,6 @@ class SpectrumAnalyser(GenericInstrument):
 
     @videobandwidth.setter
     def videobandwidth(self, videobandwidth, *, unit='Hz'):
-        """Video Bandwidth."""
         self.write(':BANDwidth:VIDeo {} {}'.format(videobandwidth, unit))
 
     @property
@@ -126,10 +119,6 @@ class SpectrumAnalyser(GenericInstrument):
 
     @unitpower.setter
     def unitpower(self, unit):
-        """Unit Power.
-
-        DBM|DBMV|DBMA|V|W|A|DBUV|DBUA|DBPW|DBUVM|DBUAM|DBPT|DBG
-        """
         self.query(':UNIT:POWer {}'.format(unit))
 
     @property
@@ -139,7 +128,6 @@ class SpectrumAnalyser(GenericInstrument):
 
     @frequencyspan.setter
     def frequencyspan(self, span, *, unit='Hz'):
-        """Frequency Span."""
         self.write(':FREQuency:SPAN {} {}'.format(span, unit))
 
 
