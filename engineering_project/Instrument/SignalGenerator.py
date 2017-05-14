@@ -56,8 +56,7 @@ class amplitudelimiter(object):
     def __init__(self, f, *args, **kwargs):
         """
         If there are no decorator arguments, the function
-        to be decorated is passed to the constructor.
-        """
+        to be decorated is passed to the constructor."""
         # print(f)
         # print(*args)
         # print(**kwargs)
@@ -126,7 +125,11 @@ class SCPI(SignalGenerator):
 
 
 class HP8657A(SignalGenerator):
-    """HP 8657A 100e3, 1040e6."""
+    """HP 8657A 100e3, 1040e6.
+
+    .. figure::  images/SignalGenerator/HP8657A.jpg
+    """
+
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
@@ -275,6 +278,19 @@ class AgilentN5182A(SignalGenerator):
     .. figure::  images/SignalGenerator/AgilentN5182A.jpg
     """
 
+
+class AgilentN5181A(SignalGenerator):
+    """Agilent N5181A 100e3, 3e9
+
+    .. figure::  images/SignalGenerator/AgilentN5181A.jpg
+    """
+
+
+class HPESG3000A(SignalGenerator):
+    """Agilent E4422B 250e3, 3e9.
+
+    .. figure::  images/SignalGenerator/HPESG3000A.jpg
+    """
 
 class AgilentE4422B(SignalGenerator):
     """Agilent E4422B 250e3, 4e9.
@@ -436,8 +452,110 @@ class AnritsuMG3693A(AnritsuMG369nx):  # ANRITSU,MG3693A,
         self.freqs = [2e9, 30e9]
 
 
-class Willtronnnnn(SignalGenerator):
-    """Willtron 10e6, 40e9."""
+class Wiltron6669A(SignalGenerator):
+    """Wiltron 6669A 10e6, 40e9.
+
+    .. figure::  images/SignalGenerator/Wiltron6669A.jpg
+    """
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        # self.log = logging.getLogger(__name__)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        self.amps = [-20, 17]
+        self.freqs = [10e6, 40e9]
+        # self.siggen.write("*CLS")  # clear error status
+        # self.frequency = min(self.freqs)
+
+    @property
+    def frequency(self):
+        return(self.query("OF0"))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("F0{0:.2f}GH".format(frequency))
+
+    @property
+    def amplitude(self):
+        return(self.query("OL0"))
+
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("L0{0:.2f}DM".format(amplitude))
+
+    '''@property
+    def output(self):
+        if self.query("OUTPut:STATe?") == "1":
+            return(True)
+        else:
+            return(False)
+
+    @output.setter
+    def output(self, boolean=False):
+        self.write("OUTPut:STATe {:d}".format(boolean))
+    '''
+
+class Wiltron6672B(SignalGenerator):
+    """Wiltron 6672B 40e9, 60e9.
+
+    .. figure::  images/SignalGenerator/Wiltron6672B.jpg
+    """
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        # self.log = logging.getLogger(__name__)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        self.amps = [-20, 17]
+        self.freqs = [40e9, 60e9]
+        # self.siggen.write("*CLS")  # clear error status
+        # self.frequency = min(self.freqs)
+
+    @property
+    def frequency(self):
+        return(self.query("OF0"))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("F0{0:.2f}GH".format(frequency))
+
+    @property
+    def amplitude(self):
+        return(self.query("OL0"))
+
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("L0{0:.2f}DM".format(amplitude))
+
+    '''@property
+    def output(self):
+        if self.query("OUTPut:STATe?") == "1":
+            return(True)
+        else:
+            return(False)
+
+    @output.setter
+    def output(self, boolean=False):
+        self.write("OUTPut:STATe {:d}".format(boolean))
+    '''
+
+
+class Wiltron360SS69(SignalGenerator):
+    """Wiltron 360SS69 10e6, 40e9.
+
+    .. figure::  images/SignalGenerator/Wiltron360SS69.jpg
+    """
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
@@ -483,75 +601,177 @@ class Willtronnnnn(SignalGenerator):
     '''
 
 
-class WilltronHeadless(SignalGenerator):
-    """Willtron Headless 10e6, 40e9."""
+class MarconiInstruments203N(SignalGenerator):
+    """MarconiInstruments 203N 10e3, ...
+
+    .. figure::  images/SignalGenerator/MarconiInstruments203N.jpg
+    10 kHz to 1.35 GHz (2030)
+    10 kHz to 2.7 GHz (2031)
+    10 kHz to 5.4 GHz (2032)
+
+    print( inst.write('CFRQ:VALUE 1234.5678912MHZ') )
+
+    MODE?
+    MODE AM
+    MODE FM
+    MOD:ON
+    MOD:OFF
+    MOD?
+    AM:DEPTH
+    AM:INTF1
+    AM:ON
+    AM:OFF
+    AM?
+    INTF1  ,2,3,4,5,6
+    INTF1:FREQ 1KHz
+    INTF1:SIN
+    INTF1?
+    LF?
+    LF:ON
+    LF:OFF
+    LFGF?
+    LFGF:VALUE
+    LFGF:SIN
+    LFGF:TRI
+    LFGL?
+    LFGL:VALUE
+    LFGL:UNITS DBM,DBV,DBMV,V,MV,UV
+    SWEEP?
+    BACKL:ON
+    BACKL:OFF
+    TIME?
+    DATE?
+    OPER? operating hours
+    ELAPSED? hours since last reset
+    ERROR?
+    KLOCK
+    KUNLOCK
+    """
+
+    @property
+    def frequency(self):
+        return(self.query("CFRQ?"))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("CFRQ:VALUE {0:.1f}Hz".format(frequency))
+
+    @property
+    def amplitude(self):
+        return(self.query("RFLV?"))
+
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("RFLV:VALUE {0:.2f}DBM".format(amplitude))
+
+
+    @property
+    def output(self):
+        print(self.query("RFLV?"))
+
+    @output.setter
+    def output(self, boolean=False):
+        if boolean == True:
+            self.write("RFLV:ON")
+        else:
+            self.write("RFLV:OFF")
+
+
+class MarconiInstruments2030(MarconiInstruments203N):
+    """MarconiInstruments 203N 10e3, ...
+
+    .. figure::  images/SignalGenerator/MarconiInstruments203N.jpg
+    10 kHz to 1.35 GHz (2030)"""
 
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
         super().__init__(instrument)
-        # self.log = logging.getLogger(__name__)
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
 
-        self.amps = [-140, 17]
-        self.freqs = [10e6, 40e9]
-        # self.siggen.write("*CLS")  # clear error status
-        # self.frequency = min(self.freqs)
+        # assert self.IDN.startswith('Agilent Technologies, E4422B')
 
-    @property
-    def frequency(self):
-        return(self.query("OF0"))
-
-    @frequency.setter
-    def frequency(self, frequency):
-        self.write("F0{0:.2f}GH".format(frequency))
-
-    @property
-    def amplitude(self):
-        return(self.query("OL0"))
-
-    @amplitude.setter
-    @amplitudelimiter
-    def amplitude(self, amplitude):
-        self.write("L0{0:.2f}DM".format(amplitude))
-
-    '''@property
-    def output(self):
-        if self.query("OUTPut:STATe?") == "1":
-            return(True)
-        else:
-            return(False)
-
-    @output.setter
-    def output(self, boolean=False):
-        self.write("OUTPut:STATe {:d}".format(boolean))
-    '''
+        self.amps = [-144, 13]
+        self.freqs = [10e3, 1.35e9]
+        # self.write("*CLS")  # clear error status
 
 
-'''inst = rm.open_resource('GPIB0::6::INSTR')
-print( inst.query('*IDN?').strip() )
-print( inst.write('CFRQ:VALUE 1234.5678912MHZ') )
+class MarconiInstruments2031(MarconiInstruments203N):
+    """MarconiInstruments 203N 10e3, ...
+
+    .. figure::  images/SignalGenerator/MarconiInstruments203N.jpg
+    10 kHz to 2.7 GHz (2031)"""
 
 
-# MARCONI INSTRUMENTS,2032,119500001,5.002
-# E266'''
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        # assert self.IDN.startswith('Agilent Technologies, E4422B')
+
+        self.amps = [-144, 13]
+        self.freqs = [10e3, 2.7e9]
+        # self.write("*CLS")  # clear error status
+
+
+class MarconiInstruments2032(MarconiInstruments203N):
+    """MarconiInstruments 203N 10e3, ...
+
+    .. figure::  images/SignalGenerator/MarconiInstruments203N.jpg
+    10 kHz to 5.4 GHz (2032)"""
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        # assert self.IDN.startswith('Agilent Technologies, E4422B')
+
+        self.amps = [-144, 13]
+        self.freqs = [10e3, 5.4e9]
+        # self.write("*CLS")  # clear error status
+
+
+class KeysightN5173B(SignalGenerator):
+    """Keysight N5173B 9e3, 40e9.
+
+    .. figure::  images/SignalGenerator/KeysightN5173B.jpg
+    """
+
+class AnritsuMG3710A(SignalGenerator):
+    """Anritsu MG3710A 100e3, 6e9.
+
+    .. figure::  images/SignalGenerator/AnritsuMG3710A.jpg
+    """
+
 
 REGISTER = {
-    "HEWLETT-PACKARD,8657A,": HP8657A,
-    "HEWLETT_PACKARD,8664A,": HP8664A,
-    "HEWLETT_PACKARD,8665B,": HP8665B,
-    "ANRITSU,MG3691B,": AnritsuMG3691B,
-    "ANRITSU,MG3692A,": AnritsuMG3692A,
-    "ANRITSU,MG3693A,": AnritsuMG3693A,
-    "Agilent Technologies, E4422B,": AgilentE4422B,
-    "Hewlett-Packard, ESG-4000B": AgilentE4422B,
-    "Willtron ZZZZ,": Willtronnnnn,
-    #
+    'HEWLETT-PACKARD,8657A,': HP8657A,
+    'HEWLETT_PACKARD,8664A,': HP8664A,
+    'HEWLETT_PACKARD,8665B,': HP8665B,
+    'ANRITSU,MG3691B,': AnritsuMG3691B,
+    'ANRITSU,MG3692A,': AnritsuMG3692A,
+    'ANRITSU,MG3693A,': AnritsuMG3693A,
+    'Agilent Technologies, E4422B,': AgilentE4422B,
+    'Hewlett-Packard, ESG-4000B': AgilentE4422B,
+    'Wiltron 6669A,': Wiltron6669A,  # TODO
+    'Wiltron 6672B,': Wiltron6672B,  # TODO
+    'Wiltron 360SS69,': Wiltron360SS69,  # TODO
+    'MARCONI INSTRUMENTS,2030': MarconiInstruments2030,
+    'MARCONI INSTRUMENTS,2031': MarconiInstruments2031,
+    'MARCONI INSTRUMENTS,2032': MarconiInstruments2032,
+
     # HP 8673M 2-18GHz
     # Anritsu MG3710A 100e3, 6e9
     # Agilent N5182A 100e3, 6e9
-    # Marconi 2031 10e3-2.7e9
-    # Marconi 20nn 10e3-5.4e9
 }

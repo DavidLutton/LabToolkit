@@ -1,24 +1,35 @@
 #!/usr/bin/env python3
-import time
-import logging
-import pint
+"""WaveformGenerator Instrument classes."""
+
+# import time
+# import logging
+# import pint
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+    from Instrument.GenericInstrument import GenericInstrument
+    from Instrument.Utils import AmplitudeLimiter
 except ImportError:
-    from GenericInstrument import GenericInstrument as GenericInstrument
+    from GenericInstrument import GenericInstrument
+    from Utils import AmplitudeLimiter
 
 
 class WaveformGenerator(GenericInstrument):
+    """WaveformGenerator SCPI."""
+
     def __init__(self, instrument):
-        super().__init__(instrument)
+        """."""
+        GenericInstrument.__init__(instrument)
+        # super().__init__(instrument)
 
     def safe(self):
-        self.amplitude = min(self.amps)
+        """."""
+        pass
+        # self.amplitude = min(self.amps)
         # self.frequency = min(self.freqs)
         # self.output = False
 
     def state(self):
+        """."""
         print("Amplitude: {}".format(self.amplitude))
         print("Frequency: {}".format(self.frequency))
         print("Shape: {}".format(self.shape))
@@ -26,50 +37,26 @@ class WaveformGenerator(GenericInstrument):
         # print("Output: {}".format(self.output))
 
     def start(self, lvl=-50):
-        self.amplitude = lvl
-
-
-class amplitudelimiter(object):
-
-    def __init__(self, f, *args, **kwargs):
-        """
-        If there are no decorator arguments, the function
-        to be decorated is passed to the constructor.
-        """
-        # print(f)
-        # print(*args)
-        # print(**kwargs)
-        # print("Inside __init__()")
-        self.f = f
-
-    def __call__(self, f, *args, **kwargs):
-        """
-        The __call__ method is not called until the
-        decorated function is called.
-        """
-        # print(f)
-        print(*args)
-        # print(**kwargs)
-        # print("Inside __call__()")
-        setpoint = float(*args)
-        if setpoint > f.amplimit:
-            f.log.warn("Amplimit ({}) reached with setpoint ({}) on {}".format(f.amplimit, setpoint, f.instrument))
-        else:
-            self.f(f, *args)
-        # print("After self.f(*args)")
+        """."""
+        pass
+        # self.amplitude = lvl
 
 
 class HP33120A(WaveformGenerator):
     """HP 33120A, 0 to 15MHz.
 
-    .. figure::  images/WaveformGenerator/HP33120A.jpg"""
+    .. figure::  images/WaveformGenerator/HP33120A.jpg
+    """
+
     def __repr__(self):
-        return("{}, {}".format(__class__, self.instrument))
+        """."""
+        return "{}, {}".format(__name__, self.instrument)
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         self.amplimit = 5
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        # self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
 
         # assert self.IDN.startswith('HEWLETT-PACKARD,???,')
         self.amps = [0.01, 5]
@@ -82,7 +69,8 @@ class HP33120A(WaveformGenerator):
 
     @property
     def frequency(self):
-        return(float(self.query("SOURce:FREQuency?")))
+        """."""
+        return float(self.query("SOURce:FREQuency?"))
 
     @frequency.setter
     def frequency(self, frequency):
@@ -90,7 +78,8 @@ class HP33120A(WaveformGenerator):
 
     @property
     def shape(self):
-        return(self.query("SOURce:FUNCtion:SHAPe?"))
+        """."""
+        return self.query("SOURce:FUNCtion:SHAPe?")
 
     @shape.setter
     def shape(self, shape="SIN"):
@@ -99,7 +88,8 @@ class HP33120A(WaveformGenerator):
 
     @property
     def load(self):
-        return(self.query("OUTPut:LOAD?"))
+        """."""
+        return self.query("OUTPut:LOAD?")
 
     @load.setter
     def load(self, load="INF"):
@@ -108,14 +98,14 @@ class HP33120A(WaveformGenerator):
 
     @property
     def amplitude(self):
+        """VPP|VRMS|DBM|DEF"""
         self.query("SOURce:VOLTage:UNIT?")
-        return(float(self.query("SOURce:VOLTage?")))
+        return float(self.query("SOURce:VOLTage?"))
         # return(self.query("SOURce:VOLTage:UNIT?"))
 
     @amplitude.setter
-    @amplitudelimiter
+    @AmplitudeLimiter
     def amplitude(self, amplitude, unit="VPP"):
-        # VPP|VRMS|DBM|DEF
         self.write("SOURce:VOLTage {0:.6f}{1}".format(amplitude, unit))
 
 
@@ -133,6 +123,6 @@ class Keysight33500B(WaveformGenerator):
     """
 
 
-register = {
+REGISTER = {
     "HEWLETT-PACKARD,33120A,": HP33120A,
 }

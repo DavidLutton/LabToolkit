@@ -251,6 +251,19 @@ TR2 trigger with delay
 @2 Learn mode prefix
 % Percent
 '''
+
+class RohdeSchwarzNRVS(PowerMeter):
+    """Rohde-Schwarz NRVS.
+
+    .. figure::  images/PowerMeter/RohdeSchwarzNRVS.jpg
+    """
+
+class RohdeSchwarzURV4(PowerMeter):
+    """RohdeSchwarz URV 4.
+
+    .. figure::  images/PowerMeter/RohdeSchwarzURV4.jpg
+    """
+
 REGISTER = {
     "HEWLETT-PACKARD,437B,": HP437B,
     # "Agilent Technologies,E4418B,": AgilentE4418B,

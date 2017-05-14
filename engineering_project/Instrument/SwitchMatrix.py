@@ -25,7 +25,10 @@ class PickeringInterface10(SwitchMatrix):
 
 
 class HP3488A(SwitchMatrix):
-    """HP 3488A Switch/Control Unit."""
+    """HP 3488A Switch/Control Unit.
+
+    .. figure::  images/SwitchMatrix/HP3488A.jpg
+    """
 
 
 REGISTER = {
