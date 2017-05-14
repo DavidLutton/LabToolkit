@@ -18,7 +18,8 @@ def pickfilesave(title="Save", filetypes=(("All files", "*.*"), )):
     return(filedialog.asksaveasfilename(title=title, filetypes=filetypes))
 
 
-def pickopendir():
+def pickopendir(*, args):
     """Pick a directory."""
-    pass
-    # filedialog.askdirectory
+    root = tk.Tk()
+    root.withdraw()
+    return filedialog.askdirectory(args)

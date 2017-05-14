@@ -75,6 +75,7 @@ def driverdispatcher(pool, driverlist):
 
 class ResourceManager(object):
     """ResourceManager as a context manager."""
+
     def __init__(self, rm):
         self.rm = visa.ResourceManager(rm)
 
