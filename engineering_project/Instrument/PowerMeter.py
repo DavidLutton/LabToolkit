@@ -5,12 +5,12 @@ import logging
 # import numpy as np
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+    from Instrument.GenericInstrument import GenericInstrument
     from Instrument.IEEE488 import IEEE488
     from Instrument.SCPI import SCPI
 
 except ImportError:
-    from GenericInstrument import GenericInstrument as GenericInstrument
+    from GenericInstrument import GenericInstrument
     from IEEE488 import IEEE488
     from SCPI import SCPI
 
@@ -72,23 +72,22 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @property
     def frequency(self):
-        """."""
+        """Frequency used for correction factor lookup."""
         return(float(self.query(":SENSe1:FREQuency:CW?")))
 
     @frequency.setter
     def frequency(self, freq):
         # SENSe1:FREQuency:CW 26.5GHz
-
         self.write(":SENSe1:FREQuency:CW {}".format(freq))
 
     @property
     def measurement(self):
-        """."""
+        """Get reading of power level."""
         return(float(self.query(":FETCh1:SCALar:POWer:AC?")))
 
     @property
     def reference(self):
-        """."""
+        """Reference state."""
         return(bool(int(self.query(":OUTPut:ROSCillator:STATe?"))))
 
     @reference.setter
@@ -97,17 +96,17 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @property
     def zero(self):
-        """."""
+        """Zero the power head."""
         self.write('CALibration1:ZERO:AUTO ONCE')
 
     @property
     def calibrate(self):
-        """."""
+        """Calibrate against a power source."""
         self.write('CALibration1:AUTO ONCE')
 
     @property
     def rcfactor(self):
-        """."""
+        """Correction factor for calibration (84nn series heads)."""
         return(float(self.query('CALibration1:RCFactor?')))
 
     @rcfactor.setter
@@ -116,7 +115,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @property
     def offset(self):
-        """."""
+        """Offset input attenuation."""
         return(float(self.query('CALCulate1:GAIN:MAGNitude?')))
 
     @offset.setter
@@ -125,7 +124,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @property
     def offseten(self):
-        """."""
+        """Offset state"""
         return(bool(int(self.query('CALCulate1:GAIN:STATe?'))))
 
     @offseten.setter
@@ -134,7 +133,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @property
     def cfactor(self):
-        """."""
+        """Correction factor for readings (84nn series heads)."""
         return(float(self.query(":SENSe1:CORRection:CFACtor?")))
 
     @cfactor.setter
@@ -143,7 +142,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @property
     def units(self):
-        """."""
+        """Readback units."""
         return(self.query('UNIT:POWer?'))
 
     @units.setter
@@ -160,7 +159,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
         self.write('DISPlay:WINDow1:RESolution {}'.format(resolution))
 
 
-class HP437B(PowerMeter):
+class HP437B(PowerMeter, IEEE488):
     """HP 437B.
 
     .. figure::  images/PowerMeter/HP437B.jpg
