@@ -221,6 +221,7 @@ class HP866nA(SignalGenerator, IEEE488):
 
     @property
     def output(self):
+        """."""
         if self.query("AMPL:OUT:STATe?") == "1":
             return(True)
         else:
@@ -645,6 +646,9 @@ class MarconiInstruments203N(SignalGenerator, IEEE488):
     10 kHz to 1.35 GHz (2030)
     10 kHz to 2.7 GHz (2031)
     10 kHz to 5.4 GHz (2032)
+    """
+
+    '''
 
     print( inst.write('CFRQ:VALUE 1234.5678912MHZ') )
 
@@ -683,7 +687,7 @@ class MarconiInstruments203N(SignalGenerator, IEEE488):
     ERROR?
     KLOCK
     KUNLOCK
-    """
+    '''
 
     @property
     def frequency(self):
