@@ -5,9 +5,14 @@
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
 try:
-    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+    from Instrument.GenericInstrument import GenericInstrument
+    from Instrument.IEEE488 import IEEE488
+    from Instrument.SCPI import SCPI
+
 except ImportError:
-    from GenericInstrument import GenericInstrument as GenericInstrument
+    from GenericInstrument import GenericInstrument
+    from IEEE488 import IEEE488
+    from SCPI import SCPI
 
 
 class ElectronicAttenuator(GenericInstrument):
@@ -22,7 +27,7 @@ class ElectronicAttenuator(GenericInstrument):
         return"{}, {}".format(__class__, self.instrument)
 
 
-class MarconiInstruments2187(ElectronicAttenuator):
+class MarconiInstruments2187(ElectronicAttenuator, IEEE488):
     """Marconi 2187 - DC-20GHz 1W max N-type.
 
     .. figure::  images/ElectronicAttenuator/MarconiInstruments2187.jpg
