@@ -720,7 +720,6 @@ class MarconiInstruments203N(SignalGenerator, IEEE488):
 class MarconiInstruments2030(MarconiInstruments203N):
     """MarconiInstruments 203N 10e3, ...
 
-    .. figure::  images/SignalGenerator/MarconiInstruments2030.jpg
     10 kHz to 1.35 GHz (2030)
     """
 
