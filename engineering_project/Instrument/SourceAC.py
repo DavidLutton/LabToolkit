@@ -17,6 +17,42 @@ class SourceAC(GenericInstrument):
     def __repr__(self):
         return("{}, {}".format(__class__, self.instrument))
 
+    @property
+    def volts(self):
+        """Not Implemented Stub."""
+        return NotImplemented
+
+    @volts.setter
+    def volts(self, volts):
+        return NotImplemented
+
+    @property
+    def frequency(self):
+        """Not Implemented Stub."""
+        return NotImplemented
+
+    @frequency.setter
+    def frequency(self, current):
+        return NotImplemented
+
+    @property
+    def output(self):
+        """Not Implemented Stub."""
+        return NotImplemented
+
+    @output.setter
+    def output(self, boolean=False):
+        return NotImplemented
+
+    @property
+    def current(self):
+        """Not Implemented Stub."""
+        return NotImplemented
+
+    @current.setter
+    def current(self, current):
+        return NotImplemented
+
 
 class CaliforniaInstruments3000i(SourceAC):
     """California Instruments 3000i.
