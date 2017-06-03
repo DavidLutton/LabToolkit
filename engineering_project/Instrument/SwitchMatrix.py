@@ -21,7 +21,10 @@ class SwitchMatrix(GenericInstrument):
 
 
 class PickeringInterface10(SwitchMatrix):
-    """E."""
+    """Pickering Interface System 10.
+
+    .. figure::  images/SwitchMatrix/PickeringInterface10.jpg
+    """
 
 
 class HP3488A(SwitchMatrix):
