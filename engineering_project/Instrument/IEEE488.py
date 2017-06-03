@@ -72,7 +72,7 @@ class IEEE488(object):
         return(self.write("*TRG"))
 
     @property
-    def STB(self):
+    def TST(self):
         r"""\*TST? - Self-test."""
         return(self.query("*TST?"))
 
