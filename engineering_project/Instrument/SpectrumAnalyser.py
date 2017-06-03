@@ -232,6 +232,48 @@ print(inst.query(":READ:SPECtrum7?"))
 '''
 
 
+class HP8546A(SpectrumAnalyser):
+    """HP8546A, 9e3 to 6.5e9.
+
+    .. figure::  images/SpectrumAnalyser/HP8546A.jpg
+    """
+
+
+class HP8563E(SpectrumAnalyser):
+    """HP8563E, 9e3 to 26.5e9.
+
+    .. figure::  images/SpectrumAnalyser/HP8563E.jpg
+    """
+
+
+class HP8564E(SpectrumAnalyser):
+    """HP8564E, 9e3 to 40.5e9.
+
+    .. figure::  images/SpectrumAnalyser/HP8564E.jpg
+    """
+
+
+class HP8594E(SpectrumAnalyser):
+    """HP8594E, 9e3 to 2.9e9.
+
+    .. figure::  images/SpectrumAnalyser/HP8594E.jpg
+    """
+
+
+class HP8596E(SpectrumAnalyser):
+    """HP8596E, 9e3 to 12.8e9.
+
+    .. figure::  images/SpectrumAnalyser/HP8596E.jpg
+    """
+
+
+class HPE4404B(SpectrumAnalyser):
+    """HPE4404B, 9e3 to 6.7e9.
+
+    .. figure::  images/SpectrumAnalyser/HPE4404B.jpg
+    """
+
+
 REGISTER = {
     "Hewlett-Packard,E4406A,": HPE4406A,
     "Agilent Technologies, E4440A,": AgilentE4440A,
