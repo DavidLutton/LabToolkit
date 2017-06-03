@@ -5,19 +5,30 @@ import logging
 # import numpy as np
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+    from Instrument.GenericInstrument import GenericInstrument
+    from Instrument.IEEE488 import IEEE488
+    from Instrument.SCPI import SCPI
+
 except ImportError:
-    from GenericInstrument import GenericInstrument as GenericInstrument
+    from GenericInstrument import GenericInstrument
+    from IEEE488 import IEEE488
+    from SCPI import SCPI
 
 
 class Oscilloscope(GenericInstrument):
     """Parent class for Oscilloscope."""
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
+
+    def trace(self):
+        """."""
+        return NotImplemented
 
 
 class TektronixTDS544A(Oscilloscope):
@@ -26,6 +37,9 @@ class TektronixTDS544A(Oscilloscope):
     .. figure::  images/Oscilloscope/TektronixTDS544A.jpg
     """
 
+    def trace(self):
+        """."""
+        return NotImplemented
 
 
 class AgilentDSO5052A(Oscilloscope):
@@ -34,11 +48,37 @@ class AgilentDSO5052A(Oscilloscope):
     .. figure::  images/Oscilloscope/AgilentDSO5052A.jpg
     """
 
+    def trace(self):
+        """."""
+        return NotImplemented
 
-    def __init__(self, instrument, logger=None):
+
+class KeysightDSOX3034T(Oscilloscope):
+    """KeysightDSOX3034T 350e6 5GS/s.
+
+    .. figure::  images/Oscilloscope/KeysightDSOX3034T.jpg
+    """
+
+    def trace(self):
+        """."""
+        return NotImplemented
+
+
+class AttenInstrumentsADS1102CAL(Oscilloscope):
+    """Atten Instruments ADS1102CAL 100e6 1GS/s.
+
+    .. figure::  images/Oscilloscope/AttenInstrumentsADS1102CAL.jpg
+    """
+
+    def trace(self):
+        """."""
+        return NotImplemented
+
+    '''def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
         # assert self.IDN.startswith('Agilent Technologies, DSO5052A,')
+'''
 
 
 REGISTER = {
