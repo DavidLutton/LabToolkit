@@ -124,7 +124,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @property
     def offseten(self):
-        """Offset state"""
+        """Offset state."""
         return(bool(int(self.query('CALCulate1:GAIN:STATe?'))))
 
     @offseten.setter
@@ -361,6 +361,13 @@ class RohdeSchwarzURV4(PowerMeter):
     """RohdeSchwarz URV 4.
 
     .. figure::  images/PowerMeter/RohdeSchwarzURV4.jpg
+    """
+
+
+class Bird4421(PowerMeter):
+    """Bird 4421.
+
+    .. figure::  images/PowerMeter/Bird4421.jpg
     """
 
 
