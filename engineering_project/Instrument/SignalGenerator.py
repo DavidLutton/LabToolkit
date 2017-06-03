@@ -4,13 +4,21 @@ import logging
 import pint
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+    from Instrument.GenericInstrument import GenericInstrument
+    from Instrument.IEEE488 import IEEE488
+    from Instrument.SCPI import SCPI
+
 except ImportError:
-    from GenericInstrument import GenericInstrument as GenericInstrument
+    from GenericInstrument import GenericInstrument
+    from IEEE488 import IEEE488
+    from SCPI import SCPI
 
 
 class SignalGenerator(GenericInstrument):
+    """."""
+
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         self.amplimit = 0
 
@@ -27,6 +35,7 @@ class SignalGenerator(GenericInstrument):
         print("Output: {}".format(self.output))
 
     def start(self, lvl=-50):
+        """."""
         self.amplitude = lvl
 
     '''def ampsetter(self, targetlevel):
@@ -52,11 +61,11 @@ class SignalGenerator(GenericInstrument):
 class amplitudelimiter(object):
     """Class to limit upper amplitude value applied to a SignalGenerator.
 
-    Applied by decorator @amplitudelimiter"""
+    Applied by decorator @amplitudelimiter
+    """
+
     def __init__(self, f, *args, **kwargs):
-        """
-        If there are no decorator arguments, the function
-        to be decorated is passed to the constructor."""
+        """If there are no decorator arguments, the function to be decorated is passed to the constructor."""
         # print(f)
         # print(*args)
         # print(**kwargs)
@@ -64,10 +73,7 @@ class amplitudelimiter(object):
         self.f = f
 
     def __call__(self, f, *args, **kwargs):
-        """
-        The __call__ method is not called until the
-        decorated function is called.
-        """
+        """The __call__ method is not called until the decorated function is called."""
         # print(f)
         print(*args)
         # print(**kwargs)
@@ -80,23 +86,28 @@ class amplitudelimiter(object):
         # print("After self.f(*args)")
 
 
-class SCPI(SignalGenerator):
+class SCPISignalGenerator(SignalGenerator, IEEE488, SCPI):
+    """."""
+
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
 
-        self.amps = [-140, 17]
-        self.freqs = [100e3, 3e9]
+        # self.amps = [-140, 17]
+        # self.freqs = [100e3, 3e9]
         # self.siggen.write("*CLS")  # clear error status
         # self.frequency = min(self.freqs)
 
     @property
     def frequency(self):
+        """."""
         return(self.query("SOURce:FREQuency:CW?"))
 
     @frequency.setter
@@ -105,6 +116,7 @@ class SCPI(SignalGenerator):
 
     @property
     def amplitude(self):
+        """."""
         return(self.query("SOURce:POWer:LEVel:AMPLitude?"))
 
     @amplitude.setter
@@ -114,6 +126,7 @@ class SCPI(SignalGenerator):
 
     @property
     def output(self):
+        """."""
         if self.query("OUTPut:STATe?") == "1":
             return(True)
         else:
@@ -124,16 +137,18 @@ class SCPI(SignalGenerator):
         self.write("OUTPut:STATe {:d}".format(boolean))
 
 
-class HP8657A(SignalGenerator):
+class HP8657A(SignalGenerator, IEEE488):
     """HP 8657A 100e3, 1040e6.
 
     .. figure::  images/SignalGenerator/HP8657A.jpg
     """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
 
@@ -147,6 +162,7 @@ class HP8657A(SignalGenerator):
 
     @property
     def frequency(self):
+        """."""
         return(self.query("FR?"))
 
     @frequency.setter
@@ -155,6 +171,7 @@ class HP8657A(SignalGenerator):
 
     @property
     def amplitude(self):
+        """."""
         return(self.query("AP?"))
 
     @amplitude.setter
@@ -164,6 +181,7 @@ class HP8657A(SignalGenerator):
 
     @property
     def output(self):
+        """."""
         pass
 
     @output.setter
@@ -175,15 +193,56 @@ class HP8657A(SignalGenerator):
                 self.write("R3")
 
 
-class HP8664A(SignalGenerator):
-    """HP 8664A 100e3, 3e9.
-
-    .. figure::  images/SignalGenerator/HP8664A.jpg"""
+class HP866nA(SignalGenerator, IEEE488):
+    """HP 866nA."""
 
     def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__, self.instrument))
+
+    @property
+    def frequency(self):
+        """."""
+        return(self.query("FREQ:CW?"))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("FREQ:CW {0:.0f}Hz".format(frequency))
+
+    @property
+    def amplitude(self):
+        """."""
+        return(self.query("AMPL:OUT:LEV?"))
+
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("AMPL:OUT:LEV {0:.1f}DBM".format(amplitude))
+
+    @property
+    def output(self):
+        if self.query("AMPL:OUT:STATe?") == "1":
+            return(True)
+        else:
+            return(False)
+
+    @output.setter
+    def output(self, boolean=False):
+        self.write("AMPL:OUT:STATe {:d}".format(boolean))
+
+
+class HP8664A(HP866nA):
+    """HP 8664A 100e3, 3e9.
+
+    .. figure::  images/SignalGenerator/HP8664A.jpg
+    """
+
+    def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
         # self.log.info('Creating an instance of\t' + str(__class__))
@@ -193,46 +252,19 @@ class HP8664A(SignalGenerator):
         self.amps = [-140, 17]
         self.freqs = [100e3, 3e9]
 
-    @property
-    def frequency(self):
-        return(self.query("FREQ:CW?"))
 
-    @frequency.setter
-    def frequency(self, frequency):
-        self.write("FREQ:CW {0:.0f}Hz".format(frequency))
-
-    @property
-    def amplitude(self):
-        return(self.query("AMPL:OUT:LEV?"))
-
-    @amplitude.setter
-    @amplitudelimiter
-    def amplitude(self, amplitude):
-        self.write("AMPL:OUT:LEV {0:.1f}DBM".format(amplitude))
-    '''
-    @property
-    def output(self):
-        if self.query("OUTPut:STATe?") == "1":
-            return(True)
-        else:
-            return(False)
-
-    @output.setter
-    def output(self, boolean=False):
-        self.write("OUTPut:STATe {:d}".format(boolean))
-    '''
-
-
-class HP8665B(SignalGenerator):
+class HP8665B(HP866nA):
     """HP 8665B 100e3, 6e9.
 
     .. figure::  images/SignalGenerator/HP8665B.jpg
     """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
         # self.log.info('Creating an instance of\t' + str(__class__))
@@ -242,66 +274,40 @@ class HP8665B(SignalGenerator):
         self.amps = [-140, 17]
         self.freqs = [100e3, 6e9]
 
-    @property
-    def frequency(self):
-        return(self.query("FREQ:CW?"))
 
-    @frequency.setter
-    def frequency(self, frequency):
-        self.write("FREQ:CW {0:.0f}Hz".format(frequency))
-
-    @property
-    def amplitude(self):
-        return(self.query("AMPL:OUT:LEV?"))
-
-    @amplitude.setter
-    @amplitudelimiter
-    def amplitude(self, amplitude):
-        self.write("AMPL:OUT:LEV {0:.1f}DBM".format(amplitude))
-    '''
-    @property
-    def output(self):
-        if self.query("OUTPut:STATe?") == "1":
-            return(True)
-        else:
-            return(False)
-
-    @output.setter
-    def output(self, boolean=False):
-        self.write("OUTPut:STATe {:d}".format(boolean))
-    '''
-
-
-class AgilentN5182A(SignalGenerator):
-    """Agilent N5182A 100e3, 6e9
+class AgilentN5182A(SignalGenerator, IEEE488):
+    """Agilent N5182A 100e3, 6e9.
 
     .. figure::  images/SignalGenerator/AgilentN5182A.jpg
     """
 
 
-class AgilentN5181A(SignalGenerator):
-    """Agilent N5181A 100e3, 3e9
+class AgilentN5181A(SignalGenerator, IEEE488):
+    """Agilent N5181A 100e3, 3e9.
 
     .. figure::  images/SignalGenerator/AgilentN5181A.jpg
     """
 
 
-class HPESG3000A(SignalGenerator):
+class HPESG3000A(SignalGenerator, IEEE488):
     """Agilent E4422B 250e3, 3e9.
 
     .. figure::  images/SignalGenerator/HPESG3000A.jpg
     """
 
-class AgilentE4422B(SignalGenerator):
+
+class AgilentE4422B(SignalGenerator, IEEE488):
     """Agilent E4422B 250e3, 4e9.
 
     .. figure::  images/SignalGenerator/AgilentE4422B.jpg
     """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
@@ -314,6 +320,7 @@ class AgilentE4422B(SignalGenerator):
 
     @property
     def frequency(self):
+        """."""
         return(self.query("FREQ?"))
 
     @frequency.setter
@@ -322,6 +329,7 @@ class AgilentE4422B(SignalGenerator):
 
     @property
     def amplitude(self):
+        """."""
         return(self.query("POWer?"))
 
     @amplitude.setter
@@ -331,6 +339,7 @@ class AgilentE4422B(SignalGenerator):
 
     @property
     def output(self):
+        """."""
         if self.query("OUTPut:STATe?") == "1":
             return(True)
         else:
@@ -341,13 +350,17 @@ class AgilentE4422B(SignalGenerator):
         self.write("OUTPut:STATe {:d}".format(boolean))  # OUTP:STAT ON // OFF
 
 
-class AnritsuMG369nx(SignalGenerator):  # ANRITSU,MG369nx
+class AnritsuMG369nx(SignalGenerator, IEEE488):
+    """ANRITSU,MG369nx."""
+
     # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
@@ -360,6 +373,7 @@ class AnritsuMG369nx(SignalGenerator):  # ANRITSU,MG369nx
 
     @property
     def frequency(self):
+        """."""
         return(self.query("OF0"))
 
     @frequency.setter
@@ -368,6 +382,7 @@ class AnritsuMG369nx(SignalGenerator):  # ANRITSU,MG369nx
 
     @property
     def amplitude(self):
+        """."""
         return(self.query("OL0"))  # OLO
 
     @amplitude.setter
@@ -377,6 +392,7 @@ class AnritsuMG369nx(SignalGenerator):  # ANRITSU,MG369nx
 
     @property
     def output(self):
+        """."""
         pass
         ''' ORF if self.query("OUTPut:STATe?") == "1":
             return(True)
@@ -394,12 +410,15 @@ class AnritsuMG3691B(AnritsuMG369nx):  # ANRITSU,MG3691B,
 
     .. figure::  images/SignalGenerator/AnritsuMG3691B.jpg
     """
+
     # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
@@ -415,12 +434,15 @@ class AnritsuMG3692A(AnritsuMG369nx):  # ANRITSU,MG3692A,
 
     .. figure::  images/SignalGenerator/AnritsuMG3692A.jpg
     """
+
     # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
@@ -436,12 +458,15 @@ class AnritsuMG3693A(AnritsuMG369nx):  # ANRITSU,MG3693A,
 
     .. figure::  images/SignalGenerator/AnritsuMG3693A.jpg
     """
+
     # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
@@ -452,16 +477,18 @@ class AnritsuMG3693A(AnritsuMG369nx):  # ANRITSU,MG3693A,
         self.freqs = [2e9, 30e9]
 
 
-class Wiltron6669A(SignalGenerator):
+class Wiltron6669A(SignalGenerator, IEEE488):
     """Wiltron 6669A 10e6, 40e9.
 
     .. figure::  images/SignalGenerator/Wiltron6669A.jpg
     """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
         # self.log.info('Creating an instance of\t' + str(__class__))
@@ -474,6 +501,7 @@ class Wiltron6669A(SignalGenerator):
 
     @property
     def frequency(self):
+        """."""
         return(self.query("OF0"))
 
     @frequency.setter
@@ -482,6 +510,7 @@ class Wiltron6669A(SignalGenerator):
 
     @property
     def amplitude(self):
+        """."""
         return(self.query("OL0"))
 
     @amplitude.setter
@@ -501,16 +530,19 @@ class Wiltron6669A(SignalGenerator):
         self.write("OUTPut:STATe {:d}".format(boolean))
     '''
 
-class Wiltron6672B(SignalGenerator):
+
+class Wiltron6672B(SignalGenerator, IEEE488):
     """Wiltron 6672B 40e9, 60e9.
 
     .. figure::  images/SignalGenerator/Wiltron6672B.jpg
     """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
         # self.log.info('Creating an instance of\t' + str(__class__))
@@ -523,6 +555,7 @@ class Wiltron6672B(SignalGenerator):
 
     @property
     def frequency(self):
+        """."""
         return(self.query("OF0"))
 
     @frequency.setter
@@ -531,6 +564,7 @@ class Wiltron6672B(SignalGenerator):
 
     @property
     def amplitude(self):
+        """."""
         return(self.query("OL0"))
 
     @amplitude.setter
@@ -551,16 +585,18 @@ class Wiltron6672B(SignalGenerator):
     '''
 
 
-class Wiltron360SS69(SignalGenerator):
+class Wiltron360SS69(SignalGenerator, IEEE488):
     """Wiltron 360SS69 10e6, 40e9.
 
     .. figure::  images/SignalGenerator/Wiltron360SS69.jpg
     """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
         # self.log.info('Creating an instance of\t' + str(__class__))
@@ -573,6 +609,7 @@ class Wiltron360SS69(SignalGenerator):
 
     @property
     def frequency(self):
+        """."""
         return(self.query("OF0"))
 
     @frequency.setter
@@ -581,6 +618,7 @@ class Wiltron360SS69(SignalGenerator):
 
     @property
     def amplitude(self):
+        """."""
         return(self.query("OL0"))
 
     @amplitude.setter
@@ -601,10 +639,9 @@ class Wiltron360SS69(SignalGenerator):
     '''
 
 
-class MarconiInstruments203N(SignalGenerator):
+class MarconiInstruments203N(SignalGenerator, IEEE488):
     """MarconiInstruments 203N 10e3, ...
 
-    .. figure::  images/SignalGenerator/MarconiInstruments203N.jpg
     10 kHz to 1.35 GHz (2030)
     10 kHz to 2.7 GHz (2031)
     10 kHz to 5.4 GHz (2032)
@@ -650,6 +687,7 @@ class MarconiInstruments203N(SignalGenerator):
 
     @property
     def frequency(self):
+        """."""
         return(self.query("CFRQ?"))
 
     @frequency.setter
@@ -658,6 +696,7 @@ class MarconiInstruments203N(SignalGenerator):
 
     @property
     def amplitude(self):
+        """."""
         return(self.query("RFLV?"))
 
     @amplitude.setter
@@ -665,14 +704,14 @@ class MarconiInstruments203N(SignalGenerator):
     def amplitude(self, amplitude):
         self.write("RFLV:VALUE {0:.2f}DBM".format(amplitude))
 
-
     @property
     def output(self):
+        """."""
         print(self.query("RFLV?"))
 
     @output.setter
     def output(self, boolean=False):
-        if boolean == True:
+        if boolean is True:
             self.write("RFLV:ON")
         else:
             self.write("RFLV:OFF")
@@ -681,13 +720,16 @@ class MarconiInstruments203N(SignalGenerator):
 class MarconiInstruments2030(MarconiInstruments203N):
     """MarconiInstruments 203N 10e3, ...
 
-    .. figure::  images/SignalGenerator/MarconiInstruments203N.jpg
-    10 kHz to 1.35 GHz (2030)"""
+    .. figure::  images/SignalGenerator/MarconiInstruments2030.jpg
+    10 kHz to 1.35 GHz (2030)
+    """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
@@ -702,14 +744,16 @@ class MarconiInstruments2030(MarconiInstruments203N):
 class MarconiInstruments2031(MarconiInstruments203N):
     """MarconiInstruments 203N 10e3, ...
 
-    .. figure::  images/SignalGenerator/MarconiInstruments203N.jpg
-    10 kHz to 2.7 GHz (2031)"""
-
+    .. figure::  images/SignalGenerator/MarconiInstruments2031.jpg
+    10 kHz to 2.7 GHz (2031)
+    """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
@@ -724,13 +768,16 @@ class MarconiInstruments2031(MarconiInstruments203N):
 class MarconiInstruments2032(MarconiInstruments203N):
     """MarconiInstruments 203N 10e3, ...
 
-    .. figure::  images/SignalGenerator/MarconiInstruments203N.jpg
-    10 kHz to 5.4 GHz (2032)"""
+    .. figure::  images/SignalGenerator/MarconiInstruments2032.jpg
+    10 kHz to 5.4 GHz (2032)
+    """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         # self.log.info('Creating an instance of\t' + str(__class__))
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
@@ -742,13 +789,14 @@ class MarconiInstruments2032(MarconiInstruments203N):
         # self.write("*CLS")  # clear error status
 
 
-class KeysightN5173B(SignalGenerator):
+class KeysightN5173B(SCPISignalGenerator):
     """Keysight N5173B 9e3, 40e9.
 
     .. figure::  images/SignalGenerator/KeysightN5173B.jpg
     """
 
-class AnritsuMG3710A(SignalGenerator):
+
+class AnritsuMG3710A(SCPISignalGenerator):
     """Anritsu MG3710A 100e3, 6e9.
 
     .. figure::  images/SignalGenerator/AnritsuMG3710A.jpg
