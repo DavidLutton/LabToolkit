@@ -17,7 +17,9 @@ except ImportError:
 
 class NetworkAnalyser(GenericInstrument, IEEE488):
     """Parent class for NetworkAnalysers."""
+
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
 
 
@@ -34,6 +36,131 @@ class HP4395A(NetworkAnalyser):
     .. figure::  images/NetworkAnalyser/HP4395A.jpg
     """
 
+    @property
+    def points(self):
+        """Sweep Points, max 801."""
+        return float(self.write("POIN?"))
+
+    @points.setter
+    def points(self, points=801):
+        self.write("POIN {}".format(int(points)))
+
+    @property
+    def bandwidth(self):
+        """IF Bandwidth.
+
+        2, 10, 30, 100, 300, 1000 (=1k), 3000 (=3k), 10000 (=10k), 30000 (=30k)
+        """
+        return float(self.write("BW?"))
+
+    @bandwidth.setter
+    def bandwidth(self, points=1000):
+        self.write("BW {}HZ".format(int(points)))
+
+    @property
+    def form(self):
+        """Format.
+
+        LOGM, PHAS, DELA, LINM, SWR, REAL, IMAG, SMITH, POLA, EXPP, ADMIT, SPECT, NOISE, LINY
+        """
+        return float(self.write("FMT?"))
+
+    @form.setter
+    def form(self, form='LOGM'):
+        self.write("FMT {}".format(form))
+
+    @property
+    def sweepformat(self):
+        """Format.
+
+        LOGF, LINF, LIST, POWE
+        Log frequency (Network and impedance analyzers only)
+        """
+        return float(self.write("SWPT?"))
+
+    @sweepformat.setter
+    def sweepformat(self, form='LOGF'):
+        self.write("SWPT {}".format(form))
+
+    @property
+    def paramater(self):
+        """Measure paramater.
+
+        AR, RB, R, A, B, S11, S12, S21, S22, IMAG, IPH, IRE, IIM, AMAG, APH, ARE, AIM, RCM, RCPH, RCM, RCPH, RCR, RCIM, CP, CS, LP, LS, D, Q, RP, RS
+        """
+        return float(self.write("MEAS?"))
+
+    @paramater.setter
+    def paramater(self, paramater='S11'):
+        self.write("MEAS {}".format(paramater))
+
+    @property
+    def attenuationr(self):
+        """Port attenuation R dB.
+
+        0, 10, 20, 30, 40, 50
+        """
+        return float(self.write("ATTR?"))
+
+    @attenuationr.setter
+    def attenuationr(self, attenuation=20):
+        self.write("ATTR {}DB".format(int(attenuation)))
+
+    @property
+    def attenuationa(self):
+        """Port attenuation A dB.
+
+        0, 10, 20, 30, 40, 50
+        """
+        return float(self.write("ATTA?"))
+
+    @attenuationa.setter
+    def attenuationa(self, attenuation=20):
+        self.write("ATTA {}DB".format(int(attenuation)))
+
+    @property
+    def attenuationb(self):
+        """Port attenuation B dB.
+
+        0, 10, 20, 30, 40, 50
+        """
+        return float(self.write("ATTB?"))
+
+    @attenuationb.setter
+    def attenuationb(self, attenuation=20):
+        self.write("ATTB {}DB".format(int(attenuation)))
+
+    @property
+    def sourcepower(self):
+        """Source power dBm."""
+        return float(self.write("POWE?"))
+
+    @sourcepower.setter
+    def sourcepower(self, power=0):
+        self.write("POWE {}".format(int(power)))
+
+    @property
+    def start(self):
+        """Start frequency."""
+        return float(self.write("STAR?"))
+
+    @start.setter
+    def start(self, frequency):
+        self.write("STAR {}".format(frequency))
+
+    @property
+    def stop(self):
+        """Stop frequency."""
+        return float(self.write("STOP?"))
+
+    @stop.setter
+    def stop(self, frequency):
+        self.write("STOP {}".format(frequency))
+
+    def trace(self):
+        """Get formatted trace."""
+        return NotImplemented
+
 
 class Wiltron360(NetworkAnalyser):
     """Wiltron 360.
@@ -46,9 +173,10 @@ class KeysightFieldFox(NetworkAnalyser):
     """Keysight FieldFox.
 
     .. figure::  images/NetworkAnalyser/KeysightFieldFoxN9928A.jpg
-   	"""
+    """
 
     def __init__(self, instrument, logger=None):
+        """."""
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
         self.freqs = [30e3, 26.5e9]
@@ -60,6 +188,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @property
     def points(self):
+        """."""
         return(self.query("SENS:SWE:POIN?"))
 
     @points.setter
@@ -68,6 +197,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @property
     def start(self):
+        """."""
         return(self.query("SENS:FREQ:STAR?"))
 
     @start.setter
@@ -76,6 +206,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @property
     def stop(self):
+        """."""
         return(self.query("SENS:FREQ:STOP?"))
 
     @stop.setter
@@ -84,6 +215,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @property
     def ifbw(self):
+        """."""
         return(self.query(":BWID?"))
 
     @ifbw.setter
@@ -92,6 +224,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @property
     def display(self):
+        """."""
         return(self.query("DISP:ENAB?"))
 
     @display.setter
@@ -100,6 +233,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @property
     def trigger(self):
+        """."""
         return(self.query("INIT:CONT?"))
 
     @trigger.setter
@@ -108,6 +242,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @property
     def format(self):
+        """."""
         return(self.query("CALC:SEL:FORM?"))
 
     @format.setter
@@ -116,6 +251,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @property
     def sparameter(self):
+        """."""
         return(self.query("CALC:PAR1:DEF?"))
 
     @sparameter.setter
@@ -123,10 +259,12 @@ class KeysightFieldFox(NetworkAnalyser):
         self.write("CALC:PAR1:DEF {}".format(sparameter))
 
     def sweep(self):
+        """."""
         self.write("INIT")
         self.write("*WAI")
 
     def readRI(self):
+        """."""
         self.write("CALC:DATA:SDAT?")
         answer = self.instrument.read_until(b'\n').decode('ascii')
         parsed = answer.strip().split(",")
@@ -135,6 +273,7 @@ class KeysightFieldFox(NetworkAnalyser):
         return (real, imag)
 
     def readFormatted(self):
+        """."""
         self.write("CALC:DATA:FDAT?")
         answer = self.instrument.read_until(b'\n').decode('ascii')
         parsed = answer.strip().split(",")
@@ -145,5 +284,5 @@ class KeysightFieldFox(NetworkAnalyser):
 
 REGISTER = {
     "Keysight ZZZZZZZ Fieldfox": KeysightFieldFox,
-
+    'HEWLETT-PACKARD,4395A,': HP4395A
 }
