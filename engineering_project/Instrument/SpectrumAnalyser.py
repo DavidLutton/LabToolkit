@@ -156,6 +156,10 @@ class HPAKSpectrumAnalyser(SpectrumAnalyser):
         print(frequency)
         return amplitude  # , frequency
 
+    def trace(self):
+        """Get trace."""
+        return NotImplemented
+
 
 class KeysightN9030B(HPAKSpectrumAnalyser):
     """Keysight N9030B, 3 to 50e9.
@@ -207,6 +211,10 @@ class HPE4406A(SpectrumAnalyser):
         assert self.IDN.startswith('Hewlett-Packard,E4406A,')
         self.__preset__()
 
+    def trace(self):
+        """Get trace."""
+        return NotImplemented
+
     # def __repr__(self):
     #    return "{}, {}".format(__name__, self.instrument)
     #    # return "{}, {}".format(__class__, self.instrument)
@@ -238,12 +246,20 @@ class HP8546A(SpectrumAnalyser):
     .. figure::  images/SpectrumAnalyser/HP8546A.jpg
     """
 
+    def trace(self):
+        """Get trace."""
+        return NotImplemented
+
 
 class HP8563E(SpectrumAnalyser):
     """HP8563E, 9e3 to 26.5e9.
 
     .. figure::  images/SpectrumAnalyser/HP8563E.jpg
     """
+
+    def trace(self):
+        """Get trace."""
+        return NotImplemented
 
 
 class HP8564E(SpectrumAnalyser):
@@ -252,12 +268,20 @@ class HP8564E(SpectrumAnalyser):
     .. figure::  images/SpectrumAnalyser/HP8564E.jpg
     """
 
+    def trace(self):
+        """Get trace."""
+        return NotImplemented
+
 
 class HP8594E(SpectrumAnalyser):
     """HP8594E, 9e3 to 2.9e9.
 
     .. figure::  images/SpectrumAnalyser/HP8594E.jpg
     """
+
+    def trace(self):
+        """Get trace."""
+        return NotImplemented
 
 
 class HP8596E(SpectrumAnalyser):
@@ -266,12 +290,20 @@ class HP8596E(SpectrumAnalyser):
     .. figure::  images/SpectrumAnalyser/HP8596E.jpg
     """
 
+    def trace(self):
+        """Get trace."""
+        return NotImplemented
+
 
 class HPE4404B(SpectrumAnalyser):
     """HPE4404B, 9e3 to 6.7e9.
 
     .. figure::  images/SpectrumAnalyser/HPE4404B.jpg
     """
+
+    def trace(self):
+        """Get trace."""
+        return NotImplemented
 
 
 REGISTER = {

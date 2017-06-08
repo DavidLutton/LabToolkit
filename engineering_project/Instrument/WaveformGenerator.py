@@ -98,7 +98,7 @@ class HP33120A(WaveformGenerator):
 
     @property
     def amplitude(self):
-        """VPP|VRMS|DBM|DEF"""
+        """VPP|VRMS|DBM|DEF."""
         self.query("SOURce:VOLTage:UNIT?")
         return float(self.query("SOURce:VOLTage?"))
         # return(self.query("SOURce:VOLTage:UNIT?"))
@@ -115,12 +115,94 @@ class HP8116A(WaveformGenerator):
     .. figure::  images/WaveformGenerator/HP8116A.jpg
     """
 
+    @property
+    def frequency(self):
+        """."""
+        return float(self.query("SOURce:FREQuency?"))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("SOURce:FREQuency {0:.4f}".format(frequency))
+
+    @property
+    def shape(self):
+        """."""
+        return self.query("SOURce:FUNCtion:SHAPe?")
+
+    @shape.setter
+    def shape(self, shape="SIN"):
+        # SIN|SQU|TRI|RAMP|NOIS|DC|USER
+        self.write("SOURce:FUNCtion:SHAPe {}".format(shape))
+
+    @property
+    def load(self):
+        """."""
+        return self.query("OUTPut:LOAD?")
+
+    @load.setter
+    def load(self, load="INF"):
+        # 50 | INF | MAX | MIB
+        self.write("OUTPut:LOAD {}".format(load))
+
+    @property
+    def amplitude(self):
+        """VPP|VRMS|DBM|DEF."""
+        self.query("SOURce:VOLTage:UNIT?")
+        return float(self.query("SOURce:VOLTage?"))
+        # return(self.query("SOURce:VOLTage:UNIT?"))
+
+    @amplitude.setter
+    @AmplitudeLimiter
+    def amplitude(self, amplitude, unit="VPP"):
+        self.write("SOURce:VOLTage {0:.6f}{1}".format(amplitude, unit))
+
 
 class Keysight33500B(WaveformGenerator):
     """Keysight 33500B, 0 to 20MHz.
 
     .. figure::  images/WaveformGenerator/Keysight33500B.jpg
     """
+
+    @property
+    def frequency(self):
+        """."""
+        return float(self.query("SOURce:FREQuency?"))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("SOURce:FREQuency {0:.4f}".format(frequency))
+
+    @property
+    def shape(self):
+        """."""
+        return self.query("SOURce:FUNCtion:SHAPe?")
+
+    @shape.setter
+    def shape(self, shape="SIN"):
+        # SIN|SQU|TRI|RAMP|NOIS|DC|USER
+        self.write("SOURce:FUNCtion:SHAPe {}".format(shape))
+
+    @property
+    def load(self):
+        """."""
+        return self.query("OUTPut:LOAD?")
+
+    @load.setter
+    def load(self, load="INF"):
+        # 50 | INF | MAX | MIB
+        self.write("OUTPut:LOAD {}".format(load))
+
+    @property
+    def amplitude(self):
+        """VPP|VRMS|DBM|DEF."""
+        self.query("SOURce:VOLTage:UNIT?")
+        return float(self.query("SOURce:VOLTage?"))
+        # return(self.query("SOURce:VOLTage:UNIT?"))
+
+    @amplitude.setter
+    @AmplitudeLimiter
+    def amplitude(self, amplitude, unit="VPP"):
+        self.write("SOURce:VOLTage {0:.6f}{1}".format(amplitude, unit))
 
 
 REGISTER = {
