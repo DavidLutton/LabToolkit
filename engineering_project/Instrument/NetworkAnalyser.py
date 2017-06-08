@@ -32,7 +32,7 @@ class AgilentE8357A(NetworkAnalyser):
     @property
     def points(self):
         """Sweep Points."""
-        return float(self.query("SENS1:SWE:POIN?"))
+        return int(self.query("SENS1:SWE:POIN?"))
 
     @points.setter
     def points(self, points=801):
@@ -166,7 +166,7 @@ class HP4395A(NetworkAnalyser):
     @property
     def points(self):
         """Sweep Points, max 801."""
-        return float(self.query("POIN?"))
+        return int(self.query("POIN?"))
 
     @points.setter
     def points(self, points=801):
