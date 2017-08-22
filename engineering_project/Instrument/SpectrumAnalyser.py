@@ -159,6 +159,18 @@ class HPAKSpectrumAnalyser(SpectrumAnalyser):
     def trace(self):
         """Get trace."""
         return NotImplemented
+        self.write(':FORM ASC')
+        self.query(':INST:SEL?')  # SA
+        self.query(':SENS:FREQ:STAR?')  # +4.0000000000000000E+010
+        self.query(':SENS:FREQ:STOP?')  # +5.0000000000000000E+010
+        self.query(':SENS:BWID:RES?')  # +3.00000000E+006
+        self.query(':SENS:BWID:VID?')  # +5.00000000E+007
+        self.query(':SENS:SWE:TIME?')  # +2.50000000E-002
+        self.query(':DISP:WIND:TRAC:Y:RLEV?')  # -1.000E+01
+        self.query(':DISP:WIND:TRAC:Y:SPAC?')  # LOG.
+        self.query(':DISP:WIND:TRAC:Y:SCAL:PDIV?')  # +1.000E+01
+        self.query(':UNIT:POW?')  # DBM
+        self.query_ascii_values(':TRAC:DATA? TRACE1')  # Values
 
 
 class KeysightN9030B(HPAKSpectrumAnalyser):
@@ -309,8 +321,11 @@ class HPE4404B(SpectrumAnalyser):
 REGISTER = {
     "Hewlett-Packard,E4406A,": HPE4406A,
     "Agilent Technologies, E4440A,": AgilentE4440A,
-    # HP 8594E 9e3-40e9
-    # HP 8653E -26.5e9
-
-
+    'KeysightN9030B': KeysightN9030B,
+    'HP8546A': HP8546A,
+    'HP8563E': HP8563E,
+    'HP8564E': HP8564E,
+    'HP8594E': HP8594E,
+    'HP8596E': HP8596E,
+    'HPE4404B': HPE4404B,
 }
