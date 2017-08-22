@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""."""
 import traceback
 import sys
 import visa
@@ -71,48 +71,3 @@ def driverdispatcher(pool, driverlist):
                 alloc[insts] = driverlist[driver](inst)
                 insts += 1
     return(alloc)
-
-
-class ResourceManager(object):
-    """ResourceManager as a context manager."""
-
-    def __init__(self, rm):
-        self.rm = visa.ResourceManager(rm)
-
-    def __enter__(self):
-        return(self.rm)
-
-    def __exit__(self, exc_type, exc, exc_tb):
-        del(self.rm)
-
-
-class Instrument(object):
-    """ResourceManager.open_resource as a context manager for instrument."""
-
-    def __init__(self, rm, resource_name, read_termination='\n', write_termination='\n', **kwargs):
-        self.inst = rm.open_resource(resource_name, read_termination=read_termination, write_termination=write_termination, **kwargs)
-        # return(self.inst)
-
-    def __enter__(self):
-        # print(repr(self.inst))
-        return(self.inst)
-
-    def __exit__(self, exc_type, exc, exc_tb):
-        self.inst.close()
-
-
-'''
-print()
-print()
-
-with ResourceManager('@sim') as rm:
-    print(rm.list_resources())
-    print(rm)
-
-    with Instrument(rm, 'USB::0x1111::0x2222::0x4444::INSTR') as inst:
-        # print(inst)
-        print(inst.query("*IDN?"))
-        # print(inst.session)
-    # print(inst.session)
-# print(rm.session)
-'''
