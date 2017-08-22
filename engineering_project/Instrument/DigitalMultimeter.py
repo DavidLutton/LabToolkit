@@ -139,6 +139,24 @@ class HP34401A(DigitalMultimeter):
         return(float(self.query('READ?')))
 
 
+class TZ4000(DigitalMultimeter):
+    """TZ4000.
+
+    .. figure::  images/DigitalMultimeter/TZ4000.jpg
+    """
+
+    def __repr__(self):
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        super().__init__(instrument)
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+
 REGISTER = {
-    "IDN": HP34401A,
+    'HEWLETT-PACKARD,34401A': HP34401A,
+    'HEWLETT-PACKARD,3457A': HP3457A,
+    'HEWLETT-PACKARD,3478A': HP3478A,
+    'TZ4000': TZ4000,
+
 }

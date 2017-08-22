@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+"""."""
+
 import time
 import logging
 # from scipy.interpolate import UnivariateSpline
@@ -442,6 +443,8 @@ class KeysightFieldFox(NetworkAnalyser):
 
 
 REGISTER = {
-    "Keysight ZZZZZZZ Fieldfox": KeysightFieldFox,
-    'HEWLETT-PACKARD,4395A,': HP4395A
+    "Keysight, Fieldfox": KeysightFieldFox,
+    'HEWLETT-PACKARD,4395A,': HP4395A,
+    'Agilent Technologies,E8357A': AgilentE8357A,
+    'Wiltron360': Wiltron360,
 }

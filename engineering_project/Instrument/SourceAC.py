@@ -11,6 +11,7 @@ except ImportError:
 
 
 class SourceAC(GenericInstrument):
+
     def __init__(self, instrument):
         super().__init__(instrument)
 
@@ -68,7 +69,23 @@ class CaliforniaInstruments3000iM(SourceAC):
     """
 
 
+class SchaffnerNSG1007(SourceAC):
+    """Schaffner NSG1007.
+
+    .. figure::  images/SourceAC/SchaffnerNSG1007.jpg
+    """
+
+
+class YA(SourceAC):
+    """Schaffner NSG1007.
+
+    .. figure::  images/SourceAC/SchaffnerNSG1007.jpg
+    """
+
 REGISTER = {
-    "ZZZ": SourceAC,
+    "CaliforniaInstruments3000i": CaliforniaInstruments3000i,
+    "CaliforniaInstruments3000iM": CaliforniaInstruments3000iM,
+    'SchaffnerNSG1007': SchaffnerNSG1007,
+    'Ya': YA
 
 }

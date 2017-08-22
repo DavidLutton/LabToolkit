@@ -82,7 +82,8 @@ class AttenInstrumentsADS1102CAL(Oscilloscope):
 
 
 REGISTER = {
-    "ZZZ": AgilentDSO5052A,
-
-
+    'AGILENT TECHNOLOGIES,DSO5052A': AgilentDSO5052A,
+    'Tektronix,TDS 544A': TektronixTDS544A,
+    'Keysight,DSOX3034T': KeysightDSOX3034T,
+    'AttenInstruments,ADS1102CAL': AttenInstrumentsADS1102CAL,
 }

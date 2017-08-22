@@ -136,7 +136,7 @@ http://www.tti-test.com/downloads/drivers-download.htm
 
 
 REGISTER = {
-    "ZZZ": SourceDC,
+    "HP6632A": HP6632A,
     'THURLBY-THANDAR,PL330P,0,1.10': TTIPL330P,
 
 }

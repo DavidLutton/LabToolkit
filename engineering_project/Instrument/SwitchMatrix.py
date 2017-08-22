@@ -35,7 +35,7 @@ class HP3488A(SwitchMatrix):
 
 
 REGISTER = {
-    "ZZZ": PickeringInterface10,
-    "ZZZ": HP3488A,
+    "PickeringInterface10": PickeringInterface10,
+    "HP3488A": HP3488A,
 
 }

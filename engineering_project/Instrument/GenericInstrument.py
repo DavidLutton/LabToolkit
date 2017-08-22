@@ -24,3 +24,7 @@ class GenericInstrument(object):
     def write(self, query):
         self.log.debug("Write {}: {}".format(self.instrument.resource_name, query))
         return(self.instrument.write(query))
+
+    '''def preset(self):
+        return NotImplemented
+    '''

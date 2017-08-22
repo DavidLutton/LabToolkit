@@ -821,6 +821,8 @@ REGISTER = {
     'MARCONI INSTRUMENTS,2030': MarconiInstruments2030,
     'MARCONI INSTRUMENTS,2031': MarconiInstruments2031,
     'MARCONI INSTRUMENTS,2032': MarconiInstruments2032,
+    'Anritsu,MG3710A': AnritsuMG3710A,
+    'Keysight,N5173B': KeysightN5173B,
 
     # HP 8673M 2-18GHz
     # Anritsu MG3710A 100e3, 6e9

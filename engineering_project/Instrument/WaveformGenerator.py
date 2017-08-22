@@ -207,4 +207,7 @@ class Keysight33500B(WaveformGenerator):
 
 REGISTER = {
     "HEWLETT-PACKARD,33120A,": HP33120A,
+    'HP8116A': HP8116A,
+    'Keysight33500B': Keysight33500B,
+
 }

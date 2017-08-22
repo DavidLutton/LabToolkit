@@ -39,4 +39,8 @@ class VoltechPM1000P(PowerAnalyser, IEEE488):
     """
 
 
-# REGISTER = {}
+REGISTER = {
+    'VoltechPM3000A': VoltechPM3000A,
+    'VoltechPM1000P': VoltechPM1000P,
+
+}

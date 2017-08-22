@@ -18,7 +18,7 @@ class EnviromentalChamber(GenericInstrument):
         return("{}, {}".format(__class__, self.instrument))
 
 
-'''class ZZZ(EnviromentalChamber):
+class ZZZ(EnviromentalChamber):
     def __init__(self, instrument, logger=None):
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
@@ -37,6 +37,8 @@ class EnviromentalChamber(GenericInstrument):
     @temperature.setter
     def temperature(self, temperature):
         self.write("THERM {0:.0f}".format(temperature))
-'''
 
-REGISTER = {}
+
+REGISTER = {
+    'ZZZ': ZZZ,
+}
