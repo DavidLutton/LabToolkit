@@ -55,10 +55,14 @@ class MarconiInstruments2187(ElectronicAttenuator, IEEE488):
         """Attenuation of instrument."""
         return float(self.query("ATTN?"))
 
-    @attenuation.setter
     # @validsteps(3,4,5,6)
+    @attenuation.setter
     def attenuation(self, attenuation):
         self.write("ATTN {0:.1f}{1}".format(attenuation, self.units['dB']))
+
+    def preset(self):
+        """."""
+        self.attenuation = 144
 
 
 REGISTER = {
