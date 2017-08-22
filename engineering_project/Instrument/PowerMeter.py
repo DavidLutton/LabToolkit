@@ -173,16 +173,16 @@ class HP437B(PowerMeter, IEEE488):
         # self.log.info('Creating an instance of\t' + str(__class__))
 
         assert self.IDN.startswith('HEWLETT-PACKARD,437B,')
-        self.__preset__()
+        # self.__preset__()
 
     def __repr__(self):
         """."""
         return("{}, {}".format(__class__, self.instrument))
 
-    def __preset__(self):
+    def preset(self):
         """."""
         # self.message("")
-        self.log.info("Get   {} to known state".format(self.instrument.resource_name))
+        self.log.info("Get {} to known state".format(self.instrument.resource_name))
         self.correctionfactor(100.0)
         self.rangeauto()
         self.unitslog()  # Log units dBM/dB
