@@ -92,6 +92,16 @@ class Trace(object):
         '''
 
 
+def almost_equal(x, y, threshold=0.0000001):
+    return abs(x-y) < threshold
+
+
+@functools.lru_cache(maxsize=1024, typed=False)
+def log(value):
+    """."""
+    return np.log(value)
+
+
 @functools.lru_cache(maxsize=1024, typed=False)
 def log10(value):
     """."""
@@ -510,6 +520,7 @@ def test_RL2VSWR():
 def VSWR2RL(VSWR):
     return(-20 * log10((VSWR - 1) / (VSWR + 1)))
 
+
 def test_VSWR2RL():
     assert VSWR2RL(1.2) == 20.827853703164504
     assert VSWR2RL(1.002) == 60.00868154958637
@@ -615,20 +626,71 @@ def dBitonumericgain(dBi):
     return 10.**(dBi/10)
 
 
+def test_dBitonumericgain():
+    for number in 1.0, 10.0, np.pi, 5.4321:
+        assert almost_equal(numericgaintodBi(dBitonumericgain(number)), number)
+
+
 def numericgaintodBi(numericgain):
     return 10*log10(numericgain)
 
 
-# print(numericgaintodBi(32))
-# print(dBitonumericgain(15))
+def test_numericgaintodBi():
+    for number in 1.0, 10.0, np.pi, 5.4321:
+        assert almost_equal(dBitonumericgain(numericgaintodBi(number)), number)
 
 
 def dBitoAF(MHz, dBi):
     return 20*log10(MHz) - dBi - 29.79
 
 
+def test_dBitoAF():
+    assert AFtodBi(10, dBitoAF(10, 3)) == 3
+    assert not AFtodBi(30, 38.5) == -38.7
+    assert AFtodBi(30, 38.5) == -38.747574905606754
+    assert not AFtodBi(50, 32.5) == -28.3
+    assert AFtodBi(50, 32.5) == -28.310599913279624
+    assert not AFtodBi(100, 27.8) == -17.6
+    assert AFtodBi(100, 27.8) == -17.59
+    assert not AFtodBi(200, 22.6) == -6.4
+    assert AFtodBi(200, 22.6) == -6.3694000867203755
+    assert not AFtodBi(500, 23.3) == 0.9
+    assert AFtodBi(500, 23.3) == 0.88940008672037507
+    assert not AFtodBi(1000, 29.5) == 0.7
+    assert AFtodBi(1000, 29.5) == 0.71000000000000085
+    assert not AFtodBi(1500, 40.2) == -6.4
+    assert AFtodBi(1500, 40.2) == -6.468174818886375
+    assert not AFtodBi(2000, 47.3) == -11.1
+    assert AFtodBi(2000, 47.3) == -11.069400086720371
+    assert not AFtodBi(3000, 50.5) == -10.7
+    assert AFtodBi(3000, 50.5) == -10.747574905606747
+
+
 def AFtodBi(MHz, AF):
     return 20*log10(MHz) - AF - 29.79
+
+
+def test_AFtodBi():
+    assert dBitoAF(10, AFtodBi(10, 3)) == 3
+
+    assert not dBitoAF(30, -38.7) == 38.5
+    assert dBitoAF(30, -38.7) == 38.452425094393256
+    assert not dBitoAF(50, -28.3) == 32.5
+    assert dBitoAF(50, -28.3) == 32.489400086720373
+    assert not dBitoAF(100, -17.6) == 27.8
+    assert dBitoAF(100, -17.6) == 27.810000000000002
+    assert not dBitoAF(200, -6.4) == 22.6
+    assert dBitoAF(200, -6.4) == 22.630599913279625
+    assert not dBitoAF(500, 0.9) == 23.3
+    assert dBitoAF(500, 0.9) == 23.289400086720377
+    assert not dBitoAF(1000, 0.7) == 29.5
+    assert dBitoAF(1000, 0.7) == 29.509999999999998
+    assert not dBitoAF(1500, -6.4) == 40.2
+    assert dBitoAF(1500, -6.4) == 40.131825181113634
+    assert not dBitoAF(2000, -11.1) == 47.3
+    assert dBitoAF(2000, -11.1) == 47.33059991327962
+    assert not dBitoAF(3000, -10.7) == 50.5
+    assert dBitoAF(3000, -10.7) == 50.452425094393256
 
 
 def givenWGDist(watts, gain, distance):
@@ -651,8 +713,8 @@ def fieldVmtodBuVm(Vm):
     return Q_(20*log10(Vm)+120, 'dBμV/m')
 
 
-def woundcoilfluxdensity(turns, amps, radiusm):
-    return Q_((4*np.pi*turns*amps)/(log20(radiusm)), 'μT')
+# def woundcoilfluxdensity(turns, amps, radiusm):
+#    return Q_((4*np.pi*turns*amps)/(log20(radiusm)), 'μT')
 
 
 def uTtoAm(uT):
