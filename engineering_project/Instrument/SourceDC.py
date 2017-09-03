@@ -61,6 +61,73 @@ class HP6632A(SourceDC):
         return NotImplemented
 
 
+class TTIPL303(SourceDC):
+    """."""
+
+    @property
+    def volts(self):
+        """."""
+        return float(self.query('V1?'))
+
+    @property
+    def voltsoutput(self):
+        """."""
+        return float(self.query('V{}O?'.format(1)))
+
+    @volts.setter
+    def volts(self, volts):
+        self.write('V1{2.3f}'.format(volts))
+
+    @property
+    def current(self):
+        """."""
+        return float(self.query('I1?'))
+
+    @property
+    def currentoutput(self):
+        """."""
+        return float(self.query('I{}O?'.format(1)))
+
+    @current.setter
+    def current(self, current):
+        self.write('I1{1.3f}'.format(current))
+
+    @property
+    def output(self):
+        """."""
+        return bool(self.query('OP1?'))
+
+    @output.setter
+    def output(self, boolean=False):
+        self.write('OP1 {:d}''.format(boolean))
+
+    @property
+    def config(self):
+        """."""
+        return self.query('CONFIG?')
+
+    @property
+    def currentrange(self):
+        """."""
+        return int(self.query('IRANGE{}?'.format(1)))
+
+    @currentrange.setter
+    def currentrange(self, currentrange):
+        self.write('IRANGE{}{}'.format(1, currentrange))
+
+    @property
+    def voltsoverprotect(self):
+        """."""
+        return(float(self.query('OVP{}?'.format(1))))
+
+    @property
+    def currentoverprotect(self):
+        """."""
+        return(float(self.query('OCP{}?'.format(1))))
+
+    # def setLocal(self): 'LOCAL'
+
+
 class TTIPL330P(SourceDC):
     """TTI PL330P 0-32V/0-3A.
 
@@ -114,7 +181,7 @@ http://www.tti-test.com/downloads/drivers-download.htm
 
     @volts.setter
     def volts(self, volts):
-        self.write("V1{}".format(volts))
+        self.write('V1{}'.format(volts))
 
     @property
     def current(self):
@@ -123,7 +190,7 @@ http://www.tti-test.com/downloads/drivers-download.htm
 
     @current.setter
     def current(self, current):
-        self.write("I1{}".format(current))
+        self.write('I1{}'.format(current))
 
     @property
     def output(self):
@@ -132,11 +199,33 @@ http://www.tti-test.com/downloads/drivers-download.htm
 
     @output.setter
     def output(self, boolean=False):
-        self.write("OP1 {:d}".format(boolean))
+        self.write('OP1 {:d}''.format(boolean))
 
 
 REGISTER = {
-    "HP6632A": HP6632A,
-    'THURLBY-THANDAR,PL330P,0,1.10': TTIPL330P,
+    'HEWLETT-PACKARD,6632A,': HP6632A,
+    'THURLBY-THANDAR,PL330P,': TTIPL330P,
+    'THURLBY THANDAR,PL303,': TTIPL303,  # ? *IDN?
+    # 'THURLBY THANDAR,MX100TP,': TTIMX100TP,
+    # 'THURLBY THANDAR,MX180TP,': TTIMX180TP,
+    # TTI, CPX400DP
+    # 'Rohde & Schwarz, HMC8043,':
+    # 'Rohde & Schwarz, HMC8042,':
+    # 'Rohde & Schwarz, HMC8041,':
+    # Keithley, 2231A-30-3
+    # Keithley, 2220-30-1
+    # BKPrecision, BK9130B
+    # BKPrecision, BK9181B
+    # Keysight, E3648A
+    # Keysight, E3634A
+    # Keysight, E3649A
+    # Keysight, E3631A
+    # Keysight, E3644A
+    # Keysight, E36104A
+    # GWINSTEK, GPD-4303S
+    # GWINSTEK, GPD-2303S
+    # Keithley, 2220-30-1
+
+
 
 }
