@@ -45,10 +45,13 @@ ureg.default_format = '~P'
 Q_ = ureg.Quantity
 
 
-# ureg.define('emf = 0.5 * volt = e.m.f')  # half of one volt is one emf
 ureg.define('emf = 0.5 * volt')  # half of one volt is one emf
 ureg.define('dB = []')
 ureg.define('dBm = []')
+ureg.define('dBμA = []')
+ureg.define('dBμV = []')
+
+
 # uref.define('dBu = 0.7746 volt')  # log20
 # uref.define('dBV = 1 volt')  # log20
 
@@ -90,15 +93,63 @@ class Trace(object):
 
 
 @functools.lru_cache(maxsize=1024, typed=False)
+def log10(value):
+    """."""
+    return np.log10(value)
+
+
+def test_log10():
+    assert log10(np.pi) == 0.4971498726941338
+    assert log10(50) == 1.6989700043360187
+    assert log10(10) == 1.0
+
+
+@functools.lru_cache(maxsize=1024, typed=False)
 def log20(value):
     """."""
-    return np.log(20**value)/np.log(20)
+    return np.log(value)/np.log(20)
+    # return np.log(value)/2.9957322735539909
+    # print('{:.50f}'.format(np.log(20)))
+    # 2.99573227355399085425347038835752755403518676757812
+
+
+def test_log20():
+    assert log20(np.pi) == 0.38212022347756341
+    # https://www.wolframalpha.com/input/?i=log20(pi)
+
+    assert log20(50) == 1.3058653605207224
+    # assert log20(np.pi) == 0.38212022347756336  # return log10(value)/log10(20)
+    # assert log20(10) == 0.76862178684024074  # return log10(value)/log10(20)
+    assert log20(10) == 0.76862178684024096
 
 
 @functools.lru_cache(maxsize=1024, typed=False)
 def dBofVratio(ratio):
     """Calculate the dB equivalent of the voltage ratio."""
-    return Q_(20*np.log10(ratio), 'dB')  # ratio(dB)
+    return Q_(20*log10(ratio), 'dB')  # ratio(dB)
+
+
+def test_dBofVratio():
+    assert dBofVratio(1.8) == 5.105450102066121
+    assert dBofVratio(float(18/10)) == 5.105450102066121
+
+    assert dBofVratio(0.5555555555555556) == -5.10545010206612
+    assert dBofVratio(float(10/18)) == -5.10545010206612
+
+    assert dBofVratio(float(10/9.4)) == 0.5374429280060267
+    # Wanted level is 10V/m, measured level is 9.4V/m
+    # What amount of power (dB) change is required to get to wanted level
+
+    assert dBofVratio(float(10/11)) == -0.8278537031645011
+    # Wanted level is 10 volts, measured level is 11
+    # What amount of power (dB) change is required to get to wanted level
+
+    assert dBofVratio(float(10/0.2)) == 33.979400086720375
+
+    assert dBofVratio(float(10/3)) == 10.457574905606752
+    assert dBofVratio(float(10/5.4)) == 5.352124803540629
+
+    assert dBofVratio(float(18/5.4)) == 10.45757490560675
 
 
 @functools.lru_cache(maxsize=1024, typed=False)
@@ -111,7 +162,7 @@ def dBofPratio(ratio):
     """Calculate the dB equivalent of the power ratio.
 
     Useful for correcting readings from rf power heads"""
-    return Q_(10*np.log10(ratio), 'dB')  # ratio(dB)
+    return Q_(10*log10(ratio), 'dB')  # ratio(dB)
 
 
 @functools.lru_cache(maxsize=1024, typed=False)
@@ -160,7 +211,7 @@ def wattstovolts(watts, *, ohms=50):
 
 @functools.lru_cache(maxsize=1024, typed=False)
 def wattstodBm(watts):
-    return Q_(10 * np.log10((watts / 0.001)), 'dBm')
+    return Q_(10 * log10((watts / 0.001)), 'dBm')
 
 
 @functools.lru_cache(maxsize=1024, typed=False)
@@ -197,24 +248,6 @@ def test_wattstovolts():
 
 def test_wattstoemf():
     assert wattstoemf(2) == Q_(19.999999999999996, 'emf')
-
-
-def test_dBofVratio():
-    assert dBofVratio(float(18/10)) == 5.105450102066121
-    assert dBofVratio(float(10/18)) == -5.10545010206612
-
-    assert dBofVratio(float(10/9.4)) == 0.5374429280060267
-    # Wanted level is 10 volts, measured level is 9.4
-    # What amount of power (dB) change is required to get to wanted level
-
-    assert dBofVratio(float(10/11)) == -0.8278537031645011
-    # Wanted level is 10 volts, measured level is 11
-    # What amount of power (dB) change is required to get to wanted level
-
-    assert dBofVratio(float(10/9.94)) == 0.05227231205373506
-
-
-def test_wattstoemf():
     # emf =
     assert wattstoemf(0.189) * 3 == Q_(18.444511378727274, 'emf')  # For CDNs
     # assert wattstoemf(0.189, ohms=150) == Q_(18.444511378727274, 'emf')  # For CDNs
@@ -464,10 +497,6 @@ dBm/Hz = -90dBm - 10LOG(1kHz)
 '''
 
 
-def VSWR2RL(VSWR):
-    return(-20 * np.log10((VSWR - 1) / (VSWR + 1)))
-
-
 def RL2VSWR(RL):
     return((10 ** (RL / 20) + 1) / (10 ** (RL / 20) - 1))
 
@@ -477,6 +506,9 @@ def test_RL2VSWR():
     assert RL2VSWR(60) == 1.002002002002002
     assert RL2VSWR(0.5) == 34.75315212699187
 
+
+def VSWR2RL(VSWR):
+    return(-20 * log10((VSWR - 1) / (VSWR + 1)))
 
 def test_VSWR2RL():
     assert VSWR2RL(1.2) == 20.827853703164504
@@ -565,3 +597,97 @@ dp = decimalplace
     print(dp(6, q.to('Hz')))
     print(dp(6, q.to('mHz')))
 '''
+
+
+def neededpowerforVm(Vm, dBi, meters):
+    return ((Vm * meters)**2) / (30 * (10.**(dBi/10)))
+
+
+'''print(neededpowerforVm(Vm=18.45, dBi=10, meters=2))
+print(neededpowerforVm(Vm=18.45, dBi=10, meters=2.5))
+print(neededpowerforVm(Vm=18.45, dBi=10, meters=3))
+print(neededpowerforVm(Vm=18.45, dBi=10, meters=3.5))
+print(neededpowerforVm(Vm=18.45, dBi=10, meters=4))
+'''
+
+
+def dBitonumericgain(dBi):
+    return 10.**(dBi/10)
+
+
+def numericgaintodBi(numericgain):
+    return 10*log10(numericgain)
+
+
+# print(numericgaintodBi(32))
+# print(dBitonumericgain(15))
+
+
+def dBitoAF(MHz, dBi):
+    return 20*log10(MHz) - dBi - 29.79
+
+
+def AFtodBi(MHz, AF):
+    return 20*log10(MHz) - AF - 29.79
+
+
+def givenWGDist(watts, gain, distance):
+    return Q_(np.sqrt(30*watts*gain)/meters, 'V/m')
+
+
+def givenWdBiDist(watts, dBi, distance):
+    return Q_(np.sqrt(30*watts*(10**(dBi/10)))/meters, 'V/m')
+
+
+def neededpowergforVm(Vm, gain, meters):
+    return ((Vm * meters)**2)/(30 * gain)
+
+
+def fielddBuVmtoVm(dBuVm):
+    return Q_(10**(((dBuVm)-120)/20), 'V/m')
+
+
+def fieldVmtodBuVm(Vm):
+    return Q_(20*log10(Vm)+120, 'dBμV/m')
+
+
+def woundcoilfluxdensity(turns, amps, radiusm):
+    return Q_((4*np.pi*turns*amps)/(log20(radiusm)), 'μT')
+
+
+def uTtoAm(uT):
+    return Q_(uT/1.25, 'A/m')
+
+
+def AmtouT(Am):
+    return Q_(1.25*Am, 'μT')
+
+
+def dBmtodBuV(dBm, *, Z=50):
+    return Q_(90 + 10*log10(Z) + dBm, 'dBμV')
+
+
+def test_dBmtodBuV():
+    assert not dBmtodBuV(10) == Q_(117, 'dBμV')
+    assert dBmtodBuV(10) == Q_(116.98970004336019, 'dBμV')
+
+
+def dBuVtodBm(dBuV, *, Z=50):
+    return Q_(dBuV - 90 + 10*log10(Z), 'dBm')
+
+
+def dBuAtodBm(dBuA, *, Z=50):
+    return Q_(dBuA + 10*log10(Z) - 90, 'dBm')
+
+
+def dBmtodBuA(dBm, *, Z=50):
+    return Q_(dBm - 10*log10(Z)+90, 'dBμA')
+
+
+def dBuAtodBuV(dbuA, *, Z=50):
+    return Q_(dbuA + log20(Z), 'dBμV')
+
+
+def dBuVtodBuA(dbuV, *, Z=50):
+    return Q_(dbuV - log20(Z), 'dBμA')
+# return Q_(, 'dBμV')
