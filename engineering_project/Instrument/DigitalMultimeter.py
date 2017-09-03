@@ -13,6 +13,7 @@ class DigitalMultimeter(GenericInstrument):
     """Parent class for DigitalMultimeters."""
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
 
 
@@ -23,9 +24,11 @@ class HP3457A(DigitalMultimeter):
     """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
 
@@ -33,6 +36,7 @@ class HP3457A(DigitalMultimeter):
 
         # self.siggen.write("*CLS")  # clear error status
     def state(self):
+        """."""
         print("Function: {}".format(self.function))
         print("Range: {}".format(self.range))
         print("Trigger: {}".format(self.trigger))
@@ -45,9 +49,11 @@ class HP3478A(DigitalMultimeter):
     """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
 
@@ -55,6 +61,7 @@ class HP3478A(DigitalMultimeter):
 
         # self.siggen.write("*CLS")  # clear error status
     def state(self):
+        """."""
         print("Function: {}".format(self.function))
         print("Range: {}".format(self.range))
         print("Trigger: {}".format(self.trigger))
@@ -67,9 +74,11 @@ class HP34401A(DigitalMultimeter):
    """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
 
@@ -77,12 +86,14 @@ class HP34401A(DigitalMultimeter):
 
         # self.siggen.write("*CLS")  # clear error status
     def state(self):
+        """."""
         print("Function: {}".format(self.function))
         print("Range: {}".format(self.range))
         print("Trigger: {}".format(self.trigger))
 
     @property
     def trigger(self):
+        """."""
         return(self.query("TRIGger:SOURce?"))
 
     @trigger.setter
@@ -91,10 +102,12 @@ class HP34401A(DigitalMultimeter):
 
     @property
     def function(self):
+        """."""
         return(self.query("FUNCtion?"))
 
     @function.setter
     def function(self, function="VOLTage:DC"):
+        """."""
         '''
         VOLTage:DC
         VOLTage:DC:RATio
@@ -112,6 +125,7 @@ class HP34401A(DigitalMultimeter):
 
     @property
     def range(self):
+        """."""
         return(self.query("RANGe?"))
 
     @range.setter
@@ -120,6 +134,7 @@ class HP34401A(DigitalMultimeter):
 
     @property
     def rangeauto(self):
+        """."""
         return(self.query("RANGe:AUTO?"))
 
     @rangeauto.setter
@@ -128,6 +143,7 @@ class HP34401A(DigitalMultimeter):
 
     @property
     def rangeauto(self):
+        """."""
         return(self.query("INPut:IMPedance:AUTO?"))
 
     @rangeauto.setter
@@ -136,6 +152,7 @@ class HP34401A(DigitalMultimeter):
 
     @property
     def reading(self):
+        """."""
         return(float(self.query('READ?')))
 
 
@@ -146,11 +163,41 @@ class TZ4000(DigitalMultimeter):
     """
 
     def __repr__(self):
+        """."""
         return("{}, {}".format(__class__, self.instrument))
 
     def __init__(self, instrument):
+        """."""
         super().__init__(instrument)
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+
+class Keithley2015(DigitalMultimeter):
+    """."""
+
+    @property
+    def reading(self):
+        """."""
+        inst.query(float(':FETCh?'))
+
+
+class Fluke8845(DigitalMultimeter, IEEE488):
+    """."""
+
+    def preset(self):
+        self.CLS
+        self.write('system:remote')
+        self.write('disp:off')
+        # self.write('conf:volt:dc:nplc 60')
+
+    @property
+    def reading(self):
+        """."""
+        inst.query(float(':FETCh?'))
+
+
+class Fluke8846(Fluke8845):
+    """."""
 
 
 REGISTER = {
@@ -158,5 +205,8 @@ REGISTER = {
     'HEWLETT-PACKARD,3457A': HP3457A,
     'HEWLETT-PACKARD,3478A': HP3478A,
     'TZ4000': TZ4000,
+    'Keithley, 2015,': Keithley2015,
+    'Fluke, 8845,': Fluke8845,
+    'Fluke, 8846,': Fluke8846,
 
 }
