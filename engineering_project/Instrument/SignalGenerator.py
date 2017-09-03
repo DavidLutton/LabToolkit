@@ -806,6 +806,56 @@ class AnritsuMG3710A(SCPISignalGenerator):
     """
 
 
+class RohdeSchwarzSHM52(SignalGenerator):
+    """Rohde and Schwarz SHM, 100e3-2e9."""
+
+    def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        """."""
+        super().__init__(instrument)
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        self.amps = [-107, 17]
+        self.freqs = [100e3, 2e9]
+
+    @property
+    def frequency(self):
+        """."""
+        return(self.query("RF?"))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("RF {0:.0f}HZ".format(frequency))
+
+    @property
+    def amplitude(self):
+        """."""
+        return(self.query("L:?"))
+
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("LEV {0:.1f}DBM".format(amplitude))
+
+    @property
+    def output(self):
+        """."""
+        if self.query("L:?") == "1":
+            return(True)
+        else:
+            return(False)
+
+    @output.setter
+    def output(self, boolean=False):
+        # LEV:OFF
+        if boolean is False:
+            # self.amplitude = min(self.amps)
+            self.write("LEV:OFF")
+
+
 REGISTER = {
     'HEWLETT-PACKARD,8657A,': HP8657A,
     'HEWLETT_PACKARD,8664A,': HP8664A,
@@ -823,6 +873,8 @@ REGISTER = {
     'MARCONI INSTRUMENTS,2032': MarconiInstruments2032,
     'Anritsu,MG3710A': AnritsuMG3710A,
     'Keysight,N5173B': KeysightN5173B,
+    'ROHDE&SCHWARZ,SMH52': RohdeSchwarzSHM52,
+
 
     # HP 8673M 2-18GHz
     # Anritsu MG3710A 100e3, 6e9
