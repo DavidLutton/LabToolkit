@@ -23,6 +23,7 @@ import Instrument.SourceDC
 import Instrument.SourceAC
 import Instrument.SwitchMatrix
 import Instrument.ModulationMeter
+import Instrument.ElectronicLoad
 
 Drivers = [
     Instrument.SignalGenerator,
@@ -44,6 +45,8 @@ Drivers = [
     Instrument.SwitchMatrix,
     Instrument.ModulationMeter,
     Instrument.WaveformGenerator,
+    Instrument.ElectronicLoad,
+
 ]
 
 # counter = 0
