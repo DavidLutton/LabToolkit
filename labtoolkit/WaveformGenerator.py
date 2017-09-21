@@ -4,12 +4,16 @@
 # import time
 # import logging
 # import pint
-
 try:
-    from engineering_project.GenericInstrument import GenericInstrument
+    from labtoolkit.GenericInstrument import GenericInstrument
+    from labtoolkit.IEEE488 import IEEE488
+    from labtoolkit.SCPI import SCPI
     from engineering_project.Utils import AmplitudeLimiter
+
 except ImportError:
     from GenericInstrument import GenericInstrument
+    from IEEE488 import IEEE488
+    from SCPI import SCPI
     from Utils import AmplitudeLimiter
 
 

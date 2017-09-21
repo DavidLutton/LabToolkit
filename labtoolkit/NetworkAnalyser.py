@@ -6,14 +6,14 @@ import logging
 # import numpy as np
 
 try:
-    from engineering_project.GenericInstrument import GenericInstrument as GenericInstrument
-except ImportError:
-    from GenericInstrument import GenericInstrument as GenericInstrument
+    from labtoolkit.GenericInstrument import GenericInstrument
+    from labtoolkit.IEEE488 import IEEE488
+    from labtoolkit.SCPI import SCPI
 
-try:
-    from engineering_project.IEEE488 import IEEE488 as IEEE488
 except ImportError:
-    from IEEE488 import IEEE488 as IEEE488
+    from GenericInstrument import GenericInstrument
+    from IEEE488 import IEEE488
+    from SCPI import SCPI
 
 
 class NetworkAnalyser(GenericInstrument, IEEE488):

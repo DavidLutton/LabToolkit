@@ -4,9 +4,9 @@ import logging
 import pint
 
 try:
-    from engineering_project.GenericInstrument import GenericInstrument as GenericInstrument
+    from labtoolkit.GenericInstrument import GenericInstrument
 except ImportError:
-    from GenericInstrument import GenericInstrument as GenericInstrument
+    from GenericInstrument import GenericInstrument
 
 
 class FrequencyCounter(GenericInstrument):

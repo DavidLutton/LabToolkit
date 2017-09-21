@@ -4,9 +4,14 @@ import logging
 import pint
 
 try:
-    from engineering_project.GenericInstrument import GenericInstrument as GenericInstrument
+    from labtoolkit.GenericInstrument import GenericInstrument
+    from labtoolkit.IEEE488 import IEEE488
+    from labtoolkit.SCPI import SCPI
+
 except ImportError:
-    from GenericInstrument import GenericInstrument as GenericInstrument
+    from GenericInstrument import GenericInstrument
+    from IEEE488 import IEEE488
+    from SCPI import SCPI
 
 
 class ModulationMeter(GenericInstrument):
