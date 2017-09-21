@@ -8,7 +8,7 @@ try:
     from labtoolkit.GenericInstrument import GenericInstrument
     from labtoolkit.IEEE488 import IEEE488
     from labtoolkit.SCPI import SCPI
-    from engineering_project.Utils import AmplitudeLimiter
+    from labtoolkit.Utils import AmplitudeLimiter
 
 except ImportError:
     from GenericInstrument import GenericInstrument
