@@ -6,12 +6,12 @@ import logging
 # import numpy as np
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+    from engineering_project.GenericInstrument import GenericInstrument as GenericInstrument
 except ImportError:
     from GenericInstrument import GenericInstrument as GenericInstrument
 
 try:
-    from Instrument.IEEE488 import IEEE488 as IEEE488
+    from engineering_project.IEEE488 import IEEE488 as IEEE488
 except ImportError:
     from IEEE488 import IEEE488 as IEEE488
 
@@ -426,7 +426,7 @@ class KeysightFieldFox(NetworkAnalyser):
     def readRI(self):
         """."""
         self.write("CALC:DATA:SDAT?")
-        answer = self.instrument.read_until(b'\n').decode('ascii')
+        answer = self.engineering_project.read_until(b'\n').decode('ascii')
         parsed = answer.strip().split(",")
         real = [float(parsed[i]) for i in range(0, len(parsed), 2)]
         imag = [float(parsed[i]) for i in range(1, len(parsed), 2)]
@@ -435,7 +435,7 @@ class KeysightFieldFox(NetworkAnalyser):
     def readFormatted(self):
         """."""
         self.write("CALC:DATA:FDAT?")
-        answer = self.instrument.read_until(b'\n').decode('ascii')
+        answer = self.engineering_project.read_until(b'\n').decode('ascii')
         parsed = answer.strip().split(",")
         return ([float(x) for x in parsed], [0.0]*len(parsed))
     # topfreq = freq + span/2

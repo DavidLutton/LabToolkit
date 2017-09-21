@@ -5,7 +5,7 @@ import logging
 # import numpy as np
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+    from engineering_project.GenericInstrument import GenericInstrument as GenericInstrument
 except ImportError:
     from GenericInstrument import GenericInstrument as GenericInstrument
 
@@ -99,7 +99,7 @@ class TTIPL303(SourceDC):
 
     @output.setter
     def output(self, boolean=False):
-        self.write('OP1 {:d}''.format(boolean))
+        self.write('OP1 {:d}'.format(boolean))
 
     @property
     def config(self):
@@ -199,7 +199,7 @@ http://www.tti-test.com/downloads/drivers-download.htm
 
     @output.setter
     def output(self, boolean=False):
-        self.write('OP1 {:d}''.format(boolean))
+        self.write('OP1 {:d}'.format(boolean))
 
 
 REGISTER = {

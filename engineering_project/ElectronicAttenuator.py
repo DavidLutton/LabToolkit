@@ -5,9 +5,9 @@
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
 try:
-    from Instrument.GenericInstrument import GenericInstrument
-    from Instrument.IEEE488 import IEEE488
-    from Instrument.SCPI import SCPI
+    from engineering_project.GenericInstrument import GenericInstrument
+    from engineering_project.IEEE488 import IEEE488
+    from engineering_project.SCPI import SCPI
 
 except ImportError:
     from GenericInstrument import GenericInstrument
@@ -52,7 +52,7 @@ class MarconiInstruments2187(ElectronicAttenuator, IEEE488):
 
     @property
     def attenuation(self):
-        """Attenuation of instrument."""
+        """Attenuation of engineering_project."""
         return float(self.query("ATTN?"))
 
     # @validsteps(3,4,5,6)

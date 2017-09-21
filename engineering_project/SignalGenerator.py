@@ -4,9 +4,9 @@ import logging
 import pint
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument
-    from Instrument.IEEE488 import IEEE488
-    from Instrument.SCPI import SCPI
+    from engineering_project.GenericInstrument import GenericInstrument
+    from engineering_project.IEEE488 import IEEE488
+    from engineering_project.SCPI import SCPI
 
 except ImportError:
     from GenericInstrument import GenericInstrument

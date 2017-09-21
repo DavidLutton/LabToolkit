@@ -6,8 +6,8 @@
 # import pint
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument
-    from Instrument.Utils import AmplitudeLimiter
+    from engineering_project.GenericInstrument import GenericInstrument
+    from engineering_project.Utils import AmplitudeLimiter
 except ImportError:
     from GenericInstrument import GenericInstrument
     from Utils import AmplitudeLimiter
@@ -18,7 +18,7 @@ class WaveformGenerator(GenericInstrument):
 
     def __init__(self, instrument):
         """."""
-        GenericInstrument.__init__(instrument)
+        Genericengineering_project.__init__(instrument)
         # super().__init__(instrument)
 
     def safe(self):

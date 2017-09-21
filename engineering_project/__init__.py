@@ -4,72 +4,58 @@ __author__ = """David A Lutton"""
 __email__ = 'david@dalun.space'
 __version__ = '0.1.0'
 
-import visa
+import sys
 
+import visa
 
 from pprint import pprint
 
-import Instrument.PowerMeter
-import Instrument.SignalGenerator
-import Instrument.WaveformGenerator
-import Instrument.SpectrumAnalyser
-import Instrument.NetworkAnalyser
-import Instrument.ElectronicAttenuator
-import Instrument.DigitalMultimeter
-import Instrument.EnviromentalChamber
-import Instrument.PowerAnalyser
-import Instrument.SurgeGenerator
-import Instrument.AudioAnalyser
-import Instrument.Osciliscope
-import Instrument.FieldStrength
-import Instrument.Positioner
-import Instrument.FrequencyCounter
-import Instrument.SourceDC
-import Instrument.SourceAC
-import Instrument.SwitchMatrix
-import Instrument.ModulationMeter
-import Instrument.ElectronicLoad
+from . import PowerMeter
+from . import SignalGenerator
+from . import WaveformGenerator
+from . import SpectrumAnalyser
+from . import NetworkAnalyser
+from . import ElectronicAttenuator
+from . import DigitalMultimeter
+from . import EnviromentalChamber
+from . import PowerAnalyser
+from . import SurgeGenerator
+from . import AudioAnalyser
+from . import Osciliscope
+from . import FieldStrength
+from . import Positioner
+from . import FrequencyCounter
+from . import SourceDC
+from . import SourceAC
+from . import SwitchMatrix
+from . import ModulationMeter
+from . import ElectronicLoad
 
-Drivers = [
-    Instrument.SignalGenerator,
-    Instrument.PowerMeter,
-    Instrument.SpectrumAnalyser,
-    Instrument.NetworkAnalyser,
-    Instrument.AudioAnalyser,
-    Instrument.PowerAnalyser,
-    Instrument.SurgeGenerator,
-    Instrument.FrequencyCounter,
-    Instrument.ElectronicAttenuator,
-    Instrument.DigitalMultimeter,
-    Instrument.Osciliscope,
-    Instrument.FieldStrength,
-    Instrument.EnviromentalChamber,
-    Instrument.Positioner,
-    Instrument.SourceDC,
-    Instrument.SourceAC,
-    Instrument.SwitchMatrix,
-    Instrument.ModulationMeter,
-    Instrument.WaveformGenerator,
-    Instrument.ElectronicLoad,
 
-]
+for name in set(sys.modules):
+    if name.startswith(__name__):
 
-# counter = 0
-for each in Drivers:
-    pass
-    pprint(each)
-    pprint(each.REGISTER)
-    print()
-    # counter += len(each.REGISTER)
+        module = sys.modules[name]
+        try:
+            pprint(module.REGISTER)
+            print()
+        except AttributeError:
+            pass
 
-Drivernames = []
-for driver in Drivers:
-    # print(driver)
-    Drivernames.append(repr(driver).split("'")[1].split('.')[1])  # Extract class name from repr
 
-# print(counter)
+driverclasses = []
+for name in set(sys.modules):
+    if name.startswith(__name__+'.'):
+        module = (sys.modules[name])
+        try:
+            if module.REGISTER:  # has drivers
+                name = module.__name__.split('.')[1]
+                # print(name)
+                driverclasses.append(name)
+        except AttributeError:
+            pass
 
-# print(REGISTER)
+# pprint(driverclasses)
 
 
 class ResourceManager(object):
@@ -86,7 +72,7 @@ class ResourceManager(object):
 
 
 class Instrument(object):
-    """ResourceManager.open_resource as a context manager for instrument."""
+    """Instrument.open_resource as a context manager."""
 
     def __init__(self, rm, resource, *, read_termination=False, write_termination=False, **kwargs):
 

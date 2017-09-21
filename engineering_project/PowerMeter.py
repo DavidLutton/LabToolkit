@@ -5,9 +5,9 @@ import logging
 # import numpy as np
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument
-    from Instrument.IEEE488 import IEEE488
-    from Instrument.SCPI import SCPI
+    from engineering_project.GenericInstrument import GenericInstrument
+    from engineering_project.IEEE488 import IEEE488
+    from engineering_project.SCPI import SCPI
 
 except ImportError:
     from GenericInstrument import GenericInstrument
@@ -182,7 +182,7 @@ class HP437B(PowerMeter, IEEE488):
     def preset(self):
         """."""
         # self.message("")
-        self.log.info("Get {} to known state".format(self.instrument.resource_name))
+        self.log.info("Get {} to known state".format(self.engineering_project.resource_name))
         self.correctionfactor(100.0)
         self.rangeauto()
         self.unitslog()  # Log units dBM/dB
@@ -231,13 +231,13 @@ class HP437B(PowerMeter, IEEE488):
         self.write(dispatch[key])
 
     # def display(self, key):
-    '''DD display disable
-        DE display enable
-        DF display enable
-        DU display user message
-    '''
+    # DD display disable
+    #    DE display enable
+    #    DF display enable
+    #    DU display user message
+
     # print(dispatch[key])  # PowerMeter[0].key("Left")
-    # self.instrument.write(dispatch[key])
+    # self.engineering_project.write(dispatch[key])
 
     def zero(self):
         """."""

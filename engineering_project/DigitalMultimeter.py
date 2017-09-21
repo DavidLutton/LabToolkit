@@ -4,9 +4,14 @@ import logging
 import pint
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+    from engineering_project.GenericInstrument import GenericInstrument
+    from engineering_project.IEEE488 import IEEE488
+    from engineering_project.SCPI import SCPI
+
 except ImportError:
-    from GenericInstrument import GenericInstrument as GenericInstrument
+    from GenericInstrument import GenericInstrument
+    from IEEE488 import IEEE488
+    from SCPI import SCPI
 
 
 class DigitalMultimeter(GenericInstrument):

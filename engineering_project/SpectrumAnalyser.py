@@ -6,7 +6,7 @@
 # import numpy as np
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+    from engineering_project.GenericInstrument import GenericInstrument as GenericInstrument
 except ImportError:
     from GenericInstrument import GenericInstrument as GenericInstrument
 
@@ -135,7 +135,7 @@ class HPAKSpectrumAnalyser(SpectrumAnalyser):
     """Extra functions for marker functions and configuration."""
 
     def configure(self):
-        """Configure instrument."""
+        """Configure engineering_project."""
         self.referenceoutput = True
         self.frequencyspan = 1e3
         self.resolutionbandwidth = 1e3
@@ -234,7 +234,7 @@ class HPE4406A(SpectrumAnalyser):
     # def __preset__(self):
 
     # self.message("")
-    # self.log.info("Get   {} to known state".format(self.instrument.resource_name))
+    # self.log.info("Get   {} to known state".format(self.engineering_project.resource_name))
     # self.write('RST')
 
 

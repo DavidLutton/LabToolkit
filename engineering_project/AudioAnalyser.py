@@ -6,7 +6,7 @@ import logging
 import pint
 
 try:
-    from Instrument.GenericInstrument import GenericInstrument as GenericInstrument
+    from engineering_project.GenericInstrument import GenericInstrument as GenericInstrument
 except ImportError:
     from GenericInstrument import GenericInstrument as GenericInstrument
 
