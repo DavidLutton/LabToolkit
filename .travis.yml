@@ -28,5 +28,5 @@ deploy:
     secure: PLEASE_REPLACE_ME
   on:
     tags: true
-    repo: DavidLutton/engineering_project
+    repo: DavidLutton/LabToolkit
     condition: $TOXENV == py27

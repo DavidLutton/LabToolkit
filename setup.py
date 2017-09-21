@@ -18,23 +18,23 @@ test_requirements = [
 ]
 
 setup(
-    name='engineering_project',
+    name='LabToolkit',
     version='0.1.0',
-    description="Engineering project to operate a test system to IEC 61000-4-6:2014 and IEC 61000-4-3:2006+A2:2010 and ISO/IEC 17025:2005",
+    description="Engineering project to operate a test system",
     long_description=readme + '\n\n' + history,
     author="David A Lutton",
     author_email='david@dalun.space',
-    url='https://github.com/DavidLutton/engineering_project',
+    url='https://github.com/DavidLutton/LabToolkit',
     packages=[
         'engineering_project',
     ],
-    package_dir={'engineering_project':
-                 'engineering_project'},
+    package_dir={'labtoolkit':
+                 'labtoolkit'},
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
     zip_safe=False,
-    keywords='engineering_project',
+    keywords='labtoolkit',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
