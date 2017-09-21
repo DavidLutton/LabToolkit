@@ -26,7 +26,7 @@ setup(
     author_email='david@dalun.space',
     url='https://github.com/DavidLutton/LabToolkit',
     packages=[
-        'engineering_project',
+        'labtoolkit',
     ],
     package_dir={'labtoolkit':
                  'labtoolkit'},
