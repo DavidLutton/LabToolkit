@@ -399,7 +399,7 @@ class AnritsuMG369nx(SignalGenerator, IEEE488):
     @property
     def frequency(self):
         """."""
-        return(self.query("OF0"))
+        return(float(self.query("OF0").strip()) * 1e6)  # Responce is in MHz
 
     @frequency.setter
     def frequency(self, frequency):
@@ -418,7 +418,7 @@ class AnritsuMG369nx(SignalGenerator, IEEE488):
     @property
     def output(self):
         """."""
-        pass
+        return NotImplemented
         ''' ORF if self.query("OUTPut:STATe?") == "1":
             return(True)
         else:
