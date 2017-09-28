@@ -30,6 +30,10 @@ class AgilentE8357A(NetworkAnalyser):
     .. figure::  images/NetworkAnalyser/AgilentE8357A.jpg
     """
 
+    def __init__(self, instrument):
+        """."""
+        super().__init__(instrument)
+
     @property
     def points(self):
         """Sweep Points."""
@@ -163,6 +167,10 @@ class HP4395A(NetworkAnalyser):
 
     .. figure::  images/NetworkAnalyser/HP4395A.jpg
     """
+
+    def __init__(self, instrument):
+        """."""
+        super().__init__(instrument)
 
     @property
     def points(self):
@@ -309,6 +317,10 @@ class Wiltron360(NetworkAnalyser):
 
     .. figure::  images/NetworkAnalyser/Wiltron360.jpg
     """
+
+    def __init__(self, instrument):
+        """."""
+        super().__init__(instrument)
 
     def trace(self):
         """Get trace."""
