@@ -355,6 +355,21 @@ class AnritsuMG369nx(SignalGenerator, IEEE488):
     """ANRITSU,MG369nx."""
 
     # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
+    '''LOS Opens the level offset
+    parameter.
+    +100dB to 100dB
+    (logarithmic); +xxx mV to
+    xxx mV (linear)
+    DB (log)
+    VT (linear
+    '''
+    # XL0
+    '''
+    Opens the L0 parameter.   Power level range of the
+    MG369XB model
+    DM (log)
+    VT (linear)
+    '''
 
     def __repr__(self):
         """."""
@@ -370,6 +385,15 @@ class AnritsuMG369nx(SignalGenerator, IEEE488):
         # self.amps = [-110, 30]
         self.freqs = [2e9, 10e9]
         # self.write("*CLS")  # clear error status
+        # self.write("*CLS")  # clear error status
+        # self.write('CF0')  # Set CW mode at F0, Opens F0 parameter.
+        # self.write('CM0')  # Set CW mode at M0, Opens M0 parameter.
+        # AL0
+        # self.write('LOG')
+        # self.query('SAF')  # Outputs the current instrument setup to the controller.
+        # RCF Readies the MG369XB to receive a new instrument setup recalled from the controller
+        self.query('OO')  # Returns the instrument option string to the controller
+        self.write('RO1')  # Selects RF to be off at reset
         self.write('RL1')  # Release to Local
 
     @property
@@ -856,6 +880,89 @@ class RohdeSchwarzSHM52(SignalGenerator):
             self.write("LEV:OFF")
 
 
+class HP85645A(SignalGenerator, IEEE488, SCPI):
+    """."""
+
+    def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        """."""
+        super().__init__(instrument)
+        # self.log = logging.getLogger(__name__)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        self.amps = [-60, -2]
+        self.freqs = [300e3, 26.5e9]
+
+    '''
+'HEWLETT-PACKARD,85645A,3407A00241,920427'  # E380
+
+>>> source.inst.write('*CLS')
+(5, <StatusCode.success: 0>)
+>>> source.inst.query('SOURce:FREQuency:MODE?')
+'CW'
+>>> source.inst.query('SOURce:FREQuency:OFFSet?')
+'-3.10700000E+008'
+>>> source.inst.query('SOURce:FREQuency:OFFSet:STEP:INCRement?')
+'+1.00000000E+003'
+>>> source.inst.query('SOURce:ROSCillator:SOURce?')
+'+1'
+>>> source.inst.query('SOURce:SWEep:RSELect?')
+'HP8563E'
+>>> source.inst.query('SOURce:FREQuency:STEP:AUTO?')
+'+1'
+>>> source.inst.query('SOURce:POWer:STEP:INCRement?')
+'+1.00000000E-001'
+>>> source.inst.query('SOURce:FREQuency:STEP:INCRement?')
+'+5.00000000E+007'
+>>> source.inst.query('SOURce:POWer:ATTenuation?')
+'+0'
+>>> source.inst.query('SOURce:POWer:CENTer?')
+'-5.10000000E+000'
+>>> source.inst.query('SOURce:FREQuency:CW?')
+'+1.33500000E+010'
+>>> source.inst.query('OUTPut:COUPling?')
+'AC'
+>>> source.inst.query('OUTPut:STATe?')
+'+0'
+>>>
+    '''
+
+    @property
+    def frequency(self):
+        """."""
+        return(self.query("SOURce:FREQuency:CW?"))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.write("SOURce:FREQuency:CW {0:.0f} Hz".format(frequency))
+
+    @property
+    def amplitude(self):
+        """."""
+        return(self.query("SOURce:POWer:CENTer?"))
+
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitude(self, amplitude):
+        self.write("SOURce:POWer:CENTer {0:.1f} DBM".format(amplitude))
+
+    @property
+    def output(self):
+        """."""
+        if self.query("OUTPut:STATe?") == "1":
+            return(True)
+        else:
+            return(False)
+
+    @output.setter
+    def output(self, boolean=False):
+        self.write("OUTPut:STATe {:d}".format(boolean))
+
+
 REGISTER = {
     'HEWLETT-PACKARD,8657A,': HP8657A,
     'HEWLETT_PACKARD,8664A,': HP8664A,
@@ -874,6 +981,7 @@ REGISTER = {
     'Anritsu,MG3710A': AnritsuMG3710A,
     'Keysight,N5173B': KeysightN5173B,
     'ROHDE&SCHWARZ,SMH52': RohdeSchwarzSHM52,
+    'HEWLETT-PACKARD,85645A,': HP85645A,
 
 
     # HP 8673M 2-18GHz
