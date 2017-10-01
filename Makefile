@@ -48,7 +48,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 
 lint: ## check style with flake8
-	flake8 engineering_project tests
+	flake8 labtoolkit tests
 
 test: ## run tests quickly with the default Python
 	py.test
@@ -58,24 +58,24 @@ test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source engineering_project -m pytest
+	coverage run --source labtoolkit -m pytest
 
 		coverage report -m
 		coverage html
 		$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/engineering_project.rst
+	rm -f docs/labtoolkit.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ engineering_project
+	sphinx-apidoc -o docs/ labtoolkit
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
-	######  $(BROWSER) docs/_build/html/index.html
+	echo $(BROWSER) docs/_build/html/index.html
 
 docspdf: ## generate Sphinx PDF documentation, including API docs
-	rm -f docs/engineering_project.rst
+	rm -f docs/labtoolkit.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ engineering_project
+	sphinx-apidoc -o docs/ labtoolkit
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs latexpdf
 
