@@ -54,7 +54,7 @@ class AnaheimAutomationSMC40(Positioner):
 
     @stepangle.setter
     def stepangle(self, stepangle=1):  # 100 is 1 degree
-        # self.write('XMN{}'.format(int(stepsize*100)))
+        self.write('XMN{}'.format(int(stepsize*100)))
         # int(Q_(stepangle, 'degree').magnitude * 100)
         # self.write('XMN{}'.format(int(Q_(stepangle, 'degree').magnitude * 100)))
 
