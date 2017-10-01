@@ -1,4 +1,4 @@
-Welcome to Engineering Project's documentation!
+Welcome to LabToolkit's documentation!
 ======================================
 
 Contents:

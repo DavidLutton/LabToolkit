@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use Engineering Project in a project::
+To use LabToolkit in a project::
 
-    import engineering_project
+    import LabToolkit as labtk
