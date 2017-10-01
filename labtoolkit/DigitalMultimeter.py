@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import time
 import logging
-import pint
+# import pint
 
 try:
     from labtoolkit.GenericInstrument import GenericInstrument
@@ -126,7 +126,7 @@ class HP34401A(DigitalMultimeter):
         CONTinuity
         DIODe
         '''
-        self.write("FUNCtion {}".format(function))
+        self.write('SENSe:FUNCtion "{}"'.format(function))
 
     @property
     def range(self):

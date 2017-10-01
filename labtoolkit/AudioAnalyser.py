@@ -3,7 +3,7 @@
 
 import time
 import logging
-import pint
+# import pint
 
 try:
     from labtoolkit.GenericInstrument import GenericInstrument
