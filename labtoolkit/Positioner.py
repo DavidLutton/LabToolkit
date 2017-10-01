@@ -13,9 +13,9 @@ except ImportError:
     from SCPI import SCPI
 
 
-ureg = pint.UnitRegistry()
+# ureg = pint.UnitRegistry()
 # ureg.default_format = '~P'
-Q_ = ureg.Quantity
+# Q_ = ureg.Quantity
 
 
 class Positioner(GenericInstrument):
@@ -56,7 +56,7 @@ class AnaheimAutomationSMC40(Positioner):
     def stepangle(self, stepangle=1):  # 100 is 1 degree
         # self.write('XMN{}'.format(int(stepsize*100)))
         # int(Q_(stepangle, 'degree').magnitude * 100)
-        self.write('XMN{}'.format(int(Q_(stepangle, 'degree').magnitude * 100)))
+        # self.write('XMN{}'.format(int(Q_(stepangle, 'degree').magnitude * 100)))
 
     def zero(self):
         self.write('XGH')
