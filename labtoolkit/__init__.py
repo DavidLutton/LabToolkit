@@ -30,17 +30,19 @@ from . import SourceAC
 from . import SwitchMatrix
 from . import ModulationMeter
 from . import ElectronicLoad
+# from . import PortableApplianceTester
 
 
-for name in set(sys.modules):
-    if name.startswith(__name__):
+def what():
+    for name in set(sys.modules):
+        if name.startswith(__name__):
 
-        module = sys.modules[name]
-        try:
-            pprint(module.REGISTER)
-            print()
-        except AttributeError:
-            pass
+            module = sys.modules[name]
+            try:
+                pprint(module.REGISTER)
+                print()
+            except AttributeError:
+                pass
 
 
 driverclasses = []

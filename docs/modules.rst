@@ -1,7 +1,7 @@
-engineering_project
-===================
+labtoolkit
+==========
 
 .. toctree::
    :maxdepth: 4
 
-   engineering_project
+   labtoolkit

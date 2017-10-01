@@ -11,6 +11,11 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     # TODO: put package requirements here
+    'pyvisa',
+    'pyvisa-py',
+    'pyvisa-sim',
+    # 'numpy',
+    # 'pint',
 ]
 
 test_requirements = [
@@ -19,7 +24,7 @@ test_requirements = [
 
 setup(
     name='LabToolkit',
-    version='0.1.0',
+    version='0.1.2',
     description="Engineering project to operate a test system",
     long_description=readme + '\n\n' + history,
     author="David A Lutton",
