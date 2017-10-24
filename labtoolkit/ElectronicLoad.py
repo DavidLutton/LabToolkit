@@ -4,15 +4,9 @@
 # import logging
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
-try:
-    from labtoolkit.GenericInstrument import GenericInstrument
-    from labtoolkit.IEEE488 import IEEE488
-    from labtoolkit.SCPI import SCPI
-
-except ImportError:
-    from GenericInstrument import GenericInstrument
-    from IEEE488 import IEEE488
-    from SCPI import SCPI
+from labtoolkit.GenericInstrument import GenericInstrument
+from labtoolkit.IEEE488 import IEEE488
+from labtoolkit.SCPI import SCPI
 
 
 class ElectronicLoad(GenericInstrument):
@@ -76,5 +70,6 @@ class RigolDL30n1(ElectronicLoad, IEEE488):
 
 REGISTER = {
     'RIGOL,DL3031A': RigolDL30n1,
+    # Benchview supported  N3300A, N3301A, 6060B, 6063B
 
 }

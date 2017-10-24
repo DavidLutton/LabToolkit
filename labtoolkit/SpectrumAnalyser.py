@@ -5,15 +5,9 @@
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
 
-try:
-    from labtoolkit.GenericInstrument import GenericInstrument
-    from labtoolkit.IEEE488 import IEEE488
-    from labtoolkit.SCPI import SCPI
-
-except ImportError:
-    from GenericInstrument import GenericInstrument
-    from IEEE488 import IEEE488
-    from SCPI import SCPI
+from labtoolkit.GenericInstrument import GenericInstrument
+from labtoolkit.IEEE488 import IEEE488
+from labtoolkit.SCPI import SCPI
 
 
 class SpectrumAnalyser(GenericInstrument):
@@ -32,7 +26,7 @@ class SpectrumAnalyser(GenericInstrument):
     @property
     def frequency(self):
         """Center frequency."""
-        return float(self.write(":FREQuency:CENT?"))
+        return float(self.query(":FREQuency:CENT?"))
 
     @frequency.setter
     def frequency(self, freq):
@@ -41,7 +35,7 @@ class SpectrumAnalyser(GenericInstrument):
     @property
     def sweeppoints(self):
         """Sweep Points."""
-        return float(self.write(":SWEep:POINts?"))
+        return float(self.query(":SWEep:POINts?"))
 
     @sweeppoints.setter
     def sweeppoints(self, points):
@@ -59,7 +53,7 @@ class SpectrumAnalyser(GenericInstrument):
         [:SENSe]:<meas>:SWEep:TIME:AUTO OFF|ON|0|1
         [:SENSe]:<meas>:SWEep:TIME:AUTO?
         '''
-        return float(self.write(":SWEep:TIME?"))
+        return float(self.query(":SWEep:TIME?"))
 
     @sweeptime.setter
     def sweeptime(self, points):
@@ -206,9 +200,8 @@ class AgilentE4440A(HPAKSpectrumAnalyser):
         # self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
         # self.log.info('Creating an instance of\t' + str(__class__))
 
-        assert self.IDN.startswith('Agilent Technologies, E4440A,')
         # self.query(":SYSTem:OPTions?")
-        self.write("*CLS")  # clear error status
+        # self.write("*CLS")  # clear error status
 
 
 class HPE4406A(SpectrumAnalyser):
@@ -216,6 +209,10 @@ class HPE4406A(SpectrumAnalyser):
 
     .. figure::  images/SpectrumAnalyser/AgilentE4406A.jpg
     """
+
+    def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__.__name__, self.instrument))
 
     def __init__(self, instrument):
         """."""
@@ -225,12 +222,40 @@ class HPE4406A(SpectrumAnalyser):
         # self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
         # self.log.info('Creating an instance of\t' + str(__class__))
 
-        assert self.IDN.startswith('Hewlett-Packard,E4406A,')
-        self.__preset__()
+    # def trace(self):
+    #    """Get trace."""
+    #    # setup
+    #    return self.instrument.query_binary_values(':READ:SPECtrum4?')
 
     def trace(self):
         """Get trace."""
-        return NotImplemented
+        return np.array(self.instrument.query_ascii_values(':READ:SPECtrum4?'))
+
+    @property
+    def attenuation(self):
+        """attenuation."""
+        return float(self.query(":SENS:POW:RF:ATT?"))
+
+    @attenuation.setter
+    def attenuation(self, freq):
+        self.write(":SENS:POW:RF:ATT {}".format(freq))
+
+    @property
+    def span(self):
+        """span frequency."""
+        return float(self.query(":SENS:SPEC:FREQ:SPAN?"))
+
+    @span.setter
+    def span(self, freq):
+        self.write(":SENS:SPEC:FREQ:SPAN {}Hz".format(freq))
+
+    @property
+    def axis(self):
+        """Return the x axis for current frequency and span."""
+        freq = self.frequency
+        span = self.span
+
+        return np.linspace(freq - (span / 2), freq + (span / 2), self.points)
 
     # def __repr__(self):
     #    return "{}, {}".format(__name__, self.instrument)
@@ -333,4 +358,11 @@ REGISTER = {
     'HP8594E': HP8594E,
     'HP8596E': HP8596E,
     'HPE4404B': HPE4404B,
+    # Benchview supported N9040B UXA, N9030A/B PXA, N9020A/B MXA, N9010A/B EXA, N9000A/B CXA, M9290A CXA-m
+    # Benchview supported N9320B, N9322C
+    # Benchview supported N9342C, N9343C, N9344C
+    # Benchview supported E4440A, E4443A, E4445A, E4446A, E4447A, E4448A
+    # Benchview supported E4402B, E4404B, E4405B, E4407B
+    # Benchview supported E4403B, E4411B, E4408B
+
 }

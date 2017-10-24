@@ -1,16 +1,12 @@
+#!/usr/bin/env python3
+"""."""
 # import time
 # import logging
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
-try:
-    from labtoolkit.GenericInstrument import GenericInstrument
-    from labtoolkit.IEEE488 import IEEE488
-    from labtoolkit.SCPI import SCPI
-
-except ImportError:
-    from GenericInstrument import GenericInstrument
-    from IEEE488 import IEEE488
-    from SCPI import SCPI
+from labtoolkit.GenericInstrument import GenericInstrument
+from labtoolkit.IEEE488 import IEEE488
+from labtoolkit.SCPI import SCPI
 
 
 class PowerAnalyser(GenericInstrument):
@@ -42,5 +38,6 @@ class VoltechPM1000P(PowerAnalyser, IEEE488):
 REGISTER = {
     'VoltechPM3000A': VoltechPM3000A,
     'VoltechPM1000P': VoltechPM1000P,
+    # Benchview suppported  PA2201A, PA2203A
 
 }

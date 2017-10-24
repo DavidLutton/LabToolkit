@@ -5,16 +5,9 @@ import time
 import logging
 # import pint
 
-try:
-    from labtoolkit.GenericInstrument import GenericInstrument
-    from labtoolkit.IEEE488 import IEEE488
-    from labtoolkit.SCPI import SCPI
-
-except ImportError:
-    from GenericInstrument import GenericInstrument
-    from IEEE488 import IEEE488
-    from SCPI import SCPI
-
+from labtoolkit.GenericInstrument import GenericInstrument
+from labtoolkit.IEEE488 import IEEE488
+from labtoolkit.SCPI import SCPI
 
 class AudioAnalyser(GenericInstrument):
     """Parent class for AudioAnalyser."""
@@ -25,7 +18,10 @@ class AudioAnalyser(GenericInstrument):
 
 
 class HP8903B(AudioAnalyser):
-    """8903B 21 Hz to 100 kHz Audio Analyzer."""
+    """8903B 20 Hz to 100 kHz Audio Analyzer.
+
+    .. figure::  images/AudioAnalyser/HP8903B.jpg
+    """
 
 
 REGISTER = {

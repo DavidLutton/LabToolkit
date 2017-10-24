@@ -1,18 +1,15 @@
 #!/usr/bin/env python3
+"""."""
+
 import time
 import logging
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
 
-try:
-    from labtoolkit.GenericInstrument import GenericInstrument
-    from labtoolkit.IEEE488 import IEEE488
-    from labtoolkit.SCPI import SCPI
+from labtoolkit.GenericInstrument import GenericInstrument
+from labtoolkit.IEEE488 import IEEE488
+from labtoolkit.SCPI import SCPI
 
-except ImportError:
-    from GenericInstrument import GenericInstrument
-    from IEEE488 import IEEE488
-    from SCPI import SCPI
 
 class SourceAC(GenericInstrument):
 
@@ -85,6 +82,7 @@ class YA(SourceAC):
 
     .. figure::  images/SourceAC/SchaffnerNSG1007.jpg
     """
+
 
 REGISTER = {
     "CaliforniaInstruments3000i": CaliforniaInstruments3000i,

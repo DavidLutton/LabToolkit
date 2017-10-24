@@ -4,15 +4,10 @@
 # import logging
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
-try:
-    from labtoolkit.GenericInstrument import GenericInstrument
-    from labtoolkit.IEEE488 import IEEE488
-    from labtoolkit.SCPI import SCPI
 
-except ImportError:
-    from GenericInstrument import GenericInstrument
-    from IEEE488 import IEEE488
-    from SCPI import SCPI
+from labtoolkit.GenericInstrument import GenericInstrument
+from labtoolkit.IEEE488 import IEEE488
+from labtoolkit.SCPI import SCPI
 
 
 class ElectronicAttenuator(GenericInstrument):
@@ -33,10 +28,6 @@ class MarconiInstruments2187(ElectronicAttenuator, IEEE488):
     .. figure::  images/ElectronicAttenuator/MarconiInstruments2187.jpg
     """
 
-    units = {
-        'dB': 'DB',
-    }
-
     def __init__(self, instrument):
         """."""
         super().__init__(instrument)
@@ -44,11 +35,9 @@ class MarconiInstruments2187(ElectronicAttenuator, IEEE488):
         self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
         # self.log.info('Creating an instance of\t' + str(__class__))
 
-        assert self.IDN.startswith("MARCONI INSTRUMENTS,2187,")
-
     def __repr__(self):
         """."""
-        return "{}, {}".format(__class__, self.instrument)
+        return "{}, {}".format(__class__.__name__, self.instrument)
 
     @property
     def attenuation(self):
@@ -58,7 +47,7 @@ class MarconiInstruments2187(ElectronicAttenuator, IEEE488):
     # @validsteps(3,4,5,6)
     @attenuation.setter
     def attenuation(self, attenuation):
-        self.write("ATTN {0:.1f}{1}".format(attenuation, self.units['dB']))
+        self.write("ATTN {0:.0f}DB".format(attenuation))
 
     def preset(self):
         """."""

@@ -1,20 +1,15 @@
 #!/usr/bin/env python3
+
 """WaveformGenerator Instrument classes."""
 
 # import time
 # import logging
 # import pint
-try:
-    from labtoolkit.GenericInstrument import GenericInstrument
-    from labtoolkit.IEEE488 import IEEE488
-    from labtoolkit.SCPI import SCPI
-    from labtoolkit.Utils import AmplitudeLimiter
 
-except ImportError:
-    from GenericInstrument import GenericInstrument
-    from IEEE488 import IEEE488
-    from SCPI import SCPI
-    from Utils import AmplitudeLimiter
+from labtoolkit.GenericInstrument import GenericInstrument
+from labtoolkit.IEEE488 import IEEE488
+from labtoolkit.SCPI import SCPI
+from labtoolkit.Utils import AmplitudeLimiter
 
 
 class WaveformGenerator(GenericInstrument):
@@ -213,5 +208,5 @@ REGISTER = {
     "HEWLETT-PACKARD,33120A,": HP33120A,
     'HP8116A': HP8116A,
     'Keysight33500B': Keysight33500B,
-
+    # Benchview suppored 33210A, 33220A, 33250A, 33521A, 33522A, 33509B,33510B, 33511B, 33512B, 33519B, 33520B, 33521B, 33522B, 33611A, 33612A, 33621A, 33622A, 81150A, 81160A
 }

@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
+"""."""
+
 import time
 import logging
 # from scipy.interpolate import UnivariateSpline
 # import numpy as np
 
-try:
-    from labtoolkit.GenericInstrument import GenericInstrument
-    from labtoolkit.IEEE488 import IEEE488
-    from labtoolkit.SCPI import SCPI
-
-except ImportError:
-    from GenericInstrument import GenericInstrument
-    from IEEE488 import IEEE488
-    from SCPI import SCPI
+from labtoolkit.GenericInstrument import GenericInstrument
+from labtoolkit.IEEE488 import IEEE488
+from labtoolkit.SCPI import SCPI
 
 
 class PowerMeter(GenericInstrument):
@@ -378,4 +374,6 @@ REGISTER = {
     # NVRS
     # R&S ???4
     # Bird 4421
+    # Benchview Supported N1911A, N1912A, N1913A, N1914A, N8262A,
+    # Benchview Supported U2000A, U2000B, U2000H, U2001A, U2001B, U2001H, U2002A, U2002H, U2004A, U2021XA, U2022XA, U2041XA, U2042XA, U2043XA, U2044XA, U2049XA LAN, U8481A, U8485A, U8487A, U8488A
 }

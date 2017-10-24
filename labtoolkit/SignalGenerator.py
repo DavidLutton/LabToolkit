@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
+"""."""
+
 import time
 import logging
 # import pint
 
-try:
-    from labtoolkit.GenericInstrument import GenericInstrument
-    from labtoolkit.IEEE488 import IEEE488
-    from labtoolkit.SCPI import SCPI
-
-except ImportError:
-    from GenericInstrument import GenericInstrument
-    from IEEE488 import IEEE488
-    from SCPI import SCPI
+from labtoolkit.GenericInstrument import GenericInstrument
+from labtoolkit.IEEE488 import IEEE488
+from labtoolkit.SCPI import SCPI
 
 
 class SignalGenerator(GenericInstrument):
@@ -885,7 +881,7 @@ class HP85645A(SignalGenerator, IEEE488, SCPI):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return("{}, {}".format(__class__.__name__, self.instrument))
 
     def __init__(self, instrument):
         """."""
@@ -932,6 +928,16 @@ class HP85645A(SignalGenerator, IEEE488, SCPI):
     '''
 
     @property
+    def OUTPut_COUPling(self):
+        self.query('OUTPut:COUPling?')
+
+    @OUTPut_COUPling.setter
+    def OUTPut_COUPling(self, COUPling):
+        self.write('OUTPut:COUPling {}'.format(COUPling))
+
+    # coupling = OUTPut_COUPling
+
+    @property
     def frequency(self):
         """."""
         return(self.query("SOURce:FREQuency:CW?"))
@@ -953,10 +959,10 @@ class HP85645A(SignalGenerator, IEEE488, SCPI):
     @property
     def output(self):
         """."""
-        if self.query("OUTPut:STATe?") == "1":
-            return(True)
+        if self.query("OUTPut:STATe?") == "+1":
+            return True
         else:
-            return(False)
+            return False
 
     @output.setter
     def output(self, boolean=False):
@@ -987,4 +993,5 @@ REGISTER = {
     # HP 8673M 2-18GHz
     # Anritsu MG3710A 100e3, 6e9
     # Agilent N5182A 100e3, 6e9
+    # Benchview supported E4438C, E4428C, E8267D, E8257D, E8663D, N5171B,N5172B, N5173B, N5181A/B, N5182A/B, N5183A/B
 }
