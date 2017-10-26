@@ -163,7 +163,7 @@ class Instruments(object):
     def __repr__(self):
         # return str(self.__dict__)
         buffer = []
-        for key, value in instrument.__dict__.items():
+        for key, value in self.__dict__.items():
             buffer.append('{}:'.format(key))
             for valu in value:
                 buffer.append('     {}: {}'.format(valu, value[valu]))
