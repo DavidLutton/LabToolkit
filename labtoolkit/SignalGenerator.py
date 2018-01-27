@@ -740,6 +740,37 @@ class MarconiInstruments203N(SignalGenerator, IEEE488):
         else:
             self.write("RFLV:OFF")
 
+    @property
+    def outputLF(self):
+        """."""
+        print(self.query("LF?"))
+
+    @outputLF.setter
+    def outputLF(self, boolean=False):
+        if boolean is True:
+            self.write("LF:ON")
+        else:
+            self.write("LF:OFF")
+
+    @property
+    def frequencyLF(self):
+        """."""
+        return(self.query("LFGF?"))
+
+    @frequencyLF.setter
+    def frequencyLF(self, frequency):
+        self.write("LFGF:VALUE {0:.1f}Hz".format(frequency))
+
+    @property
+    def amplitudeLF(self):
+        """."""
+        return(self.query("LFGL?"))
+
+    @amplitude.setter
+    @amplitudelimiter
+    def amplitudeLF(self, amplitude):
+        self.write("LFGL:VALUE {0:.1f}DBM".format(amplitude))
+
 
 class MarconiInstruments2030(MarconiInstruments203N):
     """MarconiInstruments 203N 10e3, ...
