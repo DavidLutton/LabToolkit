@@ -17,7 +17,7 @@ class WaveformGenerator(GenericInstrument):
 
     def __init__(self, instrument):
         """."""
-        Genericengineering_project.__init__(instrument)
+        super().__init__(instrument)
         # super().__init__(instrument)
 
     def safe(self):
@@ -104,8 +104,9 @@ class HP33120A(WaveformGenerator):
 
     @amplitude.setter
     @AmplitudeLimiter
-    def amplitude(self, amplitude, unit="VPP"):
-        self.write("SOURce:VOLTage {0:.6f}{1}".format(amplitude, unit))
+    def amplitude(self, amplitude, unit="VRMS"):
+        self.write("SOURce:VOLTage:UNIT {}".format(unit))
+        self.write("SOURce:VOLTage {0:.6f}".format(amplitude))
 
 
 class HP8116A(WaveformGenerator):
