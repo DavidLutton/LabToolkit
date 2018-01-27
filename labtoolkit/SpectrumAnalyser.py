@@ -152,8 +152,9 @@ class HPAKSpectrumAnalyser(SpectrumAnalyser):
         frequency = float(self.query(":CALCulate:MARKer1:X?").strip())  # FREQ
 
         # return(float(freqmeas), float(amp))
-        print(frequency)
+        # print(frequency)
         return amplitude  # , frequency
+        # return {'amplitude': amplitude, 'frequency': frequency}
 
     def trace(self):
         """Get trace."""
@@ -202,6 +203,10 @@ class AgilentE4440A(HPAKSpectrumAnalyser):
 
         # self.query(":SYSTem:OPTions?")
         # self.write("*CLS")  # clear error status
+
+    def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__.__name__, self.instrument))
 
 
 class HPE4406A(SpectrumAnalyser):
