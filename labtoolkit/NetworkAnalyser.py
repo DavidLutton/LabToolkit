@@ -25,6 +25,10 @@ class AgilentE8357A(NetworkAnalyser):
     .. figure::  images/NetworkAnalyser/AgilentE8357A.jpg
     """
 
+    def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__.__name__, self.instrument))
+
     def __init__(self, instrument):
         """."""
         super().__init__(instrument)
@@ -162,6 +166,10 @@ class HP4395A(NetworkAnalyser):
 
     .. figure::  images/NetworkAnalyser/HP4395A.jpg
     """
+
+    def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__.__name__, self.instrument))
 
     def __init__(self, instrument):
         """."""
@@ -317,6 +325,10 @@ class Wiltron360(NetworkAnalyser):
         """."""
         super().__init__(instrument)
 
+    def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__.__name__, self.instrument))
+
     def trace(self):
         """Get trace."""
         return NotImplemented
@@ -352,6 +364,10 @@ class KeysightFieldFox(NetworkAnalyser):
         # self.log.info('Creating an instance of\t' + str(__class__))
 
         self.write("*CLS")  # clear error status
+
+    def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__.__name__, self.instrument))
 
     @property
     def points(self):
