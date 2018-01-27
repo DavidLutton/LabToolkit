@@ -352,6 +352,25 @@ class RohdeSchwarzNRVS(PowerMeter):
     .. figure::  images/PowerMeter/RohdeSchwarzNRVS.jpg
     """
 
+    def __init__(self, instrument):
+        """."""
+        super().__init__(instrument)
+
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+    def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__, self.instrument))
+
+    @property
+    def measurement(self):
+        """Get reading of power level."""
+        vals = self.query('x3').strip().split(' ')
+        unit = vals[0]
+        value = float(vals[-1])
+        # print('{} {}'.format(value, unit))
+        return(value)
+
 
 class RohdeSchwarzURV4(PowerMeter):
     """RohdeSchwarz URV 4.
