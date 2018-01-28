@@ -300,6 +300,12 @@ class HP4395A(NetworkAnalyser):
         """Get formatted trace."""
         return NotImplemented
         '''
+         inst.timeout = 30000
+        # inst.write("FORM4")
+        print(inst.query("OUTPDATA?"))
+        # print(inst.query("OUTPSWPRM?"))
+        '''
+        '''
 
 53 54 41 52 3F                                  STAR?
 53 54 4F 50 3F                                  STOP?
