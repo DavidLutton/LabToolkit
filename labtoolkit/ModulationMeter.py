@@ -28,6 +28,12 @@ class HP8901A(ModulationMeter):
 class MI2305(ModulationMeter):
     """."""
 
+    '''
+    inst = rm.open_resource('GPIB0::5::INSTR')
+    print( inst.query('TM').strip() )
+    print( inst.query('TF').strip() )
+    '''
+
 
 REGISTER = {
     'HEWLETT-PACKARD,8901B': HP8901B,
