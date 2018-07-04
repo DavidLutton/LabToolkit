@@ -498,6 +498,30 @@ class AnritsuMG3693A(AnritsuMG369nx):  # ANRITSU,MG3693A,
         self.freqs = [2e9, 30e9]
 
 
+class AnritsuMG3695B(AnritsuMG369nx):  # ANRITSU,MG3695B,
+    """Antitsu MG3695A 2e9, 50e9.
+
+    .. figure::  images/SignalGenerator/AnritsuMG3695A.jpg
+    """
+
+    # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
+
+    def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__, self.instrument))
+
+    def __init__(self, instrument):
+        """."""
+        super().__init__(instrument)
+        # self.log.info('Creating an instance of\t' + str(__class__))
+        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+
+        # assert self.IDN.startswith('ANRITSU,MG3693A,')
+
+        self.amps = [-110, 20]
+        self.freqs = [8e6, 50e9]
+
+
 class Wiltron6669A(SignalGenerator, IEEE488):
     """Wiltron 6669A 10e6, 40e9.
 
@@ -740,37 +764,6 @@ class MarconiInstruments203N(SignalGenerator, IEEE488):
         else:
             self.write("RFLV:OFF")
 
-    @property
-    def outputLF(self):
-        """."""
-        print(self.query("LF?"))
-
-    @outputLF.setter
-    def outputLF(self, boolean=False):
-        if boolean is True:
-            self.write("LF:ON")
-        else:
-            self.write("LF:OFF")
-
-    @property
-    def frequencyLF(self):
-        """."""
-        return(self.query("LFGF?"))
-
-    @frequencyLF.setter
-    def frequencyLF(self, frequency):
-        self.write("LFGF:VALUE {0:.1f}Hz".format(frequency))
-
-    @property
-    def amplitudeLF(self):
-        """."""
-        return(self.query("LFGL?"))
-
-    @amplitude.setter
-    @amplitudelimiter
-    def amplitudeLF(self, amplitude):
-        self.write("LFGL:VALUE {0:.1f}DBM".format(amplitude))
-
 
 class MarconiInstruments2030(MarconiInstruments203N):
     """MarconiInstruments 203N 10e3, ...
@@ -804,7 +797,7 @@ class MarconiInstruments2031(MarconiInstruments203N):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return("{}, {}".format(__class__.__name__, self.instrument))
 
     def __init__(self, instrument):
         """."""
@@ -1007,6 +1000,7 @@ REGISTER = {
     'ANRITSU,MG3691B,': AnritsuMG3691B,
     'ANRITSU,MG3692A,': AnritsuMG3692A,
     'ANRITSU,MG3693A,': AnritsuMG3693A,
+    'ANRITSU,MG3695B,': AnritsuMG3695B,
     'Agilent Technologies, E4422B,': AgilentE4422B,
     'Hewlett-Packard, ESG-4000B': AgilentE4422B,
     'Wiltron 6669A,': Wiltron6669A,  # TODO
