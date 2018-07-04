@@ -145,7 +145,7 @@ class HPAKSpectrumAnalyser(SpectrumAnalyser):
     @property
     def measurement(self, *, marker=1):
         """Set instrument marker to peak and read X, Y."""
-        self.write(":CALCulate:MARKer{}: 1".format(marker))
+        # self.write(":CALCulate:MARKer{}: 1".format(marker))
         self.write(":CALCulate:MARKer{}:MAX".format(marker))
 
         amplitude = float(self.query(":CALCulate:MARKer1:Y?").strip())  # AMP
@@ -153,8 +153,8 @@ class HPAKSpectrumAnalyser(SpectrumAnalyser):
 
         # return(float(freqmeas), float(amp))
         # print(frequency)
-        return amplitude  # , frequency
-        # return {'amplitude': amplitude, 'frequency': frequency}
+        # return amplitude  # , frequency
+        return {'amplitude': amplitude, 'frequency': frequency}
 
     def trace(self):
         """Get trace."""
@@ -342,7 +342,7 @@ class HP8596E(SpectrumAnalyser):
         return NotImplemented
 
 
-class HPE4404B(SpectrumAnalyser):
+class HPE4404B(HPAKSpectrumAnalyser):
     """HPE4404B, 9e3 to 6.7e9.
 
     .. figure::  images/SpectrumAnalyser/HPE4404B.jpg
@@ -351,6 +351,15 @@ class HPE4404B(SpectrumAnalyser):
     def trace(self):
         """Get trace."""
         return NotImplemented
+
+    def __init__(self, instrument):
+        """."""
+        super().__init__(instrument)
+        self.freqs = [9e3, 6.7e9]
+
+    def __repr__(self):
+        """."""
+        return("{}, {}".format(__class__.__name__, self.instrument))
 
 
 REGISTER = {
@@ -362,7 +371,7 @@ REGISTER = {
     'HP8564E': HP8564E,
     'HP8594E': HP8594E,
     'HP8596E': HP8596E,
-    'HPE4404B': HPE4404B,
+    'Hewlett-Packard, E4404B': HPE4404B,
     # Benchview supported N9040B UXA, N9030A/B PXA, N9020A/B MXA, N9010A/B EXA, N9000A/B CXA, M9290A CXA-m
     # Benchview supported N9320B, N9322C
     # Benchview supported N9342C, N9343C, N9344C
