@@ -1009,7 +1009,7 @@ REGISTER = {
     'MARCONI INSTRUMENTS,2030': MarconiInstruments2030,
     'MARCONI INSTRUMENTS,2031': MarconiInstruments2031,
     'MARCONI INSTRUMENTS,2032': MarconiInstruments2032,
-    'Anritsu,MG3710A': AnritsuMG3710A,
+    'ANRITSU,MG3710A': AnritsuMG3710A,
     'Keysight,N5173B': KeysightN5173B,
     'ROHDE&SCHWARZ,SMH52': RohdeSchwarzSHM52,
     'HEWLETT-PACKARD,85645A,': HP85645A,
