@@ -272,18 +272,22 @@ class HP8665B(HP866nA):
         self.freqs = [100e3, 6e9]
 
 
-class AgilentN5182A(SignalGenerator, IEEE488):
+class AgilentN5182A(SCPISignalGenerator):
     """Agilent N5182A 100e3, 6e9.
 
     .. figure::  images/SignalGenerator/AgilentN5182A.jpg
     """
+    def __repr__(self):
+        return("{}, {}".format(__class__.__name__, self.instrument))
 
 
-class AgilentN5181A(SignalGenerator, IEEE488):
+class AgilentN5181A(SCPISignalGenerator):
     """Agilent N5181A 100e3, 3e9.
 
     .. figure::  images/SignalGenerator/AgilentN5181A.jpg
     """
+    def __repr__(self):
+        return("{}, {}".format(__class__.__name__, self.instrument))
 
 
 class HPESG3000A(SignalGenerator, IEEE488):
@@ -1013,6 +1017,10 @@ REGISTER = {
     'Keysight,N5173B': KeysightN5173B,
     'ROHDE&SCHWARZ,SMH52': RohdeSchwarzSHM52,
     'HEWLETT-PACKARD,85645A,': HP85645A,
+    'Agilent Technologies, E5181A,': AgilentN5181A,
+    'Agilent Technologies, E5182A,': AgilentN5182A,
+    
+
 
 
     # HP 8673M 2-18GHz
