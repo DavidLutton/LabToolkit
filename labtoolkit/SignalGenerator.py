@@ -1017,8 +1017,8 @@ REGISTER = {
     'Keysight,N5173B': KeysightN5173B,
     'ROHDE&SCHWARZ,SMH52': RohdeSchwarzSHM52,
     'HEWLETT-PACKARD,85645A,': HP85645A,
-    'Agilent Technologies, E5181A,': AgilentN5181A,
-    'Agilent Technologies, E5182A,': AgilentN5182A,
+    'Agilent Technologies, N5181A,': AgilentN5181A,
+    'Agilent Technologies, N5182A,': AgilentN5182A,
     
 
 
