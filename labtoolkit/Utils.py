@@ -19,7 +19,7 @@ class AmplitudeLimiter(object):
         # print(**kwargs)
         # print("Inside __call__()")
         setpoint = float(*args)
-        if setpoint > f.amplimit:
+        if setpoint >= f.amplimit:
             f.log.warn(
                 "Amplimit ({}) reached with setpoint ({}) on {}"
                 .format(f.amplimit, setpoint, f.instrument))
