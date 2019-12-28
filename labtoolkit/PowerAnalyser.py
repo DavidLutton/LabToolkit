@@ -18,7 +18,7 @@ class PowerAnalyser(GenericInstrument):
 
     def __repr__(self):
         """."""
-        return"{}, {}".format(__class__, self.instrument)
+        return f"{__class__}, {self.instrument}"
 
 
 class VoltechPM3000A(PowerAnalyser, IEEE488):

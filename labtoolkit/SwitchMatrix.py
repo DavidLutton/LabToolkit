@@ -18,7 +18,7 @@ class SwitchMatrix(GenericInstrument):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
 
 class PickeringInterface10(SwitchMatrix):

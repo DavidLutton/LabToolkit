@@ -29,10 +29,10 @@ class WaveformGenerator(GenericInstrument):
 
     def state(self):
         """."""
-        print("Amplitude: {}".format(self.amplitude))
-        print("Frequency: {}".format(self.frequency))
-        print("Shape: {}".format(self.shape))
-        print("Load: {}".format(self.load))
+        print(f"Amplitude: {self.amplitude}")
+        print(f"Frequency: {self.frequency}")
+        print(f"Shape: {self.shape}")
+        print(f"Load: {self.load}")
         # print("Output: {}".format(self.output))
 
     def start(self, lvl=-50):
@@ -49,7 +49,7 @@ class HP33120A(WaveformGenerator):
 
     def __repr__(self):
         """."""
-        return "{}, {}".format(__name__, self.instrument)
+        return f"{__name__}, {self.instrument}"
 
     def __init__(self, instrument):
         """."""
@@ -73,7 +73,7 @@ class HP33120A(WaveformGenerator):
 
     @frequency.setter
     def frequency(self, frequency):
-        self.write("SOURce:FREQuency {0:.4f}".format(frequency))
+        self.write(f"SOURce:FREQuency {frequency:.4f}")
 
     @property
     def shape(self):
@@ -83,7 +83,7 @@ class HP33120A(WaveformGenerator):
     @shape.setter
     def shape(self, shape="SIN"):
         # SIN|SQU|TRI|RAMP|NOIS|DC|USER
-        self.write("SOURce:FUNCtion:SHAPe {}".format(shape))
+        self.write(f"SOURce:FUNCtion:SHAPe {shape}")
 
     @property
     def load(self):
@@ -93,7 +93,7 @@ class HP33120A(WaveformGenerator):
     @load.setter
     def load(self, load="INF"):
         # 50 | INF | MAX | MIB
-        self.write("OUTPut:LOAD {}".format(load))
+        self.write(f"OUTPut:LOAD {load}")
 
     @property
     def amplitude(self):
@@ -105,8 +105,8 @@ class HP33120A(WaveformGenerator):
     @amplitude.setter
     @AmplitudeLimiter
     def amplitude(self, amplitude, unit="VRMS"):
-        self.write("SOURce:VOLTage:UNIT {}".format(unit))
-        self.write("SOURce:VOLTage {0:.6f}".format(amplitude))
+        self.write(f"SOURce:VOLTage:UNIT {unit}")
+        self.write(f"SOURce:VOLTage {amplitude:.6f}")
 
 
 class HP8116A(WaveformGenerator):
@@ -122,7 +122,7 @@ class HP8116A(WaveformGenerator):
 
     @frequency.setter
     def frequency(self, frequency):
-        self.write("SOURce:FREQuency {0:.4f}".format(frequency))
+        self.write(f"SOURce:FREQuency {frequency:.4f}")
 
     @property
     def shape(self):
@@ -132,7 +132,7 @@ class HP8116A(WaveformGenerator):
     @shape.setter
     def shape(self, shape="SIN"):
         # SIN|SQU|TRI|RAMP|NOIS|DC|USER
-        self.write("SOURce:FUNCtion:SHAPe {}".format(shape))
+        self.write(f"SOURce:FUNCtion:SHAPe {shape}")
 
     @property
     def load(self):
@@ -142,7 +142,7 @@ class HP8116A(WaveformGenerator):
     @load.setter
     def load(self, load="INF"):
         # 50 | INF | MAX | MIB
-        self.write("OUTPut:LOAD {}".format(load))
+        self.write(f"OUTPut:LOAD {load}")
 
     @property
     def amplitude(self):
@@ -154,7 +154,7 @@ class HP8116A(WaveformGenerator):
     @amplitude.setter
     @AmplitudeLimiter
     def amplitude(self, amplitude, unit="VPP"):
-        self.write("SOURce:VOLTage {0:.6f}{1}".format(amplitude, unit))
+        self.write(f"SOURce:VOLTage {amplitude:.6f}{unit}")
 
 
 class Keysight33500B(WaveformGenerator):
@@ -170,7 +170,7 @@ class Keysight33500B(WaveformGenerator):
 
     @frequency.setter
     def frequency(self, frequency):
-        self.write("SOURce:FREQuency {0:.4f}".format(frequency))
+        self.write(f"SOURce:FREQuency {frequency:.4f}")
 
     @property
     def shape(self):
@@ -180,7 +180,7 @@ class Keysight33500B(WaveformGenerator):
     @shape.setter
     def shape(self, shape="SIN"):
         # SIN|SQU|TRI|RAMP|NOIS|DC|USER
-        self.write("SOURce:FUNCtion:SHAPe {}".format(shape))
+        self.write(f"SOURce:FUNCtion:SHAPe {shape}")
 
     @property
     def load(self):
@@ -190,7 +190,7 @@ class Keysight33500B(WaveformGenerator):
     @load.setter
     def load(self, load="INF"):
         # 50 | INF | MAX | MIB
-        self.write("OUTPut:LOAD {}".format(load))
+        self.write(f"OUTPut:LOAD {load}")
 
     @property
     def amplitude(self):
@@ -202,7 +202,7 @@ class Keysight33500B(WaveformGenerator):
     @amplitude.setter
     @AmplitudeLimiter
     def amplitude(self, amplitude, unit="VPP"):
-        self.write("SOURce:VOLTage {0:.6f}{1}".format(amplitude, unit))
+        self.write(f"SOURce:VOLTage {amplitude:.6f}{unit}")
 
 
 REGISTER = {

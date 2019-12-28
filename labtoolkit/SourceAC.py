@@ -17,7 +17,7 @@ class SourceAC(GenericInstrument):
         super().__init__(instrument)
 
     def __repr__(self):
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     @property
     def volts(self):

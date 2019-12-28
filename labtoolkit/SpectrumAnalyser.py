@@ -30,7 +30,7 @@ class SpectrumAnalyser(GenericInstrument):
 
     @frequency.setter
     def frequency(self, freq):
-        self.write(":FREQuency:CENT {}".format(freq))
+        self.write(f":FREQuency:CENT {freq}")
 
     @property
     def sweeppoints(self):
@@ -42,7 +42,7 @@ class SpectrumAnalyser(GenericInstrument):
         # N9030B 1 to 100,001 Zero and non-zero spans
         # E4440A 101 to 8192, 2 to 8192 in zero span
         # [:SENSe]:SWEep:POINts <number of points>
-        self.write(":SWEep:POINts {}".format(int(points)))
+        self.write(f":SWEep:POINts {int(points)}")
 
     @property
     def sweeptime(self):
@@ -57,7 +57,7 @@ class SpectrumAnalyser(GenericInstrument):
 
     @sweeptime.setter
     def sweeptime(self, points):
-        self.write(":SWEep:TIME {}".format(int(points)))
+        self.write(f":SWEep:TIME {int(points)}")
 
     @property
     def referenceoutput(self):
@@ -66,7 +66,7 @@ class SpectrumAnalyser(GenericInstrument):
 
     @referenceoutput.setter
     def referenceoutput(self, boolean=True):
-        self.write(':SENSe:ROSCillator:OUTPUT:STATe {}'.format(boolean))
+        self.write(f':SENSe:ROSCillator:OUTPUT:STATe {boolean}')
 
     @property
     def referencelevel(self):
@@ -77,7 +77,7 @@ class SpectrumAnalyser(GenericInstrument):
 
     @referencelevel.setter
     def referencelevel(self, lvl):
-        self.write(':DISP:WIND:TRACE:Y:RLEV {}'.format(lvl))
+        self.write(f':DISP:WIND:TRACE:Y:RLEV {lvl}')
         # used for seting reference level to a reasonable amount above the measured value
         # and therefor prevent recording clipped values
         # time.sleep(.2)  # settling time
@@ -94,7 +94,7 @@ class SpectrumAnalyser(GenericInstrument):
 
     @resolutionbandwidth.setter
     def resolutionbandwidth(self, resolutionbandwidth, *, unit='Hz'):
-        self.write(':BANDwidth:RESolution {} {}'.format(resolutionbandwidth, unit))
+        self.write(f':BANDwidth:RESolution {resolutionbandwidth} {unit}')
 
     @property
     def videobandwidth(self):
@@ -105,7 +105,7 @@ class SpectrumAnalyser(GenericInstrument):
 
     @videobandwidth.setter
     def videobandwidth(self, videobandwidth, *, unit='Hz'):
-        self.write(':BANDwidth:VIDeo {} {}'.format(videobandwidth, unit))
+        self.write(f':BANDwidth:VIDeo {videobandwidth} {unit}')
 
     @property
     def unitpower(self):
@@ -118,7 +118,7 @@ class SpectrumAnalyser(GenericInstrument):
 
     @unitpower.setter
     def unitpower(self, unit):
-        self.query(':UNIT:POWer {}'.format(unit))
+        self.query(f':UNIT:POWer {unit}')
 
     @property
     def frequencyspan(self):
@@ -127,7 +127,7 @@ class SpectrumAnalyser(GenericInstrument):
 
     @frequencyspan.setter
     def frequencyspan(self, span, *, unit='Hz'):
-        self.write(':FREQuency:SPAN {} {}'.format(span, unit))
+        self.write(f':FREQuency:SPAN {span} {unit}')
 
 
 class HPAKSpectrumAnalyser(SpectrumAnalyser):
@@ -146,7 +146,7 @@ class HPAKSpectrumAnalyser(SpectrumAnalyser):
     def measurement(self, *, marker=1):
         """Set instrument marker to peak and read X, Y."""
         # self.write(":CALCulate:MARKer{}: 1".format(marker))
-        self.write(":CALCulate:MARKer{}:MAX".format(marker))
+        self.write(f":CALCulate:MARKer{marker}:MAX")
 
         amplitude = float(self.query(":CALCulate:MARKer1:Y?").strip())  # AMP
         frequency = float(self.query(":CALCulate:MARKer1:X?").strip())  # FREQ
@@ -206,7 +206,7 @@ class AgilentE4440A(HPAKSpectrumAnalyser):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
 
 class HPE4406A(SpectrumAnalyser):
@@ -217,7 +217,7 @@ class HPE4406A(SpectrumAnalyser):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
     def __init__(self, instrument):
         """."""
@@ -243,7 +243,7 @@ class HPE4406A(SpectrumAnalyser):
 
     @attenuation.setter
     def attenuation(self, freq):
-        self.write(":SENS:POW:RF:ATT {}".format(freq))
+        self.write(f":SENS:POW:RF:ATT {freq}")
 
     @property
     def span(self):
@@ -252,7 +252,7 @@ class HPE4406A(SpectrumAnalyser):
 
     @span.setter
     def span(self, freq):
-        self.write(":SENS:SPEC:FREQ:SPAN {}Hz".format(freq))
+        self.write(f":SENS:SPEC:FREQ:SPAN {freq}Hz")
 
     @property
     def axis(self):
@@ -359,7 +359,7 @@ class HPE4404B(HPAKSpectrumAnalyser):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
 
 REGISTER = {

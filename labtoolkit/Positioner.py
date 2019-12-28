@@ -18,7 +18,7 @@ class Positioner(GenericInstrument):
         super().__init__(instrument)
 
     def __repr__(self):
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
 
 class AnaheimAutomationSMC40(Positioner):
@@ -29,7 +29,7 @@ class AnaheimAutomationSMC40(Positioner):
         super().__init__(instrument)
 
     def __repr__(self):
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     @property
     def heading(self):
@@ -48,7 +48,7 @@ class AnaheimAutomationSMC40(Positioner):
 
     @stepangle.setter
     def stepangle(self, stepangle=1):  # 100 is 1 degree
-        self.write('XMN{}'.format(int(stepsize*100)))
+        self.write(f'XMN{int(stepsize * 100)}')
         # int(Q_(stepangle, 'degree').magnitude * 100)
         # self.write('XMN{}'.format(int(Q_(stepangle, 'degree').magnitude * 100)))
 

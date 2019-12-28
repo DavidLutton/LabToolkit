@@ -20,7 +20,7 @@ class Oscilloscope(GenericInstrument):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
     def trace(self):
         """."""
@@ -35,7 +35,7 @@ class TektronixTDS544A(Oscilloscope):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
     def trace(self):
         """."""
@@ -50,7 +50,7 @@ class AgilentDSO5052A(Oscilloscope):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
     def trace(self):
         """."""
@@ -65,7 +65,7 @@ class KeysightDSOX3034T(Oscilloscope):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
     def trace(self):
         """."""
@@ -80,7 +80,7 @@ class AttenInstrumentsADS1102CAL(Oscilloscope):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
     def trace(self):
         """."""

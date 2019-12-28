@@ -15,7 +15,7 @@ class IEEE488(object):
     @property
     def ESE(self, value):
         r"""\*ESE <enable_value> - Event status enable."""
-        self.write("*ESE {}".format(value))
+        self.write(f"*ESE {value}")
 
     @property
     def ESR(self):
@@ -35,7 +35,7 @@ class IEEE488(object):
     @OPC.setter
     def OPC(self, value):
         r"""\*OPC - Set operation complete bit."""
-        self.write("*OPC {}".format(value))
+        self.write(f"*OPC {value}")
 
     @property
     def OPT(self):
@@ -45,7 +45,7 @@ class IEEE488(object):
     @property
     def RCL(self, value=0):
         r"""\*RCL {0|1|2|3|4} - Recall instrument state."""
-        return(self.write("*RCL {}".format(value)))
+        return(self.write(f"*RCL {value}"))
 
     @property
     def RST(self):

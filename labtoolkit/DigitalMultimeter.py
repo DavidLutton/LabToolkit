@@ -25,21 +25,21 @@ class HP3457A(DigitalMultimeter):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     def __init__(self, instrument):
         """."""
         super().__init__(instrument)
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
 
         # assert self.IDN.startswith('HEWLETT-PACKARD,???,')
 
         # self.siggen.write("*CLS")  # clear error status
     def state(self):
         """."""
-        print("Function: {}".format(self.function))
-        print("Range: {}".format(self.range))
-        print("Trigger: {}".format(self.trigger))
+        print(f"Function: {self.function}")
+        print(f"Range: {self.range}")
+        print(f"Trigger: {self.trigger}")
 
 
 class HP3478A(DigitalMultimeter):
@@ -50,21 +50,21 @@ class HP3478A(DigitalMultimeter):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     def __init__(self, instrument):
         """."""
         super().__init__(instrument)
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
 
         # assert self.IDN.startswith('HEWLETT-PACKARD,???,')
 
         # self.siggen.write("*CLS")  # clear error status
     def state(self):
         """."""
-        print("Function: {}".format(self.function))
-        print("Range: {}".format(self.range))
-        print("Trigger: {}".format(self.trigger))
+        print(f"Function: {self.function}")
+        print(f"Range: {self.range}")
+        print(f"Trigger: {self.trigger}")
 
 
 class HP34401A(DigitalMultimeter):
@@ -75,21 +75,21 @@ class HP34401A(DigitalMultimeter):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     def __init__(self, instrument):
         """."""
         super().__init__(instrument)
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
 
         # assert self.IDN.startswith('HEWLETT-PACKARD,???,')
 
         # self.siggen.write("*CLS")  # clear error status
     def state(self):
         """."""
-        print("Function: {}".format(self.function))
-        print("Range: {}".format(self.range))
-        print("Trigger: {}".format(self.trigger))
+        print(f"Function: {self.function}")
+        print(f"Range: {self.range}")
+        print(f"Trigger: {self.trigger}")
 
     @property
     def trigger(self):
@@ -98,7 +98,7 @@ class HP34401A(DigitalMultimeter):
 
     @trigger.setter
     def trigger(self, trigger="IMMediate"):  # BUS|IMMediate|EXTernal
-        self.write("TRIGger:SOURce {}".format(trigger))
+        self.write(f"TRIGger:SOURce {trigger}")
 
     @property
     def function(self):
@@ -121,7 +121,7 @@ class HP34401A(DigitalMultimeter):
         CONTinuity
         DIODe
         '''
-        self.write('SENSe:FUNCtion "{}"'.format(function))
+        self.write(f'SENSe:FUNCtion "{function}"')
 
     @property
     def range(self):
@@ -130,7 +130,7 @@ class HP34401A(DigitalMultimeter):
 
     @range.setter
     def range(self, range="MAXimum"):  # <range >|MINimum|MAXimum
-        self.write("RANGe {}".format(range))
+        self.write(f"RANGe {range}")
 
     @property
     def rangeauto(self):
@@ -139,7 +139,7 @@ class HP34401A(DigitalMultimeter):
 
     @rangeauto.setter
     def rangeauto(self, rangeauto=True):
-        self.write("RANGe {}".format(rangeauto))
+        self.write(f"RANGe {rangeauto}")
 
     @property
     def rangeauto(self):
@@ -148,7 +148,7 @@ class HP34401A(DigitalMultimeter):
 
     @rangeauto.setter
     def rangeauto(self, impedanceauto=False):
-        self.write("INPut:IMPedance:AUTO {}".format(impedanceauto))
+        self.write(f"INPut:IMPedance:AUTO {impedanceauto}")
 
     @property
     def reading(self):
@@ -164,12 +164,12 @@ class TZ4000(DigitalMultimeter):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     def __init__(self, instrument):
         """."""
         super().__init__(instrument)
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
 
 
 class Keithley2015(DigitalMultimeter):
