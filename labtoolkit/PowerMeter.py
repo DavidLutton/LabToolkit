@@ -20,7 +20,7 @@ class PowerMeter(GenericInstrument):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     def correctionfactorinterpolateload(self, listoffrequencys, listofffactors):
         """."""
@@ -44,7 +44,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
         """."""
         super().__init__(instrument)
 
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
         # self.log.info('Creating an instance of\t' + str(__class__))
 
         assert self.IDN.startswith("HEWLETT-PACKARD,E4418B,") or self.IDN.startswith('Agilent Technologies,E4418B,')
@@ -54,17 +54,17 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     def status(self):
         """."""
-        print('CF:  {}'.format(self.cfactor))
-        print('CF:  {}HZ'.format(self.frequency))
-        print('RCF:  {}'.format(self.rcfactor))
-        print('Reference:  {}'.format(self.reference))
-        print('Offset:  {}dB {}'.format(self.offset, self.offseten))
-        print('Units:  {}'.format(self.units))
-        print('Resolution:  {}'.format(self.resolution))
+        print(f'CF:  {self.cfactor}')
+        print(f'CF:  {self.frequency}HZ')
+        print(f'RCF:  {self.rcfactor}')
+        print(f'Reference:  {self.reference}')
+        print(f'Offset:  {self.offset}dB {self.offseten}')
+        print(f'Units:  {self.units}')
+        print(f'Resolution:  {self.resolution}')
 
     @property
     def frequency(self):
@@ -74,7 +74,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
     @frequency.setter
     def frequency(self, freq):
         # SENSe1:FREQuency:CW 26.5GHz
-        self.write(":SENSe1:FREQuency:CW {}".format(freq))
+        self.write(f":SENSe1:FREQuency:CW {freq}")
 
     @property
     def measurement(self):
@@ -88,7 +88,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @reference.setter
     def reference(self, state):
-        self.write(':OUTPut:ROSCillator:STATe {}'.format(int(state)))
+        self.write(f':OUTPut:ROSCillator:STATe {int(state)}')
 
     @property
     def zero(self):
@@ -107,7 +107,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @rcfactor.setter
     def rcfactor(self, factor=100):
-        self.write('CALibration1:RCFactor {}'.format(factor))
+        self.write(f'CALibration1:RCFactor {factor}')
 
     @property
     def offset(self):
@@ -116,7 +116,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @offset.setter
     def offset(self, offset=0):
-        self.write('CALCulate1:GAIN:MAGNitude {}'.format(offset))
+        self.write(f'CALCulate1:GAIN:MAGNitude {offset}')
 
     @property
     def offseten(self):
@@ -125,7 +125,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @offseten.setter
     def offseten(self, offset=False):
-        self.write('CALCulate1:GAIN:STATe {}'.format(int(offset)))
+        self.write(f'CALCulate1:GAIN:STATe {int(offset)}')
 
     @property
     def cfactor(self):
@@ -134,7 +134,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @cfactor.setter
     def cfactor(self, factor):
-        self.write(":SENSe1:CORRection:CFACtor {}".format(factor))
+        self.write(f":SENSe1:CORRection:CFACtor {factor}")
 
     @property
     def units(self):
@@ -152,7 +152,7 @@ class AgilentE4418B(PowerMeter, SCPI, IEEE488):
 
     @resolution.setter
     def resolution(self, resolution='4'):
-        self.write('DISPlay:WINDow1:RESolution {}'.format(resolution))
+        self.write(f'DISPlay:WINDow1:RESolution {resolution}')
 
 
 class HP437B(PowerMeter, IEEE488):
@@ -165,7 +165,7 @@ class HP437B(PowerMeter, IEEE488):
         """."""
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
         # self.log.info('Creating an instance of\t' + str(__class__))
 
         assert self.IDN.startswith('HEWLETT-PACKARD,437B,')
@@ -173,12 +173,12 @@ class HP437B(PowerMeter, IEEE488):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     def preset(self):
         """."""
         # self.message("")
-        self.log.info("Get {} to known state".format(self.engineering_project.resource_name))
+        self.log.info(f"Get {self.engineering_project.resource_name} to known state")
         self.correctionfactor(100.0)
         self.rangeauto()
         self.unitslog()  # Log units dBM/dB
@@ -241,11 +241,11 @@ class HP437B(PowerMeter, IEEE488):
 
     def calibrate(self, factor=100.0):
         """."""
-        self.write("CS;CL{}EN".format(factor))
+        self.write(f"CS;CL{factor}EN")
 
     def correctionfactor(self, factor=100.0):
         """."""
-        self.write("KB{}EN".format(factor))  # KB enter measurement cal factor
+        self.write(f"KB{factor}EN")  # KB enter measurement cal factor
 
     def statusmessage(self):
         """."""
@@ -356,11 +356,11 @@ class RohdeSchwarzNRVS(PowerMeter):
         """."""
         super().__init__(instrument)
 
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     @property
     def measurement(self):

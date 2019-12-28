@@ -34,7 +34,7 @@ def stdevlowpass(*, tolerance=0.05, delay=0.1, readings=10, instrument=False, ab
         while measurethreshold is not True:
             run += 1
             if run >= abortafter:
-                raise Exception("Abort limit reached: {}".format(abortafter))
+                raise Exception(f"Abort limit reached: {abortafter}")
             meas.append(instrument.measurement)
             # print(meas)
             if len(meas) > readings:
@@ -65,7 +65,7 @@ class ETC(object):
 
     def ETC(self):
         """Estimate Time to Completion."""
-        return("{0:.2f}".format((statistics.mean(self.listoftimes) * self.points)))
+        return(f"{statistics.mean(self.listoftimes) * self.points:.2f}")
 
 
 logging.basicConfig(level=logging.INFO)
@@ -81,9 +81,9 @@ with labtk.ResourceManager('') as rm:
     pool = labtk.visaenumerate(rm, resources)
     pprint(pool)
     for a in pool:
-        print("Discovered {} ||| {}".format(a, pool[a]))
+        print(f"Discovered {a} ||| {pool[a]}")
         # print(each)
-    print("Discovered {} instruments".format(len(pool)))
+    print(f"Discovered {len(pool)} instruments")
     print("Attaching drivers to recognised instruments")
     pprint(pool)
     instrument = labtk.Instruments()
@@ -137,9 +137,9 @@ with labtk.ResourceManager('') as rm:
                 print(measurements)
                 ws.append([frequency, statistics.mean(measurements)] + measurements)
                 EstimatedTime.append(timer() - start)  # end - start
-                print("Estimated time to finish: {} s".format(EstimatedTime.ETC()))
+                print(f"Estimated time to finish: {EstimatedTime.ETC()} s")
                 print()
 
     finally:
         instrument.SignalGenerator[0].output = False
-        wb.save('E:/Path-{}.xlsx'.format(rfpath))
+        wb.save(f'E:/Path-{rfpath}.xlsx')

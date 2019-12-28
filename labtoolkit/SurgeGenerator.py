@@ -24,11 +24,11 @@ class T2000(SurgeGenerator):
     """
 
     def __repr__(self):
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     def __init__(self, instrument):
         super().__init__(instrument)
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
 
 
 REGISTER = {

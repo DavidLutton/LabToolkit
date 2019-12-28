@@ -20,7 +20,7 @@ class SourceDC(GenericInstrument):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__, self.instrument))
+        return(f"{__class__}, {self.instrument}")
 
     @property
     def volts(self):
@@ -73,7 +73,7 @@ class TTIPL303(SourceDC):
     @property
     def voltsoutput(self):
         """."""
-        return float(self.query('V{}O?'.format(1)))
+        return float(self.query(f'V{1}O?'))
 
     @volts.setter
     def volts(self, volts):
@@ -87,7 +87,7 @@ class TTIPL303(SourceDC):
     @property
     def currentoutput(self):
         """."""
-        return float(self.query('I{}O?'.format(1)))
+        return float(self.query(f'I{1}O?'))
 
     @current.setter
     def current(self, current):
@@ -100,7 +100,7 @@ class TTIPL303(SourceDC):
 
     @output.setter
     def output(self, boolean=False):
-        self.write('OP1 {:d}'.format(boolean))
+        self.write(f'OP1 {boolean:d}')
 
     @property
     def config(self):
@@ -110,21 +110,21 @@ class TTIPL303(SourceDC):
     @property
     def currentrange(self):
         """."""
-        return int(self.query('IRANGE{}?'.format(1)))
+        return int(self.query(f'IRANGE{1}?'))
 
     @currentrange.setter
     def currentrange(self, currentrange):
-        self.write('IRANGE{}{}'.format(1, currentrange))
+        self.write(f'IRANGE{1}{currentrange}')
 
     @property
     def voltsoverprotect(self):
         """."""
-        return(float(self.query('OVP{}?'.format(1))))
+        return(float(self.query(f'OVP{1}?')))
 
     @property
     def currentoverprotect(self):
         """."""
-        return(float(self.query('OCP{}?'.format(1))))
+        return(float(self.query(f'OCP{1}?')))
 
     # def setLocal(self): 'LOCAL'
 
@@ -182,7 +182,7 @@ http://www.tti-test.com/downloads/drivers-download.htm
 
     @volts.setter
     def volts(self, volts):
-        self.write('V1{}'.format(volts))
+        self.write(f'V1{volts}')
 
     @property
     def current(self):
@@ -191,7 +191,7 @@ http://www.tti-test.com/downloads/drivers-download.htm
 
     @current.setter
     def current(self, current):
-        self.write('I1{}'.format(current))
+        self.write(f'I1{current}')
 
     @property
     def output(self):
@@ -200,7 +200,7 @@ http://www.tti-test.com/downloads/drivers-download.htm
 
     @output.setter
     def output(self, boolean=False):
-        self.write('OP1 {:d}'.format(boolean))
+        self.write(f'OP1 {boolean:d}')
 
 
 REGISTER = {

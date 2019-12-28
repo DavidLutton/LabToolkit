@@ -27,7 +27,7 @@ class AgilentE8357A(NetworkAnalyser):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
     def __init__(self, instrument):
         """."""
@@ -40,7 +40,7 @@ class AgilentE8357A(NetworkAnalyser):
 
     @points.setter
     def points(self, points=801):
-        self.write("SENS1:SWE:POIN {}".format(int(points)))
+        self.write(f"SENS1:SWE:POIN {int(points)}")
 
     '''
     CALCulate<cnum>:CORRection[:STATe] <bool>
@@ -54,7 +54,7 @@ class AgilentE8357A(NetworkAnalyser):
 
     @bandwidth.setter
     def bandwidth(self, bw=1000):
-        self.write("SENSe:Bandwidth {}HZ".format(int(bw)))
+        self.write(f"SENSe:Bandwidth {int(bw)}HZ")
 
     '''
     @property
@@ -102,7 +102,7 @@ class AgilentE8357A(NetworkAnalyser):
 
     @sourcepower.setter
     def sourcepower(self, power=0):
-        self.write("SOURce:POWer {}".format(int(power)))
+        self.write(f"SOURce:POWer {int(power)}")
 
     @property
     def start(self):
@@ -111,7 +111,7 @@ class AgilentE8357A(NetworkAnalyser):
 
     @start.setter
     def start(self, frequency):
-        self.write("SENSe:FREQuency:STARt {}".format(frequency))
+        self.write(f"SENSe:FREQuency:STARt {frequency}")
 
     @property
     def stop(self):
@@ -120,7 +120,7 @@ class AgilentE8357A(NetworkAnalyser):
 
     @stop.setter
     def stop(self, frequency):
-        self.write("SENSe:FREQuency:STOP {}".format(frequency))
+        self.write(f"SENSe:FREQuency:STOP {frequency}")
 
     @property
     def attenuationa(self):
@@ -129,7 +129,7 @@ class AgilentE8357A(NetworkAnalyser):
 
     @attenuationa.setter
     def attenuationa(self, attenuation=0):
-        self.write("SENSe:POWer:ATTenuation? ARECeiver,{}".format(int(attenuation)))
+        self.write(f"SENSe:POWer:ATTenuation? ARECeiver,{int(attenuation)}")
 
     @property
     def attenuationb(self):
@@ -138,7 +138,7 @@ class AgilentE8357A(NetworkAnalyser):
 
     @attenuationb.setter
     def attenuationb(self, attenuation=0):
-        self.write("SENSe:POWer:ATTenuation? BRECeiver,{}".format(int(attenuation)))
+        self.write(f"SENSe:POWer:ATTenuation? BRECeiver,{int(attenuation)}")
 
     @property
     def reference(self):
@@ -169,7 +169,7 @@ class HP4395A(NetworkAnalyser):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
     def __init__(self, instrument):
         """."""
@@ -182,7 +182,7 @@ class HP4395A(NetworkAnalyser):
 
     @points.setter
     def points(self, points=801):
-        self.write("POIN {}".format(int(points)))
+        self.write(f"POIN {int(points)}")
 
     @property
     def bandwidth(self):
@@ -194,7 +194,7 @@ class HP4395A(NetworkAnalyser):
 
     @bandwidth.setter
     def bandwidth(self, points=1000):
-        self.write("BW {}HZ".format(int(points)))
+        self.write(f"BW {int(points)}HZ")
 
     @property
     def form(self):
@@ -206,7 +206,7 @@ class HP4395A(NetworkAnalyser):
 
     @form.setter
     def form(self, form='LOGM'):
-        self.write("FMT {}".format(form))
+        self.write(f"FMT {form}")
 
     @property
     def sweepformat(self):
@@ -219,7 +219,7 @@ class HP4395A(NetworkAnalyser):
 
     @sweepformat.setter
     def sweepformat(self, form='LOGF'):
-        self.write("SWPT {}".format(form))
+        self.write(f"SWPT {form}")
 
     @property
     def paramater(self):
@@ -231,7 +231,7 @@ class HP4395A(NetworkAnalyser):
 
     @paramater.setter
     def paramater(self, paramater='S11'):
-        self.write("MEAS {}".format(paramater))
+        self.write(f"MEAS {paramater}")
 
     @property
     def attenuationr(self):
@@ -243,7 +243,7 @@ class HP4395A(NetworkAnalyser):
 
     @attenuationr.setter
     def attenuationr(self, attenuation=20):
-        self.write("ATTR {}DB".format(int(attenuation)))
+        self.write(f"ATTR {int(attenuation)}DB")
 
     @property
     def attenuationa(self):
@@ -255,7 +255,7 @@ class HP4395A(NetworkAnalyser):
 
     @attenuationa.setter
     def attenuationa(self, attenuation=20):
-        self.write("ATTA {}DB".format(int(attenuation)))
+        self.write(f"ATTA {int(attenuation)}DB")
 
     @property
     def attenuationb(self):
@@ -267,7 +267,7 @@ class HP4395A(NetworkAnalyser):
 
     @attenuationb.setter
     def attenuationb(self, attenuation=20):
-        self.write("ATTB {}DB".format(int(attenuation)))
+        self.write(f"ATTB {int(attenuation)}DB")
 
     @property
     def sourcepower(self):
@@ -276,7 +276,7 @@ class HP4395A(NetworkAnalyser):
 
     @sourcepower.setter
     def sourcepower(self, power=0):
-        self.write("POWE {}".format(int(power)))
+        self.write(f"POWE {int(power)}")
 
     @property
     def start(self):
@@ -285,7 +285,7 @@ class HP4395A(NetworkAnalyser):
 
     @start.setter
     def start(self, frequency):
-        self.write("STAR {}".format(frequency))
+        self.write(f"STAR {frequency}")
 
     @property
     def stop(self):
@@ -294,7 +294,7 @@ class HP4395A(NetworkAnalyser):
 
     @stop.setter
     def stop(self, frequency):
-        self.write("STOP {}".format(frequency))
+        self.write(f"STOP {frequency}")
 
     def trace(self):
         """Get formatted trace."""
@@ -333,7 +333,7 @@ class Wiltron360(NetworkAnalyser):
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
     def trace(self):
         """Get trace."""
@@ -366,14 +366,14 @@ class KeysightFieldFox(NetworkAnalyser):
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
         self.freqs = [30e3, 26.5e9]
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
         # self.log.info('Creating an instance of\t' + str(__class__))
 
         self.write("*CLS")  # clear error status
 
     def __repr__(self):
         """."""
-        return("{}, {}".format(__class__.__name__, self.instrument))
+        return(f"{__class__.__name__}, {self.instrument}")
 
     @property
     def points(self):
@@ -382,7 +382,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @points.setter
     def points(self, points):
-        self.write("SENS:SWE:POIN {0:.0f}".format(points))
+        self.write(f"SENS:SWE:POIN {points:.0f}")
 
     @property
     def start(self):
@@ -391,7 +391,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @start.setter
     def start(self, start):
-        self.write("SENS:FREQ:STAR {0:.0f}Hz".format(start))
+        self.write(f"SENS:FREQ:STAR {start:.0f}Hz")
 
     @property
     def stop(self):
@@ -400,7 +400,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @stop.setter
     def stop(self, stop):
-        self.write("SENS:FREQ:STOP {0:.0f}Hz".format(stop))
+        self.write(f"SENS:FREQ:STOP {stop:.0f}Hz")
 
     @property
     def bandwidth(self):
@@ -409,7 +409,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @bandwidth.setter
     def bandwidth(self, bandwidth):
-        self.write(":BWID {0:.0f}".format(bandwidth))
+        self.write(f":BWID {bandwidth:.0f}")
 
     @property
     def display(self):
@@ -418,7 +418,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @display.setter
     def display(self, display):
-        self.write("DISP:ENAB {:d}".format(display))
+        self.write(f"DISP:ENAB {display:d}")
 
     @property
     def trigger(self):
@@ -427,7 +427,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @trigger.setter
     def trigger(self, trigger):
-        self.write("INIT:CONT {:d}".format(trigger))
+        self.write(f"INIT:CONT {trigger:d}")
 
     @property
     def format(self):
@@ -436,7 +436,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @format.setter
     def format(self, form):
-        self.write("CALC:SEL:FORM {}".format(form))
+        self.write(f"CALC:SEL:FORM {form}")
 
     @property
     def sparameter(self):
@@ -445,7 +445,7 @@ class KeysightFieldFox(NetworkAnalyser):
 
     @sparameter.setter
     def sparameter(self, sparameter="S11"):  # S21, S12, S22
-        self.write("CALC:PAR1:DEF {}".format(sparameter))
+        self.write(f"CALC:PAR1:DEF {sparameter}")
 
     def sweep(self):
         """."""

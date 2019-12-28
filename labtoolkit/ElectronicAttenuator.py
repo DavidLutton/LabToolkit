@@ -19,7 +19,7 @@ class ElectronicAttenuator(GenericInstrument):
 
     def __repr__(self):
         """."""
-        return"{}, {}".format(__class__, self.instrument)
+        return f"{__class__}, {self.instrument}"
 
 
 class MarconiInstruments2187(ElectronicAttenuator, IEEE488):
@@ -32,12 +32,12 @@ class MarconiInstruments2187(ElectronicAttenuator, IEEE488):
         """."""
         super().__init__(instrument)
         # self.log = logging.getLogger(__name__)
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
         # self.log.info('Creating an instance of\t' + str(__class__))
 
     def __repr__(self):
         """."""
-        return "{}, {}".format(__class__.__name__, self.instrument)
+        return f"{__class__.__name__}, {self.instrument}"
 
     @property
     def attenuation(self):
@@ -47,7 +47,7 @@ class MarconiInstruments2187(ElectronicAttenuator, IEEE488):
     # @validsteps(3,4,5,6)
     @attenuation.setter
     def attenuation(self, attenuation):
-        self.write("ATTN {0:.0f}DB".format(attenuation))
+        self.write(f"ATTN {attenuation:.0f}DB")
 
     def preset(self):
         """."""

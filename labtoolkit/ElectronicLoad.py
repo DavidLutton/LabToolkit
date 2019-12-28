@@ -18,7 +18,7 @@ class ElectronicLoad(GenericInstrument):
 
     def __repr__(self):
         """."""
-        return"{}, {}".format(__class__, self.instrument)
+        return f"{__class__}, {self.instrument}"
 
 
 class RigolDL30n1(ElectronicLoad, IEEE488):
@@ -31,11 +31,11 @@ class RigolDL30n1(ElectronicLoad, IEEE488):
         """."""
         super().__init__(instrument)
 
-        self.log.info('Creating {} for {}'.format(str(__class__.__name__), self.instrument))
+        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
 
     def __repr__(self):
         """."""
-        return "{}, {}".format(__class__, self.instrument)
+        return f"{__class__}, {self.instrument}"
 
     @property
     def voltagedc(self):
@@ -45,7 +45,7 @@ class RigolDL30n1(ElectronicLoad, IEEE488):
     # @validsteps(3,4,5,6)
     @voltagedc.setter
     def voltagedc(self, voltage):
-        self.write(':SOURce:VOLTage:LEVel:IMMediate {0:.3f}'.format(voltage))
+        self.write(f':SOURce:VOLTage:LEVel:IMMediate {voltage:.3f}')
 
     @property
     def currentdc(self):
@@ -54,7 +54,7 @@ class RigolDL30n1(ElectronicLoad, IEEE488):
 
     @currentdc.setter
     def currentdc(self, current):
-        self.write(':SOURce:CURRent:LEVel:IMMediate {0:.3f}'.format(current))
+        self.write(f':SOURce:CURRent:LEVel:IMMediate {current:.3f}')
 
     @property
     def function(self):
@@ -63,7 +63,7 @@ class RigolDL30n1(ElectronicLoad, IEEE488):
 
     @function.setter
     def function(self, function):
-        self.write(':SOURce:FUNCtion {}'.format(function))
+        self.write(f':SOURce:FUNCtion {function}')
 
     # :[SOURce]:TRANsient bool
 

@@ -103,7 +103,7 @@ def visaaddresslist(listofaddresses, prefix="GPIB0", suffix="65535::INSTR"):
     """
     instrs = []
     for inst in listofaddresses:
-        instrs.append("{}::{}::{}".format(prefix, inst, suffix))
+        instrs.append(f"{prefix}::{inst}::{suffix}")
     return(instrs)
 
 
@@ -163,9 +163,9 @@ class Instruments(object):
         # return str(self.__dict__)
         buffer = []
         for key, value in self.__dict__.items():
-            buffer.append('{}:'.format(key))
+            buffer.append(f'{key}:')
             for valu in value:
-                buffer.append('     {}: {}'.format(valu, value[valu]))
+                buffer.append(f'     {valu}: {value[valu]}')
         return str('\n'.join(buffer))
 
 
