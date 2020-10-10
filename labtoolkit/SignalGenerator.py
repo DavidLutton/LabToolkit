@@ -22,7 +22,7 @@ class SignalGenerator(GenericInstrument):
         """Make safe the SignalGenerator."""
         self.output = False
         self.amplitude = min(self.amps)
-        self.frequency = min(self.freqs)
+        # self.frequency = min(self.freqs)
 
     def state(self):
         """Report basic paramaters."""
@@ -191,6 +191,10 @@ class HP8657A(SignalGenerator, IEEE488):
 
 class HP866nA(SignalGenerator, IEEE488):
     """HP 866nA."""
+    def __init__(self, inst):
+        self.inst = inst
+        self.inst.read_termination = '\n'
+        self.inst.write_termination = '\n'
 
     def __repr__(self):
         """."""
@@ -226,6 +230,102 @@ class HP866nA(SignalGenerator, IEEE488):
     @output.setter
     def output(self, boolean=False):
         self.write(f"AMPL:OUT:STATe {boolean:d}")
+
+    @property
+    def frequency(self):
+        return float(self.inst.query('FREQ:CW?'))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.inst.write(f'FREQ:CW {frequency:.2f} Hz')
+
+    @property
+    def power(self):
+        return float(self.inst.query('AMPL:OUT:LEV?'))
+
+    @power.setter
+    def power(self, power):
+        self.inst.write(f'AMPL:OUT:LEV {power:.1f} DBM')
+
+    @property
+    def output(self):
+        """."""
+        if self.inst.query('AMPL:OUT:STATe?') == '1':
+            return(True)
+        else:
+            return(False)
+
+    @output.setter
+    def output(self, boolean=False):
+        self.inst.write(f'AMPL:OUT:STATe {boolean:d}')
+
+    @property
+    def fmdeviation(self):
+        return self.inst.query('FM:DEViation?')
+
+    @fmdeviation.setter
+    def fmdeviation(self, deviation):
+        self.inst.write(f'FM:DEViation {deviation} Hz')
+
+    @property
+    def fmfrequency(self):
+        return self.inst.query('FM:FREQuency?')
+
+    @fmfrequency.setter
+    def fmfrequency(self, frequency):
+        self.inst.write(f'FM:FREQuency {frequency} Hz')
+
+    @property
+    def fmmodulation(self):
+        """."""
+        if self.inst.query('FM:STATe?') == '1':
+            return(True)
+        else:
+            return(False)
+
+    @fmmodulation.setter
+    def fmmodulation(self, boolean=False):
+        self.inst.write(f'FM:STATe {boolean:d}')
+
+    @property
+    def amdepth(self):
+        return self.inst.query('AM:DEPth?')
+
+    @amdepth.setter
+    def amdepth(self, depth):
+        self.inst.write(f'AM:DEPth {depth}')
+
+    @property
+    def amfrequency(self):
+        return self.inst.query('AM:FREQuency?')
+
+    @amfrequency.setter
+    def amfrequency(self, frequency):
+        self.inst.write(f'AM:FREQuency {frequency} Hz')
+
+    @property
+    def ammodulation(self):
+        """."""
+        if self.inst.query('AM:STATe?') == '1':
+            return(True)
+        else:
+            return(False)
+
+    @ammodulation.setter
+    def ammodulation(self, boolean=False):
+        self.inst.write(f'AM:STATe {boolean:d}')
+
+    @property
+    def modulation(self):
+        """."""
+        if self.inst.query('MODulation:STATe?') == '1':
+            return(True)
+        else:
+            return(False)
+
+    @modulation.setter
+    def modulation(self, boolean=False):
+        self.inst.write(f'MODulation:STATe {boolean:d}')
 
 
 class HP8664A(HP866nA):
@@ -351,39 +451,32 @@ class AgilentE4422B(SignalGenerator, IEEE488):
         self.write(f"OUTPut:STATe {boolean:d}")  # OUTP:STAT ON // OFF
 
 
-class AnritsuMG369nx(SignalGenerator, IEEE488):
-    """ANRITSU,MG369nx."""
+class Anritsu_MG369NX():
 
-    # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
-    '''LOS Opens the level offset
-    parameter.
-    +100dB to 100dB
-    (logarithmic); +xxx mV to
-    xxx mV (linear)
-    DB (log)
-    VT (linear
-    '''
-    # XL0
-    '''
-    Opens the L0 parameter.   Power level range of the
-    MG369XB model
-    DM (log)
-    VT (linear)
-    '''
+    def __init__(self, inst):
+        self.inst = inst
+        self.inst.read_termination = '\r\n'
+        self.inst.write_termination = '\n'
+        self._fmin, self._fmax = float(self.inst.query('OFL')) * 1e6, float(self.inst.query('OFH')) * 1e6  # Min, Max Frequency
+        self._options = [str(i) for i in self.inst.query('OO').split(',')]  # Options installed
+        self._preset_()
 
-    def __repr__(self):
-        """."""
-        return(f"{__class__}, {self.instrument}")
+    def _preset_(self):
+        self.inst.write('CF0')  # select F0
+        self.inst.write('L0')  # select L0
 
-    def __init__(self, instrument):
-        """."""
-        super().__init__(instrument)
-        # self.log.info('Creating an instance of\t' + str(__class__))
-        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
+        self.inst.write('LOG')  # operate in dBm  / LIN in mV
+        self.output = False
+        self.inst.write('RO1')  # RF state at reset to off
+
+        self.frequencymultiplier = 1
+        self.leveloffset = 0
+        self.inst.write('LO0')  # Level offset off
+
+        self.inst.write('RL')
+        '''
         # self.options = self.query("*OPT?").strip().split(',')
 
-        # self.amps = [-110, 30]
-        self.freqs = [2e9, 10e9]
         # self.write("*CLS")  # clear error status
         # self.write("*CLS")  # clear error status
         # self.write('CF0')  # Set CW mode at F0, Opens F0 parameter.
@@ -395,135 +488,89 @@ class AnritsuMG369nx(SignalGenerator, IEEE488):
         self.query('OO')  # Returns the instrument option string to the controller
         self.write('RO1')  # Selects RF to be off at reset
         self.write('RL1')  # Release to Local
+        '''
 
     @property
-    def frequency(self):
-        """."""
-        return(float(self.query("OF0").strip()) * 1e6)  # Responce is in MHz
+    def frequency(self):  # Responce is in MHz
+        return round(float(self.inst.query('OF0')) * 1e6, 2)
 
     @frequency.setter
     def frequency(self, frequency):
-        self.write(f"F0{frequency:.0f} HZ")
+        self.inst.write(f'F0{frequency:.2f}HZ')
 
     @property
-    def amplitude(self):
-        """."""
-        return(self.query("OL0"))  # OLO
+    def frequencymultiplier(self):
+        return float(self.inst.query('OFM'))  # Output Frequency Multiplier
 
-    @amplitude.setter
-    @amplitudelimiter
-    def amplitude(self, amplitude):
-        self.write(f"L0{amplitude:.2f}DM")
+    @frequencymultiplier.setter
+    def frequencymultiplier(self, multiplier=1):
+        self.inst.write(f"FRS{multiplier}TMS")  # Set Frequency Multiplier
+
+    @property
+    def level(self):
+        return float(self.inst.query('OL0'))  # Output Level 0
+
+    @level.setter
+    def level(self, level):
+        self.inst.write(f'L0{level:.2f}DM')
 
     @property
     def output(self):
-        """."""
-        return NotImplemented
-        ''' ORF if self.query("OUTPut:STATe?") == "1":
-            return(True)
-        else:
-            return(False)
-        '''
+        return NotImplemented  # ORF?
 
     @output.setter
     def output(self, boolean=False):
-        self.write(f"RF{boolean:d}")
+        self.inst.write(f'RF{boolean:d}')
+
+    @property
+    def leveloffset(self):
+        return float(self.inst.query('OLO'))
+
+    @leveloffset.setter
+    def leveloffset(self, leveloffset):
+        self.inst.write(f'LOS{leveloffset:.2f}DB')
+
+    '''
+    # 'F5 100 MZ ACW'  # Activate CW on open frequency param
+
+    # AT0  # deselect coupling of ALC attenuator
+    # AT1  # select coupling of ALC attenuator
+    # ATT00 to ATT11 nn * 10 dB.
+
+    # CS0  # Turns off CW Ramp
+
+    # LVP  # set output -1dB of Peak power shy of
+
+    # gen.query('OI')
+    # gen.query('OVN')  # ROM Version
+
+    # PS0  # Phase Offset Off
+    # PSO{phase}DG
+
+    # PU{n}
+    # 0 dBm
+    # 1 mV
+    # 2 dBmV
+
+    # TR0 , TR1  # when step attenuator is installed use 0 or 40dB of attenuation ~source match termination
+
+        # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
+        LOS Opens the level offset
+        parameter.
+        +100dB to 100dB
+        (logarithmic); +xxx mV to
+        xxx mV (linear)
+        DB (log)
+        VT (linear
+
+        # XL0
+        Opens the L0 parameter.   Power level range of the
+        MG369XB model
+        DM (log)
+        VT (linear)
 
 
-class AnritsuMG3691B(AnritsuMG369nx):  # ANRITSU,MG3691B,
-    """Antitsu MG3691B 2e9, 10e9.
-
-    .. figure::  images/SignalGenerator/AnritsuMG3691B.jpg
-    """
-
-    # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
-
-    def __repr__(self):
-        """."""
-        return(f"{__class__}, {self.instrument}")
-
-    def __init__(self, instrument):
-        """."""
-        super().__init__(instrument)
-        # self.log.info('Creating an instance of\t' + str(__class__))
-        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
-
-        assert self.IDN.startswith('ANRITSU,MG3691B,')
-
-        self.amps = [-110, 30]
-        self.freqs = [10e6, 10e9]
-
-
-class AnritsuMG3692A(AnritsuMG369nx):  # ANRITSU,MG3692A,
-    """Antitsu MG3692A 2e9, 20e9.
-
-    .. figure::  images/SignalGenerator/AnritsuMG3692A.jpg
-    """
-
-    # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
-
-    def __repr__(self):
-        """."""
-        return(f"{__class__}, {self.instrument}")
-
-    def __init__(self, instrument):
-        """."""
-        super().__init__(instrument)
-        # self.log.info('Creating an instance of\t' + str(__class__))
-        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
-
-        assert self.IDN.startswith('ANRITSU,MG3692A,')
-
-        self.amps = [-110, 30]
-        self.freqs = [10e6, 20e9]
-
-
-class AnritsuMG3693A(AnritsuMG369nx):  # ANRITSU,MG3693A,
-    """Antitsu MG3693A 2e9, 30e9.
-
-    .. figure::  images/SignalGenerator/AnritsuMG3693A.jpg
-    """
-
-    # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
-
-    def __repr__(self):
-        """."""
-        return(f"{__class__}, {self.instrument}")
-
-    def __init__(self, instrument):
-        """."""
-        super().__init__(instrument)
-        # self.log.info('Creating an instance of\t' + str(__class__))
-        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
-
-        assert self.IDN.startswith('ANRITSU,MG3693A,')
-
-        self.amps = [-110, 30]
-        self.freqs = [2e9, 30e9]
-
-
-class AnritsuMG3695B(AnritsuMG369nx):  # ANRITSU,MG3695B,
-    """Antitsu MG3695A 2e9, 50e9.
-
-    .. figure::  images/SignalGenerator/AnritsuMG3695A.jpg
-    """
-
-    # Need to preset : amp offset, freq offset, used freq, used amp, used mod, used pulse
-
-    def __repr__(self):
-        """."""
-        return(f"{__class__}, {self.instrument}")
-
-    def __init__(self, instrument):
-        """."""
-        super().__init__(instrument)
-        # self.log.info('Creating an instance of\t' + str(__class__))
-        self.log.info(f'Creating {str(__class__.__name__)} for {self.instrument}')
-
-        # assert self.IDN.startswith('ANRITSU,MG3693A,')
-
-        self.amps = [-110, 20]
-        self.freqs = [8e6, 50e9]
+    '''
 
 
 class Wiltron6669A(SignalGenerator, IEEE488):
@@ -695,6 +742,10 @@ class MarconiInstruments203N(SignalGenerator, IEEE488):
     10 kHz to 2.7 GHz (2031)
     10 kHz to 5.4 GHz (2032)
     """
+    def __init__(self, inst):
+        self.inst = inst
+        self.inst.read_termination = '\n'
+        self.inst.write_termination = '\n'
 
     '''
 
@@ -740,7 +791,7 @@ class MarconiInstruments203N(SignalGenerator, IEEE488):
     @property
     def frequency(self):
         """."""
-        return(self.query("CFRQ?"))
+        return float(self.query("CFRQ?").split(';')[0].split(' ')[1])  # ':CFRQ:VALUE 50000000.0;INC 1000.0'
 
     @frequency.setter
     def frequency(self, frequency):
@@ -752,7 +803,7 @@ class MarconiInstruments203N(SignalGenerator, IEEE488):
         return(self.query("RFLV?"))
 
     @amplitude.setter
-    @amplitudelimiter
+    # @amplitudelimiter
     def amplitude(self, amplitude):
         self.write(f"RFLV:VALUE {amplitude:.2f}DBM")
 
@@ -997,6 +1048,30 @@ class HP85645A(SignalGenerator, IEEE488, SCPI):
         self.write(f"OUTPut:STATe {boolean:d}")
 
 
+class IFR341n():
+
+    def __init__(self, inst):
+        self.inst = inst
+        self.inst.read_termination = '\n'
+        self.inst.write_termination = '\n'
+
+    @property
+    def frequency(self):
+        return float(self.inst.query('SOURce:FREQuency:CW?'))
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self.inst.write(f'SOURce:FREQuency:CW {frequency:.0f} Hz')
+
+    @property
+    def power(self):
+        return float(self.inst.query('SOURce:POWer:LEVel:AMPLitude?'))
+
+    @power.setter
+    def power(self, power):
+        self.inst.write(f'SOURce:POWer:LEVel:AMPLitude {power:.2f} dBm')
+
+
 REGISTER = {
     'HEWLETT-PACKARD,8657A,': HP8657A,
     'HEWLETT_PACKARD,8664A,': HP8664A,
@@ -1019,7 +1094,7 @@ REGISTER = {
     'HEWLETT-PACKARD,85645A,': HP85645A,
     'Agilent Technologies, N5181A,': AgilentN5181A,
     'Agilent Technologies, N5182A,': AgilentN5182A,
-    
+
 
 
 

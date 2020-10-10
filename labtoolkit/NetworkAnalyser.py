@@ -4,7 +4,7 @@
 import time
 import logging
 # from scipy.interpolate import UnivariateSpline
-# import numpy as np
+import numpy as np
 
 from labtoolkit.GenericInstrument import GenericInstrument
 from labtoolkit.IEEE488 import IEEE488
@@ -32,6 +32,72 @@ class AgilentE8357A(NetworkAnalyser):
     def __init__(self, instrument):
         """."""
         super().__init__(instrument)
+        self.inst = inst
+        self.inst.read_termination = '\n'
+        self.inst.write_termination = '\n'
+
+    def catalog(self):
+        string = self.inst.query('CALC1:PAR:CAT?')  # string='"CH1_S11_1,S11,CH1_S21_2,S21,CH1_S12_3,S12,CH1_S22_4,S22,ADIVB,R1/A"'
+        cats = string.strip('"').split(',')
+        # l = ['CH1_S11_1', 'S11', 'CH1_S21_2', 'S21', 'CH1_S12_3', 'S12', 'CH1_S22_4', 'S22', 'ADIVB', 'R1/A']
+        catalog = {}
+        for i, x in enumerate(cats[::2]):  # every other
+            # print(x)
+            # print(l[(i*2)+1])
+            catalog[cats[(i*2)+1]] = x
+        # catlog = {'S11': 'CH1_S11_1', 'S21': 'CH1_S21_2', 'S12': 'CH1_S12_3', 'S22': 'CH1_S22_4', 'R1/A': 'ADIVB'}
+        return catalog
+
+    def readX(self):
+        sweeptype = self.query('SENS1:SWE:TYPE?')
+        '''
+        SENS1:SWE:TYPE? "SEGM"
+        SENS1:SEGM:COUN? +1
+        SENS1:SEGM1:STATE? 1
+        SENS1:SEGM1:FREQ:STAR? +3.00000000000E+005
+        SENS1:SEGM1:FREQ:STOP? +5.00000000000E+006
+        SENS1:SEGM1:SWE:POIN? +500
+        '''
+        # print(sweeptype)
+        start, stop, step = float(self.query('SENS1:FREQ:STAR?')), float(self.query('SENS1:FREQ:STOP?')), int(self.query('SENS1:SWE:POIN?'))
+        if sweeptype == 'LIN':
+            return np.linspace(start, stop, step)
+        elif sweeptype == 'LOG':
+            return np.geomspace(start, stop, step)
+        elif sweeptype == 'POW':
+            start, stop = float(self.query('SOUR1:POW:STAR?')), float(self.query('SOUR1:POW:STOP?'))
+            return np.linspace(start, stop, step)
+        else:
+            return None
+
+    def readS(self, nn, cat):
+        timeout = self.inst.timeout
+        self.inst.timeout = 3000
+
+        # print('CALC1:PAR:SEL \'{}\''.format(cat[nn]))
+        self.inst.write('CALC1:PAR:SEL \'{}\''.format(cat[nn]))
+
+        self.inst.write('FORM:BORD SWAP')
+        self.inst.write('FORM:DATA REAL,32')
+        arr = self.inst.query_binary_values(':CALC1:DATA? SDATA', container=np.float64).view(np.complex128)
+
+        # self.inst.write('FORM:BORD NORM')
+        # self.inst.write('FORM:DATA ASCII,0')
+        # arr = self.inst.query_ascii_values(':CALC1:DATA? SDATA', container=np.float64).view(np.complex128)
+
+        self.inst.timeout = timeout
+        return arr
+        # read as a RI series of floats and .view as complex
+
+        # Array of float consisting of interleaved real imag >>> array when .view as complex
+        # array([1., 2., 3., 4., 5., 6.]).view(np.complex128) >>> array([1.+2.j, 3.+4.j, 5.+6.j])
+
+        # Note cannot go direct to complex as numpy would produce
+        # np.array([1., 2., 3., 4., 5., 6.], dtype=np.complex128) >>> array([1.+0j, 2.+0.j, 3.+0.j, 4.+0.j, 5.+0.j, 6.+0.j])
+
+        # You can access the real and imag components
+        # array([1.+2.j, 3.+4.j, 5.+6.j]).real >>> array([1., 3., 5.])
+        # array([1.+2.j, 3.+4.j, 5.+6.j]).imag >>> array([2., 4., 6.])
 
     @property
     def points(self):
@@ -56,45 +122,6 @@ class AgilentE8357A(NetworkAnalyser):
     def bandwidth(self, bw=1000):
         self.write(f"SENSe:Bandwidth {int(bw)}HZ")
 
-    '''
-    @property
-    def form(self):
-        """Format.
-
-        """
-        # LOGM, PHAS, DELA, LINM, SWR, REAL, IMAG, SMITH, POLA, EXPP, ADMIT, SPECT, NOISE, LINY
-        return self.query(":CALC1:FORM?")
-
-    @form.setter
-    def form(self, form='LOGM'):
-        self.write(":CALC1:FORM {}".format(form))
-
-    @property
-    def sweepformat(self):
-        """Format.
-
-        LOGF, LINF, LIST, POWE
-        Log frequency (Network and impedance analyzers only)
-        """
-        return self.query("SWPT?")
-
-    @sweepformat.setter
-    def sweepformat(self, form='LOGF'):
-        self.write("SWPT {}".format(form))
-
-    @property
-    def paramater(self):
-        """Measure paramater.
-
-        AR, RB, R, A, B, S11, S12, S21, S22, IMAG, IPH, IRE, IIM, AMAG, APH, ARE, AIM, RCM, RCPH, RCM, RCPH, RCR, RCIM, CP, CS, LP, LS, D, Q, RP, RS
-        """
-        return self.query("MEAS?")
-
-    @paramater.setter
-    def paramater(self, paramater='S11'):
-        self.write("MEAS {}".format(paramater))
-
-    '''
     @property
     def sourcepower(self):
         """Source power dBm."""
@@ -157,6 +184,50 @@ class AgilentE8357A(NetworkAnalyser):
         # FORM:DATA REAL,64
         # FORM:BORDer
         # :CALC1:DATA? FDATA
+    '''
+    inst.write('SENS1:FREQ:STAR 1e9')
+    inst.write('SENS1:FREQ:STOP 6e9')
+    nets = {
+        'x': np.linspace(float(inst.query('SENS1:FREQ:STAR?')), float(inst.query('SENS1:FREQ:STOP?')), int(inst.query('SENS1:SWE:POIN?'))),
+        'S11': readS('11'),
+        'S12': readS('12'),
+        'S21': readS('21'),
+        'S22': readS('22'),
+    }
+    data = np.column_stack((nets['x'], nets['S11'].real, nets['S11'].imag, nets['S12'].real, nets['S12'].imag, nets['S21'].real, nets['S21'].imag, nets['S22'].real, nets['S22'].imag))
+    # print(data)
+
+    np.savetxt('Cable_UFLtoSMA__04.s2p', data, fmt='%i %9.8f %9.8f %9.8f %9.8f %9.8f %9.8f %9.8f %9.8f', header='! '+'\n! '.join(
+    ['Created by Python, David', 'Trace details', 'Frequency S-Parameter(RI)']
+    )+'\n# HZ S RI R 50', comments='')
+
+    print(inst.query('*OPT?'))
+    print(inst.query('DISP:WIND1:STATE?'))
+    print(inst.query('DISP:WIND1:CAT?'))
+
+    print(inst.query('SENS1:SWE:POIN?'))
+    print(inst.query(':CALC1:PAR:CAT?'))
+    print(inst.query('DISP:WIND1:CAT?'))
+
+    inst.write(':CALC1:PAR:SEL CH1_S11_1')
+    print(inst.query(':CALC1:FORM?'))
+    print(inst.query('DISP:WIND1:TRAC1:Y:RLEV?'))
+    print(inst.query('DISP:WIND1:TRAC1:Y:PDIV?'))
+    print(inst.query('DISP:WIND1:TRAC1:Y:RPOS?'))
+
+    print(inst.query(':CALC1:FORM?'))
+    # FORM:DATA REAL,32
+    # FORM:BORD SWAP
+    # :CALC1:DATA? FDATA
+    # FORM:BORD NORM
+    # FORM:DATA ASCII,0
+    print(inst.query('SENS:SWE:TIME?'))
+    print(inst.query('SENS1:SWE:TYPE?'))
+    print(inst.query('SENS1:FREQ:STAR?'))
+    print(inst.query('SENS1:FREQ:STOP?'))
+
+
+    '''
 
 
 class HP4395A(NetworkAnalyser):
