@@ -62,3 +62,17 @@ target/
 .python-version
 
 *.log
+
+
+*.txt
+*.spt
+*.jpg
+*.csv
+*.bat
+*.docx
+*.url
+*.xlsx
+.ipynb_checkpoints
+
+*.vb
+*.vbs

@@ -10,9 +10,9 @@ class SCPI(object):
 
     @property
     def SystemErrorQueue(self):
-        """SYST:ERR? - System Error Queue.
+        """Get System Error Queue.
 
-        :returns: list of error queue items
+        :returns: List of errors
         """
         responces = []
         # responce = False
@@ -27,4 +27,4 @@ class SCPI(object):
                 responces.append(responce)
             # print(responce)
             '''
-        return(responces)
+        return responces
