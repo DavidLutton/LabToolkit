@@ -27,7 +27,7 @@ setup(
     name='LabToolkit',
     version='0.1.3',
     description="Python package for instrument control, data acquisition and automation.",
-    long_description=readme + '\n\n' + history,
+    long_description=readme,  # + '\n\n' + history,
     author="David A Lutton",
     author_email='david@dalun.space',
     url='https://github.com/DavidLutton/LabToolkit',
@@ -49,5 +49,6 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     test_suite='tests',
-    tests_require=test_requirements
+    tests_require=test_requirements,
+    long_description_content_type='text/markdown',
 )
