@@ -3,7 +3,7 @@
 
 from setuptools import setup
 
-with open('README.rst') as readme_file:
+with open('README.md') as readme_file:
     readme = readme_file.read()
 
 with open('HISTORY.rst') as history_file:
@@ -14,7 +14,8 @@ requirements = [
     'pyvisa',
     'pyvisa-py',
     'pyvisa-sim',
-    # 'numpy',
+    'numpy',
+    'pandas',
     # 'pint',
 ]
 
@@ -24,8 +25,8 @@ test_requirements = [
 
 setup(
     name='LabToolkit',
-    version='0.1.2',
-    description="Engineering project to operate a test system",
+    version='0.1.3',
+    description="Python package for instrument control, data acquisition and automation.",
     long_description=readme + '\n\n' + history,
     author="David A Lutton",
     author_email='david@dalun.space',
@@ -45,7 +46,6 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
     test_suite='tests',
