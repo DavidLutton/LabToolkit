@@ -10,14 +10,6 @@ from time import sleep
 class AgilentN7972A(IEEE488, SCPI):
     """."""
 
-    def __init__(self, inst):
-        super().__init__(inst)
-
-        # self.inst = inst
-
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
-
     @property
     def voltage(self):
         return self.query_float('VOLTage?')
