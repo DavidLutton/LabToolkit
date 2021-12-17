@@ -5,12 +5,6 @@ from ..SCPI import SCPI
 class AgilentN9039A(IEEE488, SCPI):
     """."""
 
-    def __init__(self, inst):
-        """."""
-        super().__init__(inst)
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
-
     def status(self):
         return {
             'Gain': self.gain,
@@ -125,13 +119,13 @@ inst.query(':SYST:HID?'), inst.query(':SERV:EXT:VERS?')
 inst.query(':STAT:QUES:CAL:EXT:NEED:COND?')
 14
 
-inst.query(':CAL:TIME:LRAD?'), inst.query(':CAL:TIME:LCON?')
-('1.198564762E+07', '1.198667062E+07')
+inst.query(':CAL:TIME:LRAD?'), inst.query(':CAL:TIME:LCON?')  # last rad / con alignment
+
 
 # inst.query(':SERV:CAL:DATA? 100905')
 
-inst.query(':SERV:CAL:DATA? 100907')
-'"20190501.17491,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0"'
+# inst.query(':SERV:CAL:DATA? 100907')
+
 
 
 '''

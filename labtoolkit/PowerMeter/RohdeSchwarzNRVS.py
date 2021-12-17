@@ -1,15 +1,14 @@
-from ..GenericInstrument import GenericInstrument
+from ..Instrument import Instrument
 # from ..IEEE488 import IEEE488
 
 
-class RohdeSchwarzNRVS(GenericInstrument):
+class RohdeSchwarzNRVS(Instrument):
     """Rohde-Schwarz NRVS.
 
     .. figure::  images/PowerMeter/RohdeSchwarzNRVS.jpg
     """
 
-    def __init__(self, inst):
-        super().__init__(inst)
+    def __post__(self):
         self.inst.read_termination = '\n'
         self.inst.write_termination = ''
 
@@ -17,12 +16,21 @@ class RohdeSchwarzNRVS(GenericInstrument):
         self.write('KF1')  # enable freq correction
         self.write('M0')  # Average power
         self.write('N1')  # Without alphaheader
+        self.sw_offset_mag = 0
 
         '''
         inst.query('ZV')
         inst.query('Z2')
         inst.query('ST')
         '''
+    @property
+    def sw_offset(self):
+        """."""
+        return self.sw_offset_mag
+
+    @sw_offset.setter
+    def sw_offset(self, offset):
+        self.sw_offset_mag = offset
 
     @property
     def frequency(self):
@@ -37,7 +45,7 @@ class RohdeSchwarzNRVS(GenericInstrument):
     def amplitude(self):
         """."""
         # '   DBM   6.94910E+00'
-        return self.query_float('X3')
+        return self.query_float('X3') + self.sw_offset_mag
 
     '''
     @property

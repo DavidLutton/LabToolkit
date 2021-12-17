@@ -37,7 +37,7 @@ def read_S2P(s2pfile, *, Z0=50):
     y['S12'] = arr[:, [3, 4]].flatten().view(np.complex128)
     y['S21'] = arr[:, [5, 6]].flatten().view(np.complex128)
     y['S22'] = arr[:, [7, 8]].flatten().view(np.complex128)
-    return x, y['S11'], y['S12'], y['S21'], y['S22']    
+    return x, y['S11'], y['S12'], y['S21'], y['S22']
     
 
 
@@ -45,17 +45,18 @@ def complexto(c=0.0025+0.005j, *, Z0=50, reflective=False):  # c is a complex nu
     """."""
     
     R = (1-c.real**2-c.imag**2)/((1-c.real)**2+c.imag**2)*Z0  # R real impedance
-    X = 2*c.imag/((1-c.real)**2+c.imag**2)*Z0  # X imag impedance 
+    X = 2*c.imag/((1-c.real)**2+c.imag**2)*Z0  # X imag impedance
     Z = np.sqrt(X**2+R**2)  # ZO, Impedance
 
     magnitude = np.abs(c)
     
     dB = 20 * np.log10(magnitude)
-    # quadrature = (npy.abs(c), npy.angle(c)*npy.abs(c))
-    # dBfrommag = 20 * np.log10(magnitude)  # PASS~ 0 sliver of 0
-    # print(dBfrommag)
-    # dB - dBfrommag ~0    
     
+    # dB = 10 * np.log10((reim.real**2 + reim.imag**2))  🔻
+    # Disagrees with HP 4395A for small values -1.909  (dB -0.053) from -0.8002815+0.06101832j
+    
+    # quadrature = (npy.abs(c), npy.angle(c)*npy.abs(c))
+
     # Γ
     # ρ=abs(Γ)
     calcs = {

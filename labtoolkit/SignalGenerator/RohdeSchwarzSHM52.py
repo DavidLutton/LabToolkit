@@ -1,13 +1,11 @@
-from ..GenericInstrument import GenericInstrument
+from ..Instrument import Instrument
 from .helper import SignalGenerator, amplitudelimiter
 
-class RohdeSchwarzSHM52(GenericInstrument, SignalGenerator):
+class RohdeSchwarzSHM52(Instrument, SignalGenerator):
     """Rohde and Schwarz SHM, 100e3-2e9."""
 
-    def __init__(self, instrument):
+    def __post__(self):
         """."""
-        super().__init__(instrument)
-
         self.amps = [-107, 17]
         self.freqs = [100e3, 2e9]
 

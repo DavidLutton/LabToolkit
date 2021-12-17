@@ -35,8 +35,7 @@ class Switch:
 
 class HP3488A(GenericInstrument, Switch):
 
-    def __init__(self, inst):
-        super().__init__(inst)
+    def __post__(self):
         self.inst.read_termination = '\r\n'
         self.inst.write_termination = '\n'
     # switcher.switch(502, True)

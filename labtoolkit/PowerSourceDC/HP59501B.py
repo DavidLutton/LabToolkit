@@ -1,9 +1,9 @@
 import numpy as np
 
-from ..GenericInstrument import GenericInstrument
+from ..Instrument import Instrument
 
 
-class HP59501B(GenericInstrument):
+class HP59501B(Instrument):
 
     def __init__(self, inst):
         super().__init__(inst)

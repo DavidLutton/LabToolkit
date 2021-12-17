@@ -1,19 +1,23 @@
-from .GenericInstrument import GenericInstrument
+from .Instrument import Instrument
+from pyvisa.constants import VI_GPIB_REN_ADDRESS_GTL
 
 
-class IEEE488(GenericInstrument):
+class IEEE488(Instrument):
     """IEEE 488 functions."""
-
+    
+    '''
     def __repr__(self):
         # IDN = ', '.join(self.IDN.replace(', ', ',').split(',')[0:3])  # Make, Model, Serial
         # return f"{type(self).__name__} on {self.inst.resource_name} with {IDN}"
         try:
             self._IDN_
         except AttributeError:
-            self._IDN_ = ', '.join(self.IDN.replace(', ', ',').split(',')[0:3])  # Make, Model, Serial
+            self._IDN_ = ', '.join(self.IDN.replace(', ', ',').split(',')[0:3])
+            # Make, Model, Serial
         finally:
             return f'{type(self).__name__} on {self.inst.resource_name} with {self._IDN_}'
-
+    '''
+    
     @property
     def CLS(self):
         r"""\*CLS - Clear status."""
@@ -46,7 +50,7 @@ class IEEE488(GenericInstrument):
     @property
     def OPT(self):
         r"""\*OPT? - Show installed options."""
-        return self.query("*OPT?").split(',')
+        return self.query("*OPT?").strip('"') # .split(',')
 
     def RCL(self, value=0):
         r"""\*RCL {0|1|2|3|4} - Recall instrument state."""
@@ -88,3 +92,12 @@ class IEEE488(GenericInstrument):
     def SRE(self, value):
         r"""\*SRE <enable_value> - Service request enable (enable bits in enable register of Status Byte Register group."""
         return self.write(f"*SRE{value}")
+
+    def GTL(self):
+        """Go To Local."""
+        return self.inst.control_ren(VI_GPIB_REN_ADDRESS_GTL)
+    
+    @property
+    def local(self):
+        """Go To Local."""
+        return self.inst.control_ren(VI_GPIB_REN_ADDRESS_GTL)

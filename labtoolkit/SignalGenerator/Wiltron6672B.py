@@ -1,18 +1,15 @@
-from ..GenericInstrument import GenericInstrument
+from ..Instrument import Instrument
 from .helper import SignalGenerator, amplitudelimiter
 
 
-class Wiltron6672B(GenericInstrument, SignalGenerator):
+class Wiltron6672B(Instrument, SignalGenerator):
     """Wiltron 6672B 40e9, 60e9.
 
     .. figure::  images/SignalGenerator/Wiltron6672B.jpg
     """
 
-    def __init__(self, inst):
+    def __post__(self):
         """."""
-        super().__init__(inst)
-        # self.log = logging.getLogger(__name__)
-        # self.log.info('Creating an instance of\t' + str(__class__))
 
         self.amps = [-20, 17]
         self.freqs = [40e9, 60e9]

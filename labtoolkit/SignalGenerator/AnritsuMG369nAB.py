@@ -1,4 +1,4 @@
-from ..GenericInstrument import GenericInstrument
+# from ..GenericInstrument import GenericInstrument
 from ..IEEE488 import IEEE488
 from ..SCPI import SCPI
 
@@ -48,7 +48,7 @@ class amplitudelimiter(object):
         # print("After self.f(*args)")
 
 
-class AnritsuMG369NX(IEEE488):
+class AnritsuMG369nAB(IEEE488):
     """."""
 
     def __init__(self, inst):

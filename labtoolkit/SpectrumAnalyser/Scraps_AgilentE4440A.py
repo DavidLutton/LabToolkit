@@ -270,30 +270,9 @@ for q in [
 # :TRACe1|2|3:MODE WRITe|MAXHold|MINHold|VIEW|BLANk
 
 #
-xt, yt = np.linspace(0, float(inst.query(':SENS:SWE:TIME?')), int(inst.query(':SENS:SWEEP:POINts?'))), np.array(inst.query_ascii_values(':TRAC:DATA? TRACE1'))
 
 
-p = figure(title='bar', x_axis_label='Frequency (MHz)', y_axis_label='dBm', width=1440)  #, sizing_mode='scale_width')  # width=1800, height=900)
-
-p.line(xt, yt, legend='bar', color='black', alpha=1, line_width=2)
-
-p.legend.location = "top_right"
-p.legend.click_policy="hide"
-p.legend.background_fill_color = "black"
-p.legend.background_fill_alpha = 0.25
-
-p.ygrid.minor_grid_line_color = 'black'
-p.ygrid.minor_grid_line_alpha = 0.1
-
-p.xgrid.minor_grid_line_color = 'black'
-p.xgrid.minor_grid_line_alpha = 0.1
-# p.background_fill_color = "gray"
-
-# p.background_fill_alpha = 0.2
-
-show(p)
-
-*IDN?  :  Agilent Technologies, E4440A, US44302752, A.11.21
+*IDN?  :  Agilent Technologies, E4440A,
 :FORM?  :  ASC,+8
 :INST:SEL?  :  SA
 :SENS:BWID:RES?  :  +1.00000000E+004
@@ -307,46 +286,194 @@ show(p)
 :SENS:FREQ:STOP?  :  +6.0000000000000000E+009
 :SENS:FREQ:SPAN?  :  +0.0000000000000000E+000
 
+'''
+'''
+*IDN?;
+:INST?;
+:POW:PRES:USE?;
+:INP:PRES:PATH?;
+:INP:PRES RF;
+*IDN?;
+:INST?;
+:POW:PRES:USE?;
+:INP:PRES:PATH?;
+:INP:PRES RF;
+:FREQ:START 30MHZ;:FR...
+:BAND 120 KHZ;:BAND:V...
+*IDN?;
+:CORR:OFFS:MAGN 0DB;:...
+:CORR:CSET1:DEL;
+:CORR:CSET2:DEL;
+:CORR:CSET4:DEL;
+:CORR:CSET1 ON ;
+:CORR:CSET1:DATA 3000...
+:CORR:CSET2 ON ;
+:CORR:CSET2:DATA 3000...
+:CORR:CSET4 OFF ;
+:CORR:OFFS:MAGN 0DB;
+:POW:PRES:GAIN ON;:PO...
+:CALC:LLIN1:DEL;:CALC...
+:CALC:LLIN1:DATA 3000...
+:CALC:LLIN1:DISP ON;
+:EMI:MEAS:DET:QPE ON;...
+:CALC:LLIN1:CONT:INT:...
+:CALC:LLIN2:CONT:INT:...
+UNIT:POW dBuVm;
+:CALC:MARK1:PEAK:EXC ...
+:FREQ:START 30.000000...
+:FREQ:START 300.00000...
+:FREQ:CENT 486.000000...
+:CALC:MARK1:X  487.00...
+:CALC:MARK1:CENT;
+:CALC:MARK:MODE POS;
+:MEAS:EMI:MARK;*OPC?;
+:MEAS:EMI:MARK?;
+:FREQ:SPAN 5.000000 MHZ;
+:CORR:OFFS:MAGN  10.0...
+:POW:PRES:ATT 10.0;
+:POW:PRES:ATT 0.0;
+:CORR:OFFS:MAGN  0.00...
+:CALC:MARK1:MAX:RIGH;
+:CALC:MARK1:MAX:RIGH;
+:CALC:MARK1:MAX:RIGH;
+:CALC:MARK1:MAX:RIGH;
+:CALC:MARK1:MAX:NEXT;
+:CALC:MARK1:MAX:NEXT;
+:FREQ:START 300.00000...
+:CALC:MARK1:MAX:NEXT;
+:CALC:MARK1:MAX:RIGH;
+:CALC:MARK1:MAX:RIGH;
+:AVER OFF;
+:FREQ:START 30.000000...
+:AVER ON;
+:AVER OFF;
+:TRAC1:MODE WRIT;
+:TRAC1:MODE MAXH;
+:TRAC1:MODE VIEW;
+:TRAC1:MODE BLAN;
+:TRAC2:MODE WRIT;
+:TRAC3:MODE WRIT;
+:TRAC3:MODE MAXH;
+:TRAC1:MODE WRIT;
+:SENS:EMI:MEAS:DET:DW...
+:CORR:OFFS:MAGN 0DB;
+:FREQ:START 0.15MHZ;:...
+:BAND 9 KHZ;:BAND:VID...
+*IDN?;
+:CORR:OFFS:MAGN 0DB;:...
+:CORR:CSET1:DEL;
+:CORR:CSET2:DEL;
+:CORR:CSET4:DEL;
+:CORR:CSET1 OFF ;
+:CORR:CSET2 ON ;
+:CORR:CSET2:DATA 1500...
+:CORR:CSET4 ON ;
+:CORR:CSET4:DATA 1500...
+:CORR:OFFS:MAGN -10DB;
+:POW:PRES:GAIN OFF;
+:CALC:LLIN1:DEL;:CALC...
+:CALC:LLIN1:DATA 1500...
+:CALC:LLIN1:DISP ON;
+:CALC:LLIN2:DATA 1500...
+:CALC:LLIN2:DISP ON;
+:EMI:MEAS:DET:QPE ON;...
+:CALC:LLIN1:CONT:INT:...
+:CALC:LLIN2:CONT:INT:...
+UNIT:POW dBuV;
+:CALC:MARK1:PEAK:EXC ...
+:FREQ:START 0.150000M...
+:FREQ:START 1.000000M...
+:FREQ:START 1.000000M...
+:FREQ:START 0.150000M...
+:SENS:EMI:MEAS:DET:DW...
+:CORR:OFFS:MAGN 0DB;
+*IDN?;
+:INST?;
+:POW:PRES:USE?;
+:INP:PRES:PATH?;
+:INP:PRES RF;:INP:PRE...
+:FREQ:START 1GHZ;:FRE...
+:BAND 1 MHZ;:BAND:VID...
+*IDN?;
+:CORR:OFFS:MAGN 0DB;:...
+:CORR:CSET1:DEL;
+:CORR:CSET2:DEL;
+:CORR:CSET4:DEL;
+:CORR:CSET1 ON ;
+:CORR:CSET1:DATA 1000...
+:CORR:CSET2 ON ;
+:CORR:CSET2:DATA 1000...
+:CORR:CSET4 ON ;
+:CORR:CSET4:DATA 1000...
+:CORR:OFFS:MAGN 0DB;
+:POW:PRES:GAIN OFF;
+:CALC:LLIN1:DEL;:CALC...
+:CALC:LLIN1:DATA 1000...
+:CALC:LLIN1:DISP ON;
+:CALC:LLIN2:DATA 1000...
+:CALC:LLIN2:DISP ON;
+:EMI:MEAS:DET:QPE OFF...
+:CALC:LLIN1:CONT:INT:...
+:CALC:LLIN2:CONT:INT:...
+UNIT:POW dBuVm;
+:CALC:MARK1:PEAK:EXC ...
+:BWID  2000.0 kHz;
+:BWID  2000.0 kHz;
+:BWID  2000.0 kHz;
+:BWID  2000.0 kHz;
+:AVER OFF;
+:AVER ON;
+:AVER OFF;
+:SENS:EMI:MEAS:DET:DW...
+:INP:PRES:PATH?;
+:INP:PRES RF;:INP:PRE...
+:CORR:OFFS:MAGN 0DB;
+:CORR:OFFS:MAGN 0DB;
+'''
+'''
+*IDN?;
+:INST:SEL?
 
-for cf in [0.1e6, 0.15e6, 1e6, 10e6,]:
-    res = {}
-    for i, f in enumerate([cf*1, cf*2, cf*3], 1):
-        # f = int(f)
-        gen.write(f':SOUR:FREQ:FIXED {cf}')
-        inst.write(f':SENS:FREQ:CENT {f}')
-        time.sleep(2)
-        inst.write(f':CALCulate:MARKer{1}:MAX')
+:INST?;
+:POW:PRES:USE?;
+:INP:PRES:PATH?;
+:INP:PRES RF;:INP:PRE...
+*IDN?;
+:INST?;
+:POW:PRES:USE?;
+:INP:PRES:PATH?;
+:INP:PRES RF;:INP:PRE...
+:FREQ:START 1GHZ;:FRE...
+:BAND 1 MHZ;:BAND:VID...
+*IDN?;
+:CORR:OFFS:MAGN 0DB;:...
+:CORR:CSET1:DEL;
+:CORR:CSET2:DEL;
+:CORR:CSET4:DEL;
+:CORR:CSET1 ON ;
+:CORR:CSET1:DATA 1000...
+:CORR:CSET2 ON ;
+:CORR:CSET2:DATA 1000...
+:CORR:CSET4 ON ;
+:CORR:CSET4:DATA 1000...
+:CORR:OFFS:MAGN 0DB;
+:POW:PRES:GAIN OFF;
+UNIT:POW dBuVm;
+:CALC:LLIN1:DEL;:CALC...
+:CALC:LLIN1:DATA 1000...
+:CALC:LLIN1:DISP ON;
+:CALC:LLIN2:DATA 1000...
+:CALC:LLIN2:DISP ON;
+:EMI:MEAS:DET:QPE OFF...
+:CALC:LLIN1:CONT:INT:...
+:CALC:LLIN2:CONT:INT:...
+UNIT:POW dBuVm;
+:CALC:MARK1:PEAK:EXC ...
+:AVER ON;
+:AVER OFF;
+:INIT:CONT ON;
+:INIT:CONT OFF;
+:INIT:CONT ON;
 
-        res[i] = float(inst.query(':CALCulate:MARKer1:Y?').strip())
-    # pprint(res)
-    print(f'{cf/1e6}:  {round(res[1] - res[2], 2)}, {round(res[1] - res[3], 2)}          {res[1]},{res[2]},{res[3]}')
-
-    *IDN?  :  Agilent Technologies, E4440A, US44302752, A.11.21
-
-for q in [
-    '*IDN?',
-    # '*CAL?',
-    ':FORM?',
-    ':INST:SEL?',
-    # ':SENS:FREQ:STAR?',
-    # ':SENS:FREQ:STOP?',
-    ':SENS:BWID:RES?',
-    ':SENS:BWID:VID?',
-    ':SENS:SWE:TIME?',
-    # ':DISP:WIND:TRAC:Y:RLEV?',
-    # ':DISP:WIND:TRAC:Y:SPAC?',
-    # ':DISP:WIND:TRAC:Y:SCAL:PDIV',
-    ':UNIT:POW?',
-    ':TRACe1:MODE?',
-    ':INITiate:CONTinuous?',
-    ':SYSTem:ERRor:NEXT?',
-    # ':OUTPut:STATe?',
-
-    ':SENS:FREQ:STAR?',
-    ':SENS:FREQ:STOP?',
-    # ':SENS:FREQ:POINts?',
-    ':SENS:FREQ:SPAN?',
-]:
-    print('{}  :  {}'.format(q, inst.query(q)))
-    inst.write(f':SENS:FREQ:CENT{2e9}Hz')
+ibwrt(UD0, "INIT:IMM;*OPC?", 14 (0xE))
 '''

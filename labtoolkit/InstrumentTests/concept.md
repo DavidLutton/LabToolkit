@@ -1,0 +1,12 @@
+# Inputs 
+# Presets
+# Setup
+# Arming
+# Test
+## Setup
+## Sleep
+## Measure
+## Process
+# Safe
+# Clear
+# Outputs
