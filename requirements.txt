@@ -1,3 +1,6 @@
 pyvisa
 pyvisa-py
-pyvisa-sim
+# pyvisa-sim
+
+pandas
+numpy
