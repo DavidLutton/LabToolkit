@@ -1,13 +1,12 @@
-from ..GenericInstrument import GenericInstrument
+from ..Instrument import Instrument
 from ..IEEE488 import IEEE488
 from ..SCPI import SCPI
 
 
-class MI6960(GenericInstrument):
+class MI6960(Instrument):
     
     """."""
-    def __init__(self, inst):
-        super().__init__(inst)
+    def __post__(self):
         self.inst.read_termination = '\r\n'
         self.inst.write_termination = '\n'
     

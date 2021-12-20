@@ -9,11 +9,6 @@ class HP437B(IEEE488):
     .. figure::  images/PowerMeter/HP437B.jpg
     """
 
-    def __init__(self, inst):
-        super().__init__(inst)
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
-        # self.__preset__()
 
     def preset(self):
         """."""
@@ -36,7 +31,7 @@ class HP437B(IEEE488):
     def measure(self):
         """."""
         measure = float(self.query("?"))
-        if measure is not 9e40 and measure is not 9.0036e40:
+        if measure != 9e40 and measure != 9.0036e40:
             return measure
 
     def message(self, message=None):

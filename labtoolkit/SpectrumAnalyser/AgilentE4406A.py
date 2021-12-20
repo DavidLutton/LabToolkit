@@ -2,25 +2,28 @@
 from time import sleep
 
 import numpy as np
+import pandas as pd
 
 from ..IEEE488 import IEEE488
 from ..SCPI import SCPI
+
+import PIL.Image as Image
+import io
+from datetime import datetime
 
 
 class AgilentE4406A(IEEE488, SCPI):
     """."""
 
-    def __init__(self, inst):
-        super().__init__(inst)
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
+    def __post__(self):
 
-        # self.write(':DISPlay:ANNotation:CLOCk:DATE:FORMat DMY')
-        # :DISPlay:ANNotation:CLOCk:DATE:FORMat MDY|DMY
         # self.write(':DISPlay:ENABle 1')
-        # self.write(':SYSTem:DATE 2018,05,13')
-        # self.write(':SYSTem:TIME 22,22,30')
+        now = datetime.now()
 
+        self.write(f':SYSTem:DATE {now.year},{now.month},{now.day}')
+        self.write(f':SYSTem:TIME {now.hour},{now.minute},{now.second}')
+        self.write(':DISPlay:ANNotation:CLOCk:DATE:FORMat DMY')
+        
         self.write(':SYSTem:ERRor:VERBose 1')
         # self.query('SYSTem:ERRor?')
 
@@ -29,8 +32,6 @@ class AgilentE4406A(IEEE488, SCPI):
     self.write(':DISPlay:FORMat:ZOOM')  # :TILE
     self.write(':DISPlay:SPECtrum:WINDow:TRACe:Y:SCALe:PDIVision 10')
     self.write(':DISPlay:SPECtrum:WINDow:TRACe:Y:SCALe:RLEVel -20')
-
-
     :INST:SEL BASIC // Set the analyzer in Basic mode
     :FREQ:CENTER xxxMHz // Set center frequency
     :FORM REAL,32 // Set the returned data type to REAL, 32
@@ -71,6 +72,22 @@ class AgilentE4406A(IEEE488, SCPI):
     @resbw.setter
     def resbw(self, frequency):
         self.write(f':SENSe:SPECtrum:BANDwidth:RESolution {frequency}')
+    
+    @property
+    def screenshot(self):
+        timeout = self.inst.timeout
+        self.inst.timeout = 5000
+        image = Image.open(io.BytesIO(
+            self.query_binary_values(
+                ':HCOPY:SDUMP:DATA? GIF',
+                datatype='B', 
+                is_big_endian=False, 
+                container=bytearray
+            )
+        ))
+        self.inst.timeout = timeout
+        return image
+
 
     def measure_power_at_marker(self):
         timeout = self.inst.timeout
@@ -155,7 +172,6 @@ class AgilentE4406A(IEEE488, SCPI):
     :SYSTem:ERRor:VERBose 1
     SYSTem:ERRor?:		+0,"No error"
     :DISPlay:ENABle 1
-
     :SENSe:SPECtrum:FREQuency:SPAN?:		+1.00000000E+003
     :CALC:SPEC:MARK1:Y?:		-2.45338770E+001
     CALC:SPEC:MARK1:X:POS?:		+6759
@@ -165,14 +181,12 @@ class AgilentE4406A(IEEE488, SCPI):
     :FORMat:DATA?:		ASC,+0
     '''
     '''
-
     :FORM ASC
     :CONF?
     SPEC.
     :INST:SEL?
     BASIC.
     :FETC:SPEC1?
-
     :SENS:SPEC:BAND:RES?
     +4.67000000E+002
     :SENS:SPEC:SWE:TIME?
@@ -260,7 +274,43 @@ class AgilentE4406A(IEEE488, SCPI):
         self.write(":SYST:KLOC 0")  # release keyboard
         self.write(":INIT:CONT 1")  # restore continuous measurement
         # self.write(":CAL:AUTO ON")  # restore auto calibration
+    def iq(self):
+      
+        self.write(':FORM REAL,32')  # Set the returned data type to REAL, 32
+        self.write(':FORM:BORD SWAP')  # Set the Byte order to Swap
+                
+        # self.query_binary_values(':READ:WAV0?')
+        IQ = self.inst.query_binary_values(":FETCh:SPECtrum3?", container=np.float64).view(np.complex128)
 
+        t = np.linspace(0, self.query_float(':SENSe:SPECtrum:SWEep:TIME?'), len(IQ))
+
+        df = pd.DataFrame(
+            np.column_stack((t, IQ.real, IQ.imag)), 
+            columns=['S', 'I', 'Q']
+        ).set_index('S')
+        
+        
+        df.attrs['Time Stamp'] = 'Now'
+        
+        params = [
+            'IDN'
+            'frequency', 
+            'resbw', 
+            'span',
+            'resbw_ratio',
+            'decim',
+            'aper',
+            'decimated_bw',
+            'time',
+        ]
+        
+        for param in sorted(params):
+            df.attrs[param] = getattr(self, param, -1)
+
+        
+        return df
+
+    '''
     @property
     def iq(self):
 
@@ -279,7 +329,7 @@ class AgilentE4406A(IEEE488, SCPI):
         # IQComplex = I + 1j*Q
 
         return I, Q
-
+    '''
     def MeasureIQ(self):
         """."""
         # generator = FunctionName(inst)
@@ -303,21 +353,29 @@ class AgilentE4406A(IEEE488, SCPI):
         self.iqrelease()  # Free run
         yield False
 
-    def spectrum(self):
+    def trace(self):
         self.write(':FORMat REAL,32')
         self.write(':FORMat:BORDer SWAPped')
 
-        data = self.query_binary_values(':FETCh:SPECtrum4?', container=np.array)  # Fetch
+        data = self.inst.query_binary_values(':FETCh:SPECtrum4?', container=np.array)  # Fetch
         center = self.query_float(':SENSe:FREQuency:CENTer?')
         span = self.query_float(':SENSe:SPECtrum:FREQuency:SPAN?')
         frequencies = np.linspace((center - 0.5 * span), (center + 0.5 * span), len(data))
 
-        return frequencies, data
+        # return frequencies, data
+
+        return pd.DataFrame(
+            np.column_stack((frequencies, data)),
+            columns=['Hz', 'dBm']
+        ).set_index('Hz')
+        # df['dBm'] = np.clip(df['dBm'], -130, 400)
+        # return df
+
+
 
     def VOID(self):
         """
         Void.
-
         # inst.write(f'CALC:SPEC:MARK{1}:TRAC ASP')
         inst.write(f'CALC:SPEC:MARK{1}:MAX')
         float(inst.query(f'CALC:SPEC:MARK{1}:Y?')), float(inst.query(f'CALC:SPEC:MARK{1}:X?'))

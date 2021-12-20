@@ -6,11 +6,8 @@ from .FrequencyCounter import FrequencyCounter
 class HP53132A(FrequencyCounter, IEEE488, SCPI):
     """."""
 
-    def __init__(self, inst):
+    def __post__(self):
         """."""
-        super().__init__(inst)
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
         self.inst.timeout = 5000
 
     '''

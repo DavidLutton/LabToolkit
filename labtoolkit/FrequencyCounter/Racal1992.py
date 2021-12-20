@@ -1,21 +1,12 @@
-from ..GenericInstrument import GenericInstrument
-from ..IEEE488 import IEEE488
+from ..Instrument import Instrument
 from .FrequencyCounter import FrequencyCounter
 
 
-class Racal1992(GenericInstrument, FrequencyCounter):
+class Racal1992(Instrument, FrequencyCounter):
     """."""
 
-    def __init__(self, inst):
-        """."""
-        super().__init__(inst)
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
+    def __post__(self):
         self.inst.timeout = 9000  # to much?
-
-    def __repr__(self):
-        """."""
-        return(f"{__class__.__name__}, {self.inst}")
 
     '''
     IP preset

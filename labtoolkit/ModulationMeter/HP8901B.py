@@ -1,16 +1,16 @@
-from ..GenericInstrument import GenericInstrument
+from ..Instrument import Instrument
 
 
-class HP8901B(GenericInstrument):
+class HP8901B(Instrument):
     """HP 8901B. Modulation Analyser, 150e3 to 1.3e9."""
 
-    def __init__(self, inst):
+    def __post__(self):
         """."""
-        super().__init__(inst)
         self.inst.read_termination = '\r\n'
         self.inst.write_termination = '\n'
         self.inst.timeout = 6000  # Extend the default timeout as it can take a few seconds to get a settled reading
         # instMM.query('ID')  # 8901.2
+        self.write('*CLS')
 
     def MeasureFM(self):
         """."""

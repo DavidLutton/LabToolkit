@@ -1,13 +1,16 @@
-#!/usr/bin/env python3
 """."""
 
-import time
-import logging
+# import time
+# import logging
 
 
 class SCPI(object):
     """SCPI helper functions."""
-
+    
+    @property
+    def SCPI_OPT(self):
+        return self.query(':SYSTem:OPTions?').strip('"').split(',')
+    
     @property
     def SystemErrorQueue(self):
         """Get System Error Queue.
@@ -15,16 +18,21 @@ class SCPI(object):
         :returns: List of errors
         """
         responces = []
-        # responce = False
-        responce = self.query('SYST:ERR?')
 
-        while responce != '+0,"No error"':
+        i, s = self.inst.query_ascii_values(':SYSTem:ERRor?', converter='s')
+        responce = [int(i), s.strip('"')]
+
+        while responce[0] != 0:
             responces.append(responce)
-            responce = self.query('SYST:ERR?')
-            '''
-            responce = self.query('SYST:ERR?')
-            if responce != '+0,"No error"':
-                responces.append(responce)
-            # print(responce)
-            '''
-        return responces
+            i, s = self.inst.query_ascii_values(':SYSTem:ERRor?', converter='s')
+            responce = [int(i), s.strip('"')]
+
+        if len(responces) == 0:
+            return None
+        else:
+            return responces
+
+    
+    def SCPI_local(self):
+        """Go To Local."""
+        return self.query_float(':SYSTem:COMMunicate:GTLocal?')

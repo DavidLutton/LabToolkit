@@ -1,6 +1,7 @@
 from ..IEEE488 import IEEE488
 from ..SCPI import SCPI
 import numpy as np
+import pandas as pd
 
 
 class AgilentE8357A(IEEE488, SCPI):
@@ -9,10 +10,15 @@ class AgilentE8357A(IEEE488, SCPI):
     .. figure::  images/NetworkAnalyser/AgilentE8357A.jpg
     """
 
-    def __init__(self, inst):
-        super().__init__(inst)
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
+    def trace(self, trace='S21'):
+        x = self.readX()
+        y = self.readS(trace, self.catalog())
+        db = 20 * np.log10(np.abs(y))
+        df = pd.DataFrame(
+            np.column_stack(([x, db, y.real, y.imag])), 
+            columns=['Frequency (Hz)', 'dB', 'Real', 'Imag']
+        )
+        return df.set_index('Frequency (Hz)')
 
     def catalog(self):
         string = self.query('CALC1:PAR:CAT?')  # string='"CH1_S11_1,S11,CH1_S21_2,S21,CH1_S12_3,S12,CH1_S22_4,S22,ADIVB,R1/A"'

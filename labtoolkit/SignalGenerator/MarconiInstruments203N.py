@@ -1,4 +1,4 @@
-from ..GenericInstrument import GenericInstrument
+# from ..GenericInstrument import GenericInstrument
 from ..IEEE488 import IEEE488
 from ..SCPI import SCPI
 

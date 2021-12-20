@@ -1,4 +1,3 @@
-from ..GenericInstrument import GenericInstrument
 from ..IEEE488 import IEEE488
 # from ..SCPI import SCPI
 
@@ -14,17 +13,16 @@ class HP4395A(IEEE488):
     .. figure::  images/NetworkAnalyser/HP4395A.jpg
     """
 
-    def __init__(self, inst):
-        super().__init__(inst)
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
-
     @property
     def trace(self):
         self.inst.write('FORM4')
         x, y = self.inst.query_ascii_values('OUTPSWPRM?', container=np.float64), self.inst.query_ascii_values('OUTPDATA?', container=np.float64).view(np.complex128)
         # return x, y
-        df = pd.DataFrame(np.column_stack((x, y.real, y.imag)), columns=['Frequency (Hz)', 'real', 'imag'])
+        db = 20 * np.log10(np.abs(y))
+        df = pd.DataFrame(
+            np.column_stack((x, db, y.real, y.imag)), 
+            columns=['Frequency (Hz)', 'dB', 'Real', 'Imag']
+        )
         return df.set_index('Frequency (Hz)')
 
     @property
@@ -45,8 +43,8 @@ class HP4395A(IEEE488):
         return float(self.query("BW?"))
 
     @bandwidth.setter
-    def bandwidth(self, points=1000):
-        self.write(f"BW {int(points)}HZ")
+    def bandwidth(self, frequency=1000):
+        self.write(f"BW {int(frequency)}HZ")
 
     @property
     def form(self):

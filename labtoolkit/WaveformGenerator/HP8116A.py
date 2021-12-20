@@ -1,14 +1,12 @@
-from ..GenericInstrument import GenericInstrument
+from ..Instrument import Instrument
 from ..IEEE488 import IEEE488
 from ..SCPI import SCPI
 
 
-class HP8116A(GenericInstrument):
-    """."""
+class HP8116A(Instrument):
+    """HP 8116A, 0 to 50MHz.
 
-    def __init__(self, inst):
-        super().__init__(inst)
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
+    .. figure::  images/WaveformGenerator/HP8116A.jpg
+    """
 
     pass

@@ -1,5 +1,6 @@
 
-from labtoolkit.IEEE488 import IEEE488
+from ..IEEE488 import IEEE488
+
 
 class MI2187(IEEE488):
     """Marconi Instruments 2187 - DC-20GHz 1W max N-type.
@@ -7,12 +8,10 @@ class MI2187(IEEE488):
     .. figure::  images/Attenuator/MI2187.jpg
     """
 
-    def __init__(self, instrument):
-        """."""
-        super().__init__(instrument)
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
-        self._setpoints = [0, 3, 6, 144]
+    def __post__(self):
+        self._set_points = [
+            0, 3, 6, 144,
+        ]  # TODO get list of and check setting valid set points
 
     @property
     def attenuation(self):

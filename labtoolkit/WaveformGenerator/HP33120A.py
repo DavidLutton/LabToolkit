@@ -1,4 +1,3 @@
-from ..GenericInstrument import GenericInstrument
 from ..IEEE488 import IEEE488
 from ..SCPI import SCPI
 
@@ -6,13 +5,8 @@ from ..SCPI import SCPI
 class HP33120A(IEEE488, SCPI):
     """."""
 
-    def __init__(self, inst):
-        super().__init__(inst)
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
-
-        # self.amps = [0.01, 5]
-        # self.freqs = [0, 15e6]
+    # self.amps = [0.01, 5]
+    # self.freqs = [0, 15e6]
 
     def state(self):
         """."""
