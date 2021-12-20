@@ -13,7 +13,7 @@ requirements = [
     # TODO: put package requirements here
     'pyvisa',
     'pyvisa-py',
-    'pyvisa-sim',
+    # 'pyvisa-sim',
     'numpy',
     'pandas',
     # 'pint',
@@ -25,7 +25,7 @@ test_requirements = [
 
 setup(
     name='LabToolkit',
-    version='0.1.3',
+    version='0.1.4',
     description="Python package for instrument control, data acquisition and automation.",
     long_description=readme,  # + '\n\n' + history,
     author="David A Lutton",
@@ -46,7 +46,9 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
     ],
     test_suite='tests',
     tests_require=test_requirements,
