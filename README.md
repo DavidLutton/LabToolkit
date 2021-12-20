@@ -12,10 +12,7 @@ import labtoolkit.SpectrumAnalyser.AgilentE44nn
 
 
 rm = pyvisa.ResourceManager()
-sa = labtookit.SpectrumAnalyser.AgilentE44nn(
-    rm.open_resource('GPIB0::18::INSTR')
-
-    )
+sa = labtookit.SpectrumAnalyser.AgilentE44nn.AgilentE44nn(rm.open_resource('GPIB0::18::INSTR'))
 
 sa.frequency_center = 1e9
 sa.frequency_span = 10e6
