@@ -76,3 +76,5 @@ target/
 
 *.vb
 *.vbs
+
+.venv

@@ -8,22 +8,27 @@ Python package for instrument control, data acquisition and automation.
 ``` python
 # Communicate with Hardware with PyVISA
 import pyvisa
-import labtoolkit
 import labtoolkit.SpectrumAnalyser.AgilentE44nn
+
 
 rm = pyvisa.ResourceManager()
 sa = labtookit.SpectrumAnalyser.AgilentE44nn(
     rm.open_resource('GPIB0::18::INSTR')
+
     )
 
-sa.frequency_center = 145e6
-sa.frequency_span = 50e3
+sa.frequency_center = 1e9
+sa.frequency_span = 10e6
 sa.sweep_points = 8192
-sa.opc
-df = sa.trace  
+sa.OPC
+df = sa.trace
 # returns a DataFrame of the trace data
+df.plot(grid=True, figsize=(8, 6))
+df.attrs
 # df.attrs are used to store metadata (sweep_time, resolution_bandwidth, etc)
 ```
+[SpectrumAnalyser example](./examples/SpectrumAnalyser_carrier.ipynb)
+
 
 ## Badges
 ![PyPI - License](https://img.shields.io/pypi/l/Labtoolkit?color=green&style=for-the-badge)

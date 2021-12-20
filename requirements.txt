@@ -4,3 +4,5 @@ pyvisa-py
 
 pandas
 numpy
+
+Pillow  # for screen captures
