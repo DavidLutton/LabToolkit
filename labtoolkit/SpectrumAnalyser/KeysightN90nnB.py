@@ -6,6 +6,8 @@ import pandas as pd
 from datetime import datetime
 from .SpectrumAnalyser import SCPISpectrumAnalyser
 
+import PIL.Image as Image
+import io
 
 # TODO Mixer setup
 # TODO Factors Loading, reading, toggle global, toggle factor (Have external_gain)
@@ -231,7 +233,31 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
         # RF = RF Input
         # EMIXer = External Mixing
         return self.write(f':CORRection:SA:GAIN {correction}')
-    
+
+    @property
+    def screenshot(self):
+        
+        timeout = self.inst.timeout
+        self.inst.timeout = 5000
+        
+        FSCReen = self.query_bool(':DISPlay:FSCReen:STATe?')
+        self.write(f':DISPlay:FSCReen:STATe {True:b}')
+
+        image = Image.open(io.BytesIO(
+            self.query_binary_values(
+                ':HCOPy:SDUMp:DATA?',
+                datatype='B', 
+                is_big_endian=False, 
+                container=bytearray
+            )
+        ))
+        
+        self.write(f':DISPlay:FSCReen:STATe {FSCReen:b}')
+        
+        self.inst.timeout = timeout
+
+        return image
+
     @property
     def trace_data(self):
         # :INST:SEL?

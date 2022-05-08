@@ -110,7 +110,43 @@ class ABCSpectrumAnalyser(metaclass=abc.ABCMeta):
         # TODO -1 for auto
 
 class SCPISpectrumAnalyser(ABCSpectrumAnalyser):
-    pass
+
+    @property
+    def frequency_center(self):
+        """Center frequency."""
+        return self.query_float(":FREQuency:CENT?")
+    
+    @frequency_center.setter
+    def frequency_center(self, frequency):
+        return self.write(f":FREQuency:CENT {frequency}")
+    
+    @property
+    def frequency_span(self):
+        """Frequency Span."""
+        return self.query_float(":FREQuency:SPAN?")
+
+    @frequency_span.setter
+    def frequency_span(self, span):
+        self.write(f':FREQuency:SPAN {span}')
+
+    @property
+    def frequency_start(self):
+        """Frequency Start."""
+        return self.query_float(":FREQuency:STARt?")
+
+    @frequency_start.setter
+    def frequency_start(self, start):
+        self.write(f':FREQuency:STARt {start}')
+
+    @property
+    def frequency_stop(self):
+        """Frequency Stop."""
+        return self.query_float(":FREQuency:STOP?")
+
+    @frequency_stop.setter
+    def frequency_stop(self, stop):
+        self.write(f':FREQuency:STOP {stop}')
+
 '''        
     @property
     def sweep_points(self):
