@@ -1,4 +1,3 @@
-from ..GenericInstrument import GenericInstrument
 from ..IEEE488 import IEEE488
 from .helper import SignalGenerator, amplitudelimiter
 
@@ -23,17 +22,13 @@ from .helper import SignalGenerator, amplitudelimiter
 class HP866nX(IEEE488, SignalGenerator):
     """."""
 
-    def __init__(self, inst):
-        super().__init__(inst)
+    def __post__(self):
         self._amplitudelimit = 0.1
-
-        self.inst.read_termination = '\n'
-        self.inst.write_termination = '\n'
-
+        
     @property
     def frequency(self):
         """."""
-        return(self.query("FREQ:CW?"))
+        return self.query_float("FREQ:CW?")
 
     @frequency.setter
     def frequency(self, frequency):
@@ -42,7 +37,7 @@ class HP866nX(IEEE488, SignalGenerator):
     @property
     def amplitude(self):
         """."""
-        return(self.query("AMPL:OUT:LEV?"))
+        return self.query_float("AMPL:OUT:LEV?")
 
     @amplitude.setter
     @amplitudelimiter
@@ -52,10 +47,7 @@ class HP866nX(IEEE488, SignalGenerator):
     @property
     def output(self):
         """."""
-        if self.query("AMPL:OUT:STATe?") == "1":
-            return(True)
-        else:
-            return(False)
+        return self.query_bool("AMPL:OUT:STATe?")
 
     @output.setter
     def output(self, boolean=False):
@@ -63,67 +55,58 @@ class HP866nX(IEEE488, SignalGenerator):
 
     @property
     def fmdeviation(self):
-        return self.inst.query('FM:DEViation?')
+        return self.query_float('FM:DEViation?')
 
     @fmdeviation.setter
     def fmdeviation(self, deviation):
-        self.inst.write(f'FM:DEViation {deviation} Hz')
+        self.write(f'FM:DEViation {deviation} Hz')
 
     @property
     def fmfrequency(self):
-        return self.inst.query('FM:FREQuency?')
+        return self.query_float('FM:FREQuency?')
 
     @fmfrequency.setter
     def fmfrequency(self, frequency):
-        self.inst.write(f'FM:FREQuency {frequency} Hz')
+        self.write(f'FM:FREQuency {frequency} Hz')
 
     @property
     def fmmodulation(self):
         """."""
-        if self.inst.query('FM:STATe?') == '1':
-            return(True)
-        else:
-            return(False)
+        return self.query_bool('FM:STATe?') 
 
     @fmmodulation.setter
     def fmmodulation(self, boolean=False):
-        self.inst.write(f'FM:STATe {boolean:d}')
+        self.write(f'FM:STATe {boolean:d}')
 
     @property
     def amdepth(self):
-        return self.inst.query('AM:DEPth?')
+        return self.query_float('AM:DEPth?')
 
     @amdepth.setter
     def amdepth(self, depth):
-        self.inst.write(f'AM:DEPth {depth}')
+        self.write(f'AM:DEPth {depth}')
 
     @property
     def amfrequency(self):
-        return self.inst.query('AM:FREQuency?')
+        return self.query_float('AM:FREQuency?')
 
     @amfrequency.setter
     def amfrequency(self, frequency):
-        self.inst.write(f'AM:FREQuency {frequency} Hz')
+        self.write(f'AM:FREQuency {frequency} Hz')
 
     @property
     def ammodulation(self):
         """."""
-        if self.inst.query('AM:STATe?') == '1':
-            return(True)
-        else:
-            return(False)
+        return self.query_bool('AM:STATe?')
 
     @ammodulation.setter
     def ammodulation(self, boolean=False):
-        self.inst.write(f'AM:STATe {boolean:d}')
+        self.write(f'AM:STATe {boolean:d}')
 
     @property
     def modulation(self):
         """."""
-        if self.inst.query('MODulation:STATe?') == '1':
-            return(True)
-        else:
-            return(False)
+        return self.query_bool('MODulation:STATe?')
 
     @modulation.setter
     def modulation(self, boolean=False):
