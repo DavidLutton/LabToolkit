@@ -26,26 +26,29 @@ class Instrument(metaclass=abc.ABCMeta):
     
     def write(self, *args, **kwargs):
         """Wrap write to log it.."""
-        self.logger.info(*args)
+        self.logger.info(f'Write : {args[0]}')
         return self.inst.write(*args, **kwargs)
 
     def query(self, *args, **kwargs):
         """Wrap query to log it."""
-        self.logger.info(*args)
+        # self.logger.info(*args)
+        self.logger.info(f'Query : {args[0]}')
         responce = self.inst.query(*args, **kwargs)
-        self.logger.info(f'Read {responce}')
+        self.logger.info(f'Read  : {responce}')
         return responce
     
     def query_ascii_values(self, *args, **kwargs):
         """Wrap query_ascii_values to log it."""
-        self.logger.info(*args)
+        # self.logger.info(*args)
+        self.logger.info(f'Query : {args[0]}')
         return self.inst.query_ascii_values(*args, **kwargs)
         # self.logger.info(f'{responce}')
         # return responce
     
     def query_binary_values(self, *args, **kwargs):
         """Wrap query_binary_values to log it."""
-        self.logger.info(*args)
+        # self.logger.info(*args)
+        self.logger.info(f'Query : {args[0]}')
         return self.inst.query_binary_values(*args, **kwargs)
         # self.logger.info(f'{responce}')
         # return responce
