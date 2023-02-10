@@ -1,5 +1,5 @@
 
-class HeraeusVotsch(object):
+class HeraeusVotschVMT04(object):
 
     def __post__(self):
         self.inst.read_termination='\r\n'
