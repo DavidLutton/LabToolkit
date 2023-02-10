@@ -23,7 +23,7 @@ with a section header and a colon followed by a block of indented text.
 
 # [Logging HOWTO — Python 3 documentation]
 # (https://docs.python.org/3/howto/logging.html#library-config)
-logger = logging.getLogger(__name__).addHandler(logging.NullHandler())
+logger = logging.getLogger(__name__) # .addHandler(logging.NullHandler())
 # logger = logging.getLogger('__main__')
 
 # logger = logging.getLogger()
