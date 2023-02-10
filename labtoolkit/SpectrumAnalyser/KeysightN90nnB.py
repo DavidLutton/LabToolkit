@@ -1,32 +1,61 @@
-from ..IEEE488 import IEEE488
-from ..SCPI import SCPI
+import io
+from datetime import datetime
+from time import sleep
 
 import numpy as np
 import pandas as pd
-from datetime import datetime
-from .SpectrumAnalyser import SCPISpectrumAnalyser
-
 import PIL.Image as Image
-import io
+
+from ..IEEE488 import IEEE488
+from ..SCPI import SCPI
+from .SpectrumAnalyser import SCPISpectrumAnalyser
 
 # TODO Mixer setup
 # TODO Factors Loading, reading, toggle global, toggle factor (Have external_gain)
 
 class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
+    """."""
+
     def __post__(self):
+        """."""
         self.write(f':SYST:ERR:VERB {True:b}')  # Turn on verbose command errors
         # ^ not available in other modes eg BASIC
+
+        # Clear state
+        self.clear_spectrum_state()
         self.local
+
+
+    def clear_spectrum_state(self):
+        """."""
+        self.write(':SYSTem:PRESet')  # *RST works but goes to single trigger
+        sleep(0.5)
+
+        self.external_gain = 0
+
+        self.write(':CALCulate:MARKer:AOFF')
+
+        self.write(':SENSe:CORRection:CSET:ALL:DELete')
+        # self.write(f':SENSe:CORRection:CSET{1}:DELete')
+        # [self.write(f':SENSe:CORRection:CSET{x}:DELete') for x in range(1, 17)]
+
+        self.write(':CALCulate:LLINe:ALL:DELete')
+
+
+
+
+
 
     @property
     def select(self):
+        """."""
         return self.query(':INST:SEL?')
-    
+
     @select.setter
     def select(self, mode):
         return self.write(f':INST:SEL {mode}')  # SA, BASIC, ...
-    
+
     @property
     def sweep_points(self):
         """Sweep Points."""
@@ -38,9 +67,10 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
         # E4440A 101 to 8192, 2 to 8192 in zero span
         # [:SENSe]:SWEep:POINts <number of points>
         self.write(f":SWEep:POINts {points:0.0f}")
-    
+
     @property
     def sweep_points_max(self):
+        """."""
         return self.query_int(':SWEep:POINts? MAX')
 
     @property
@@ -83,6 +113,38 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
         # used for seting reference level to a reasonable amount above the measured value
         # and therefor prevent recording clipped values
 
+    @property
+    def reference_level_offset(self):
+        """Reference level offset."""
+        return self.query_float(':DISP:WIND:TRACE:Y:RLEV:OFFSet?')
+
+    @reference_level_offset.setter
+    def reference_level_offset(self, lvl):
+        self.write(f':DISP:WIND:TRACE:Y:RLEV:OFFSet {lvl}')
+
+    @property
+    def reference_level_offset_state(self):
+        """Reference level offset state."""
+        return self.query_bool(':DISP:WIND:TRACE:Y:RLEV:OFFSet:STATe?')
+
+    @reference_level_offset_state.setter
+    def reference_level_offset_state(self, state):
+        self.write(f':DISP:WIND:TRACE:Y:RLEV:OFFSet:STATe {state:b}')
+    
+    @property
+    def PDIVision(self):
+        return self.query_float(':DISP:WIND:TRACE:Y:PDIVision?')
+    
+    @property
+    def NDIVision(self):
+        return self.query_int(':DISP:WIND:TRACE:Y:NDIVision?')
+
+    @property
+    def view_range(self):
+        top = self.reference_level
+        floor = top - ( self.NDIVision * self.PDIVision)
+        return [top, floor]
+
     def resolution_bandwidths(self):
         rbws = []
         for a in [1e0, 1e1, 1e2, 1e3, 1e4, 1e5]:
@@ -91,7 +153,7 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
         for c in [1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3, 4, 5, 6, 8]:
             rbws.append(c * 1e6)
         return np.array(rbws).round(1)
-    
+
     @property
     def resolution_bandwidth(self):
         """Resolution Bandwidth."""
@@ -102,7 +164,7 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
         # 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1 in each decade
         value = self.query_float(':BANDwidth:RESolution?')
         return int(value) if value >= 10 else value
-            
+
     @resolution_bandwidth.setter
     def resolution_bandwidth(self, resolution_bandwidth):
         self.write(f':BANDwidth:RESolution {resolution_bandwidth}')
@@ -115,7 +177,7 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
         value = self.query_float(':BANDwidth:VIDeo?')
         return int(value) if value >= 10 else value
 
-    
+
 
     @video_bandwidth.setter
     def video_bandwidth(self, video_bandwidth):
@@ -147,7 +209,7 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
     _detectors = {
         'NORM':'Normal',
-        'AVER':'RMS',  # Average / RMS # TODO is this what we think it is?
+        'AVER':'RMS',
         'POS':'Positive Peak',
         'SAMP':'Sample',
         'NEG':'Negative PEak',
@@ -155,9 +217,10 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
         'EAV':'EMI Average',
         'RAV':'RMS Average',
     }
-    
+
     @property
     def detector(self):
+        """."""
         return self._detectors[self.query(f':DETector:TRACe{1}?')]
 
 
@@ -169,31 +232,34 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
     @property
     def input_attenuator(self):
+        """."""
         return self.query_int(':POWer:ATTenuation?')
 
 
     @input_attenuator.setter
     def input_attenuator(self, attenuation):
         return self.write(f':POWer:ATTenuation {attenuation}')
-    
+
     @property
     def continuous(self):
+        """."""
         return self.query_bool(':INIT:CONTinuous?')
 
     @continuous.setter
     def continuous(self, continuous):
         return self.write(f':INIT:CONTinuous {continuous:b}')
-    
-    
+
+
     @property
     def input_attenuator_auto(self):
+        """."""
         return self.query_bool(':POWer:ATTenuation:AUTO?')
 
 
     @input_attenuator_auto.setter
     def input_attenuator_auto(self, state):
         return self.write(f':POWer:ATTenuation:AUTO {state:b}')
-    
+
     _trace_types = {
         'WRIT': 'Clear Write',  # WRITe
         'AVER': 'Trace Average',  # AVERage
@@ -204,6 +270,7 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
     @property
     def trace_type(self):
+        """."""
         return self._trace_types[self.query(f':TRACe{1}:TYPE?')]
 
     @trace_type.setter
@@ -214,7 +281,8 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
     @property
     def feed(self):
-        return self.query(f':FEED?')
+        """."""
+        return self.query(':FEED?')
 
 
     @feed.setter
@@ -222,98 +290,112 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
         # RF = RF Input
         # EMIXer = External Mixing
         return self.write(f':FEED {feed}')
-    
+
     @property
     def external_gain(self):
+        """."""
         return self.query_float(':CORRection:SA:GAIN?')
 
 
     @external_gain.setter
     def external_gain(self, correction):
-        # RF = RF Input
-        # EMIXer = External Mixing
         return self.write(f':CORRection:SA:GAIN {correction}')
 
     @property
     def screenshot(self):
-        
+        """."""
+
         timeout = self.inst.timeout
         self.inst.timeout = 5000
-        
+
         FSCReen = self.query_bool(':DISPlay:FSCReen:STATe?')
         self.write(f':DISPlay:FSCReen:STATe {True:b}')
+        sleep(0.1)
 
         image = Image.open(io.BytesIO(
             self.query_binary_values(
                 ':HCOPy:SDUMp:DATA?',
-                datatype='B', 
-                is_big_endian=False, 
+                datatype='B',
+                is_big_endian=False,
                 container=bytearray
             )
         ))
-        
+
         self.write(f':DISPlay:FSCReen:STATe {FSCReen:b}')
-        
+
         self.inst.timeout = timeout
 
         return image
 
     @property
     def trace_data(self):
+        """."""
         # :INST:SEL?
         # SA
-        
+
         # self.query(':DISP:WIND:TRAC:Y:RLEV?')  # -1.000E+01
         # self.query(':DISP:WIND:TRAC:Y:SPAC?')  # LOG.
         # self.query(':DISP:WIND:TRAC:Y:SCAL:PDIV?')  # +1.000E+01
-        
+
         self.write('FORM:DATA REAL,32')
         self.write('FORM:BORD SWAP')
-        return self.inst.query_binary_values(f'TRAC:DATA? TRACE{1}', container=np.float64)
-    
-    
+        data = self.inst.query_binary_values(f'TRAC:DATA? TRACE{1}', container=np.float64)
+
+        if self.unit_power == 'dBm':
+            return data.round(2)
+        else:
+            return data
+
+
     @property
     def trace(self):
+        """."""
         if self.select == 'SA':
             return self.trace_sa
-        
+
         # if self.select == 'BASIC':
         #    return self.trace_vsa
-        
+
     @property
     def trace_sa(self):
+        """."""
         type_ = 'Time' if self.frequency_span == 0.0 else 'Frequency'
 
         if type_ == 'Frequency':
             df = pd.DataFrame(
                 np.column_stack((
                     np.linspace(
-                        self.frequency_start, 
-                        self.frequency_stop, 
+                        self.frequency_start,
+                        self.frequency_stop,
                         self.sweep_points,
-                    ), 
-                    self.trace_data)), 
+                    ),
+                    self.trace_data)),
                 columns=['Frequency (Hz)', f'Power ({self.unit_power})'],
             ).set_index('Frequency (Hz)')
-            
+
         if type_ ==  'Time':
             df = pd.DataFrame(
                 np.column_stack((
                     np.linspace(
                         0,  # TODO Could have hold off, index to zero anyway?
-                        self.sweep_time, 
+                        self.sweep_time,
                         self.sweep_points,
-                    ), 
+                    ),
                     self.trace_data
                 )),
                 columns=['Time (s)', f'Power ({self.unit_power})'],
             ).set_index('Time (s)')
-            
+
         params = [
-            'sweep_time', 
-            'resolution_bandwidth', 
+            'sweep_time',
+            'resolution_bandwidth',
             'video_bandwidth',
             'reference_level',
+            'reference_level_offset',
+            'reference_level_offset_state',
+            'PDIVision',
+            'NDIVision',
+            'view_range',
             'frequency_span',
             'frequency_start',
             'frequency_stop',
@@ -347,7 +429,6 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
             # FFT Width
             # Ext Ref
             # RF Calibrator
-            # Ref Level Offset
             # Trace Math
             # Trace Math Oper1
             # Trace Math Oper2
@@ -357,7 +438,7 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
             # X Axis Units
             # Y Axis Units
         ]
-        
+
         for param in sorted(params):
             df.attrs[param] = getattr(self, param, -1)
 
@@ -369,7 +450,7 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
         df.attrs['IDN'] = getattr(self, 'IDN', -1)
         df.attrs['OPT'] = getattr(self, 'OPT', -1)
-        
+
         now = datetime.now()
         df.attrs['ISO8601'] = now.isoformat()
         df.attrs['YYYYMMDD'] = now.strftime("%Y-%m-%d")
@@ -377,4 +458,3 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
         self.local
         return df
-        
