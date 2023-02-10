@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
@@ -25,7 +25,7 @@ test_requirements = [
 
 setup(
     name='LabToolkit',
-    version='0.1.4',
+    version='0.1.5',
     description="Python package for instrument control, data acquisition and automation.",
     long_description=readme,  # + '\n\n' + history,
     author="David A Lutton",
@@ -33,6 +33,7 @@ setup(
     url='https://github.com/DavidLutton/LabToolkit',
     packages=[
         'labtoolkit',
+        find_packages(), 
     ],
     package_dir={'labtoolkit':
                  'labtoolkit'},
