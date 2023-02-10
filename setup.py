@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
+import os 
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
@@ -33,8 +34,7 @@ setup(
     url='https://github.com/DavidLutton/LabToolkit',
     packages=[
         'labtoolkit',
-        'labtoolkit/SpectrumAnalyser',
-        'labtoolkit/SignalGenerator', 
+        *[f'labtoolkit/{f.name}' for f in os.scandir('labtoolkit') if f.is_dir() and f.name[0] != '.' and f.name[0] != '_']
     ],
     package_dir={'labtoolkit':
                  'labtoolkit'},
