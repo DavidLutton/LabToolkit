@@ -124,6 +124,13 @@ class RaSESW(IEEE488, SCPI, SCPISpectrumAnalyser):
         #    return self.trace_vsa
         
     @property
+    def trace_iq_context(self):
+        # self.query('SENSe:SWEep:TIME?'), 
+        sample_rate = self.query_float('TRACe:IQ:SRATe?')
+        record_length = self.query_int('TRACe:IQ:RLENgth?')
+        return sample_rate, record_length
+
+    @property
     def trace_iq(self):
         self.write('FORMat:DATA REAL,32')
         self.query('FORMat:DATA?')
@@ -134,11 +141,9 @@ class RaSESW(IEEE488, SCPI, SCPISpectrumAnalyser):
 
         # sa.write('INIT;*WAI')
 
-        iq = self.query_binary_values('TRACE:IQ:DATA?', container=np.float32).values.view(np.complex64)
-        time, srate, rlength = self.query('SENSe:SWEep:TIME?'), self.query('TRACe:IQ:SRATe?'), self.query('TRACe:IQ:RLENgth?')
+        yield self.query_binary_values('TRACE:IQ:DATA?', container=np.float32).view(np.complex64)
         
         self.write('INITiate:CONTinuous ON')
-        return iq, time, srate, rlength
 
 
     @property

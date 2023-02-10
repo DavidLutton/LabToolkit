@@ -355,7 +355,25 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
         # if self.select == 'BASIC':
         #    return self.trace_vsa
+    @property
+    def trace_iq_context(self):
+        # self.query_float(':FCAP:BLOC?')
+        sample_rate = self.query_float(':WAV:SRAT?')
+        record_length = self.query_int(':FCAP:LENG?')
+        return sample_rate, record_length
+        
+        
+    @property
+    def trace_iq(self):
+        self.write('FORM:DATA REAL,32')
+        self.write('FORM:BORD SWAP')
 
+        self.write(':FCAP:POIN 0')
+
+        while self.query_int(':FCAP:POIN?') != self.query_int(':FCAP:LENG?'):
+            yield self.query_binary_values(f':FETC:FCAP?', container=np.float32).view(np.complex128)
+
+    
     @property
     def trace_sa(self):
         """."""
