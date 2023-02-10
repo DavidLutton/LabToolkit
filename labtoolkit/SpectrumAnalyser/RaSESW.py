@@ -100,7 +100,7 @@ class RaSESW(IEEE488, SCPI, SCPISpectrumAnalyser):
     def video_bandwidth(self, video_bandwidth):
         self.write(f':BANDwidth:VIDeo {video_bandwidth}')
 
-  
+
     @property
     def trace_data(self):
         # :INST:SEL?
@@ -123,6 +123,24 @@ class RaSESW(IEEE488, SCPI, SCPISpectrumAnalyser):
         # if self.select == 'BASIC':
         #    return self.trace_vsa
         
+    @property
+    def trace_iq(self):
+        self.write('FORMat:DATA REAL,32')
+        self.query('FORMat:DATA?')
+        self.write('TRACe:IQ:DATA:FORMat IQPair')
+        self.query('TRACe:IQ:DATA:FORMat?')
+        
+        self.write('INITiate:CONTinuous off')
+
+        # sa.write('INIT;*WAI')
+
+        iq = self.query_binary_values('TRACE:IQ:DATA?', container=np.float32).values.view(np.complex64)
+        time, srate, rlength = self.query('SENSe:SWEep:TIME?'), self.query('TRACe:IQ:SRATe?'), self.query('TRACe:IQ:RLENgth?')
+        
+        self.write('INITiate:CONTinuous ON')
+        return iq, time, srate, rlength
+
+
     @property
     def trace_sa(self):
         type_ = 'Time' if self.frequency_span == 0.0 else 'Frequency'
