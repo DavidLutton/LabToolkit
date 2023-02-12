@@ -13,7 +13,12 @@ class ETS2090(Instrument):
         self.inst.read_termination = '\r\n'
         self.inst.write_termination = '\r\n'
         self.write('N2')  # Set numeric mode 2 (2090 -- xxx.x) 
-    
+
+    def moving(self):
+        # Hardware, rarely, passes back a number in the -hundreds
+        # self.query_bool('*OPC?')   
+        return '1' != self.query('*OPC?')
+
     @property
     def device_type(self):
         """."""
@@ -89,7 +94,7 @@ class ETS2090(Instrument):
             self.target = height
             self.target_seek()
 
-            while 1 != self.query_bool('*OPC?'):
+            while self.moving():
                 print(f'Not done {step}/{len(sequence)}, current {self.position} cm')
-                sleep(0.5)
+                sleep(1)
         self.local
