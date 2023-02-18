@@ -375,6 +375,7 @@ class AgilentE44nn(IEEE488, SCPI):
             'unit_power',
             'trace_type',
             'external_gain',
+            'view_range'
 
             # Segment
             # Average Count
