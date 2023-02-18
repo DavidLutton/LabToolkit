@@ -24,6 +24,7 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
         # Clear state
         self.clear_spectrum_state()
+        self.trace_index = 1
         self.local
 
 
@@ -167,7 +168,10 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
     @resolution_bandwidth.setter
     def resolution_bandwidth(self, resolution_bandwidth):
-        self.write(f':BANDwidth:RESolution {resolution_bandwidth}')
+        if resolution_bandwidth != -1:
+            self.write(f':BANDwidth:RESolution {resolution_bandwidth}')
+        else:
+            self.write(f':BANDwidth:RESolution:AUTO {True:b}')
 
     @property
     def video_bandwidth(self):
@@ -177,11 +181,12 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
         value = self.query_float(':BANDwidth:VIDeo?')
         return int(value) if value >= 10 else value
 
-
-
     @video_bandwidth.setter
     def video_bandwidth(self, video_bandwidth):
-        self.write(f':BANDwidth:VIDeo {video_bandwidth}')
+        if video_bandwidth != -1:
+            self.write(f':BANDwidth:VIDeo {video_bandwidth}')
+        else:
+            self.write(f':BANDwidth:VIDeo:AUTO {True:b}')
 
     _units = {
         'DBM':'dBm',
@@ -212,7 +217,7 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
         'AVER':'RMS',
         'POS':'Positive Peak',
         'SAMP':'Sample',
-        'NEG':'Negative PEak',
+        'NEG':'Negative Peak',
         'QPE':'Quasi Peak',
         'EAV':'EMI Average',
         'RAV':'RMS Average',
@@ -228,7 +233,7 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
     def detector(self, detector):
         detectors = dict(map(reversed, self._detectors.items()))
         selected_detector = detectors[detector]
-        return self.write(f':DETector:TRACe{1} {selected_detector}')
+        return self.write(f':DETector:TRACe{self.trace_index} {selected_detector}')
 
     @property
     def input_attenuator(self):
@@ -238,7 +243,10 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
     @input_attenuator.setter
     def input_attenuator(self, attenuation):
-        return self.write(f':POWer:ATTenuation {attenuation}')
+        if attenuation != -1:
+            return self.write(f':POWer:ATTenuation:AUTO {True:b}')
+        else:
+            return self.write(f':POWer:ATTenuation {attenuation}')
 
     @property
     def continuous(self):
@@ -271,13 +279,13 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
     @property
     def trace_type(self):
         """."""
-        return self._trace_types[self.query(f':TRACe{1}:TYPE?')]
+        return self._trace_types[self.query(f':TRACe{self.trace_index}:TYPE?')]
 
     @trace_type.setter
     def trace_type(self, type_):
         trace_types = dict(map(reversed, self._trace_types.items()))
         selected_type = trace_types[type_]
-        return self.write(f':TRACe{1}:TYPE {selected_type}')
+        return self.write(f':TRACe{self.trace_index}:TYPE {selected_type}')
 
     @property
     def feed(self):
@@ -295,7 +303,6 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
     def external_gain(self):
         """."""
         return self.query_float(':CORRection:SA:GAIN?')
-
 
     @external_gain.setter
     def external_gain(self, correction):
@@ -339,7 +346,7 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
         self.write('FORM:DATA REAL,32')
         self.write('FORM:BORD SWAP')
-        data = self.inst.query_binary_values(f'TRAC:DATA? TRACE{1}', container=np.float64)
+        data = self.inst.query_binary_values(f'TRAC:DATA? TRACE{self.trace_index}', container=np.float64)
 
         if self.unit_power == 'dBm':
             return data.round(2)
@@ -355,25 +362,25 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
 
         # if self.select == 'BASIC':
         #    return self.trace_vsa
+
     @property
-    def trace_iq_context(self):
+    def trace_iq_fcap_context(self):
         # self.query_float(':FCAP:BLOC?')
         sample_rate = self.query_float(':WAV:SRAT?')
         record_length = self.query_int(':FCAP:LENG?')
         return sample_rate, record_length
-        
-        
+
     @property
-    def trace_iq(self):
+    def trace_iq_fcap(self):
         self.write('FORM:DATA REAL,32')
         self.write('FORM:BORD SWAP')
 
         self.write(':FCAP:POIN 0')
 
         while self.query_int(':FCAP:POIN?') != self.query_int(':FCAP:LENG?'):
-            yield self.query_binary_values(f':FETC:FCAP?', container=np.float32).view(np.complex128)
+            yield self.query_binary_values(':FETC:FCAP?', container=np.float32).view(np.complex64)
 
-    
+
     @property
     def trace_sa(self):
         """."""
