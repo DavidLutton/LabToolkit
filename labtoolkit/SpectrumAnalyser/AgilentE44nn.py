@@ -107,6 +107,13 @@ class AgilentE44nn(IEEE488, SCPI):
         return self.query_int(':SWEep:POINts? MAX')
 
     @property
+    def view_range(self):
+        top = self.reference_level
+        # self.query_int(':DISP:WIND:TRACE:Y:NDIVision?')
+        floor = top - ( 10 * self.query_float(':DISP:WIND:TRACE:Y:PDIVision?'))
+        return [top, floor]
+
+    @property
     def sweep_time(self):
         """Sweep Time."""
         '''Replace <meas> with the meas name, eg CHPower
