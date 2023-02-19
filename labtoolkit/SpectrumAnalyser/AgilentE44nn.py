@@ -145,7 +145,7 @@ class AgilentE44nn(IEEE488, SCPI):
         # used for seting reference level to a reasonable amount above the measured value
         # and therefor prevent recording clipped values
 
-    def _resolution_bandwidths(self):
+    def resolution_bandwidths(self):
         rbws = []
         for a in [1e0, 1e1, 1e2, 1e3, 1e4, 1e5]:
             for b in [1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1]:
