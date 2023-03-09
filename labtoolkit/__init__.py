@@ -265,7 +265,7 @@ class Enumerate(metaclass=abc.ABCMeta):
         ['Hewlett Packard', '437B', 'PowerMeter', 'HP437B'],
         ['Hewlett Packard', 'E4418B', 'PowerMeter', 'AgilentE4418B'],  # TBC
         ['Agilent Technologies', 'E4418B', 'PowerMeter', 'AgilentE4418B'],
-        ['Rohde Schwarz', 'NVRS', 'PowerMeter', 'RohdeSchwarzNRVS'],
+        ['Rohde Schwarz', 'NRVS', 'PowerMeter', 'RohdeSchwarzNRVS'],
 
         ['Hewlett Packard', '59501B', 'PowerSourceDC', 'HP59501B'],  # No IDN / ID capablity
         ['Agilent Technologies', 'N7972A', 'PowerSourceDC', 'AgilentN7972A'],
