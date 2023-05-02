@@ -291,6 +291,9 @@ class Enumerate(metaclass=abc.ABCMeta):
         ['Hewlett Packard', 'ESG-3000A', 'SignalGenerator', 'SCPISignalGenerator'],
         ['Hewlett Packard', 'ESG-3000B', 'SignalGenerator', 'SCPISignalGenerator'],  # labeled HP, E4421B
         ['Hewlett Packard', 'ESG-4000B', 'SignalGenerator', 'SCPISignalGenerator'],  # labeled HP, E4422B
+        
+        ['Hewlett Packard', '8648C', 'SignalGenerator', 'SCPISignalGenerator'],  # labeled Agilent, 8648C
+        ['Agilent Technologies', '8648C', 'SignalGenerator', 'SCPISignalGenerator'],  # not needed ? HP FW
 
         ['Hewlett Packard', 'E4421B', 'SignalGenerator', 'SCPISignalGenerator'],
         ['Agilent Technologies', 'E4422B', 'SignalGenerator', 'SCPISignalGenerator'],
