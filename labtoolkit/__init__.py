@@ -5,6 +5,7 @@ import logging
 from time import sleep
 
 import pandas as pd
+# import numpy as np
 import pyvisa
 
 """Example Google style docstrings.
@@ -42,28 +43,32 @@ class Enumerate(metaclass=abc.ABCMeta):
 
     """."""
 
-    def __init__(self, rm, res, ignores, additives,*, appendix):
+    def __init__(self, *, resourcemanager, resources): # , ignores, additives, appendix):
         """."""
-        self.rm = rm
-        self.res = res
+        self.rm = resourcemanager
+        self.resources = resources
 
+
+        self.enumeration = self.enumerate_resources()
+
+        
         # add resources in appendix to ignore (for enumerate_resources list)
 
         # if not appendix.empty:
         #  ignores = [resource for resource in res*** if resource in list(appendix['Resource'])]
-        if additives is not None:
-            self.enumeration = self.enumerate_resources(ignores, additives)
-        else:
-            self.enumeration = self.enumerate_resources(ignores, additives=[])
+        #if additives is not None:
+        #    self.enumeration = self.enumerate_resources(ignores, additives)
+        #else:
+        #    self.enumeration = self.enumerate_resources(ignores, additives=[])
 
         # interject insts that don't respond to *IDN?
-        if not appendix.empty:
-            self.enumeration = pd.concat(
-                [self.enumeration, appendix],
-                axis=0,
-                join='outer',
-                ignore_index=True
-            )
+        #if not appendix.empty:
+        #    self.enumeration = pd.concat(
+        #        [self.enumeration, appendix],
+        #        axis=0,
+        #        join='outer',
+        #        ignore_index=True
+        #    )
 
         self.driver_map()
         # display(self.enumeration)
@@ -76,6 +81,13 @@ class Enumerate(metaclass=abc.ABCMeta):
         """."""
         pass
 
+    def df(self):
+        return self.enumeration
+    
+    def show(self):
+        return self.enumeration.drop([
+            'IDN', 'inst'
+            ], axis=1)
 
     def driver_load(self):
         """."""
@@ -94,14 +106,14 @@ class Enumerate(metaclass=abc.ABCMeta):
             self.enumeration.loc[index, 'inst'] = driver(self.rm.open_resource(instrument.Resource))
             # Open the resouce and pass it to the driver
 
-    def enumerate_resources(self, ignores=[], additives=[]):
+    def enumerate_resources(self):
         """."""
-        resources = self.res + tuple(additives)
+        # resources = self.res.append(additives)
 
-        resources = [resource for resource in resources if resource not in ignores]
+        # resources = [resource for resource in resources if resource not in ignores]
 
         mapping = pd.DataFrame(columns=['Manufacturer', 'Model'])
-        for number, resource in enumerate(resources):
+        for number, resource in enumerate(self.resources):
 
             # print(f'{number} of {len(resources)-1} : {resource}')
             try:
@@ -164,12 +176,16 @@ class Enumerate(metaclass=abc.ABCMeta):
                         mapping.loc[number, 'IDN'] = 'Hewlett Packard, 8901B, 0, 0'
                         mapping.loc[number, 'Manufacturer'] = 'Hewlett Packard'
                         mapping.loc[number, 'Model'] = '8901B'
+                        mapping.loc[number, 'Serial'] = ''
+
                         # mapping.loc[number, 'Serial'] = '0'
                     if ID == 'HP8594E\r':
                         mapping.loc[number, 'Resource'] = resource
                         mapping.loc[number, 'IDN'] = 'Hewlett Packard, 8594E, 0, 0'
                         mapping.loc[number, 'Manufacturer'] = 'Hewlett Packard'
                         mapping.loc[number, 'Model'] = '8594E'  # 401 pts
+                        mapping.loc[number, 'Serial'] = ''
+
                         # mapping.loc[number, 'Serial'] = '0'
 
                     if ID == 'HP8593E\r':
@@ -177,42 +193,25 @@ class Enumerate(metaclass=abc.ABCMeta):
                         mapping.loc[number, 'IDN'] = 'Hewlett Packard, 8593E, 0, 0'
                         mapping.loc[number, 'Manufacturer'] = 'Hewlett Packard'
                         mapping.loc[number, 'Model'] = '8593E'  # 401 pts
-                        # mapping.loc[number, 'Serial'] = '0'
+                        mapping.loc[number, 'Serial'] = ''
 
-                if IDN == None:
-                    print('None,None')
-                    logger.warning(f'{resource} ...')
-                    ID = inst.query('ID?')
-                    logger.warning(f'{resource} {ID}')
-                    if ID == 'E8563E': # TODO how to ID, no trailing \r
-                        mapping.loc[number, 'Resource'] = resource
-                        mapping.loc[number, 'IDN'] = 'Hewlett Packard, 8563E, 0, 0'
-                        mapping.loc[number, 'Manufacturer'] = 'Hewlett Packard'
-                        mapping.loc[number, 'Model'] = '8563E'  # 601 pts
                         # mapping.loc[number, 'Serial'] = '0'
-
 
             except IndexError:
                 pass
 
             except pyvisa.VisaIOError as error:
-                logger.warning(error)
+                print(error)
                 # if e == :
                 # VI_ERROR_RSRC_NFOUND
                 # VI_ERROR_NLISTENERS
                 # VI_ERROR_TMO
-                '''
-                if e.error_code == pyvisa.errors.VI_ERROR_TMO:
-                    sleep(.25)
-
-                    RSIDN = inst.query('ZV')
-                    if RSIDN.startswith('ROHDE & SCHWARZ NRVS VER.:'):
-                        mapping.loc[number, 'Resource'] = resource
-                        mapping.loc[number, 'IDN'] = 'Rohde Schwarz,NVRS,0,0'
-                        mapping.loc[number, 'Manufacturer'] = 'Rohde Schwarz'
-                        mapping.loc[number, 'Model'] = 'NVRS'
-                '''
-
+                
+                if error.error_code == pyvisa.errors.VI_ERROR_TMO:
+                    # If device is active but not answering at all
+                    # 
+                    self.IDN_fallback(inst, resource, mapping, number)
+        
             finally:
                 try:
                     # display(mapping)
@@ -222,7 +221,7 @@ class Enumerate(metaclass=abc.ABCMeta):
                 except NameError:
                     # Don't raise an error if you cannot close a inst, that probably never opened
 
-                    # NI VISA 20 reports disconnected end points,
+                    # NI VISA 20 with Keysight as extra IO reports disconnected end points,
                     # when you don't refresh scan for connected HW
                     # Dosn't necessarily clear then either
                     pass
@@ -231,6 +230,39 @@ class Enumerate(metaclass=abc.ABCMeta):
 
         return mapping.reset_index(drop=True)
 
+
+    def IDN_fallback(self, inst, resource, mapping, number):
+        funcs = self.IDN_for_NVRS, self.IDN_for_HP8563E
+        
+        # https://stackoverflow.com/a/19523054 handling for loops that could except
+        
+        for func in funcs:
+            try:
+                if func(inst, resource, mapping, number) == True:
+                    break
+            except pyvisa.VisaIOError as error:
+                pass
+
+    def IDN_for_NVRS(self, inst, resource, mapping, number):
+        # sleep(.25)
+        # inst.write_termination = None
+        sleep(0.05)
+        inst.write('W5')
+        sleep(0.05)
+        if inst.query('ZV').startswith('ROHDE & SCHWARZ NRVS'):
+            mapping.loc[number, 'Resource'] = resource
+            mapping.loc[number, 'Manufacturer'] = 'Rohde Schwarz'
+            mapping.loc[number, 'Model'] = 'NRVS'
+            mapping.loc[number, 'Serial'] = ''
+            return True
+
+    def IDN_for_HP8563E(self, inst, resource, mapping, number):
+        if inst.query('ID?').strip() == 'HP8563E':
+            mapping.loc[number, 'Resource'] = resource
+            mapping.loc[number, 'Manufacturer'] = 'Hewlett Packard'
+            mapping.loc[number, 'Model'] = '8563E'  # 601 pts
+            mapping.loc[number, 'Serial'] = inst.query('SER?').strip()
+            return True
 
     drivers = pd.DataFrame([
         ['Marconi Instruments', '2187', 'Attenuator', 'MI2187'],
@@ -390,6 +422,8 @@ class Enumerate(metaclass=abc.ABCMeta):
         ['Hewlett Packard', '33120A', 'WaveformGenerator', 'HP33120A'],
         ['Hewlett Packard', '8116A', 'WaveformGenerator', 'HP8116A'],  # 'ID?'?
 
+
+        ['Thurlby Thandar', 'PL330P', 'PowerSourceDC', 'TTIPL330P'],
         # ['', '', '', '']
 
     ], columns=['Manufacturer', 'Model', 'Type', 'Driver'])
