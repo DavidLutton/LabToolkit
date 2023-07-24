@@ -329,7 +329,7 @@ class Enumerate(metaclass=abc.ABCMeta):
 
         ['Hewlett Packard', 'E4421B', 'SignalGenerator', 'SCPISignalGenerator'],
         ['Agilent Technologies', 'E4422B', 'SignalGenerator', 'SCPISignalGenerator'],
-        ['Agilent Technologies', 'E4438C', 'SignalGenerator', 'SCPISignalGenerator'],
+        ['Agilent Technologies', 'E4438C', 'SignalGenerator', 'AgilentE4438C'],
 
         ['Keysight Technologies', 'N5173B', 'SignalGenerator', 'SCPISignalGenerator'],
 
