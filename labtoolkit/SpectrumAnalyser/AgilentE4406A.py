@@ -73,7 +73,6 @@ class AgilentE4406A(IEEE488, SCPI):
     def resbw(self, frequency):
         self.write(f':SENSe:SPECtrum:BANDwidth:RESolution {frequency}')
     
-    @property
     def screenshot(self):
         timeout = self.inst.timeout
         self.inst.timeout = 5000

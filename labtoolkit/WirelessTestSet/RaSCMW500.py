@@ -18,9 +18,12 @@ class RaSCMW500(IEEE488, SCPI):
     def screenshot(self):
         """Capture a screenshot."""
         # Usage
-        # image = self.screenshot()
+        # counter = 0
+        
+        # image = screenshot(inst)
+        # counter += 1
         # image.save(p / f'image{counter:04.0f}.png')
-
+        
         image = Image.open(io.BytesIO(
             self.query_binary_values(
                 'HCOPy:DATA?',

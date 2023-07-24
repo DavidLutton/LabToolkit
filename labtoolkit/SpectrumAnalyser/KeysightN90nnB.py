@@ -308,7 +308,6 @@ class KeysightN90nnB(IEEE488, SCPI, SCPISpectrumAnalyser):
     def external_gain(self, correction):
         return self.write(f':CORRection:SA:GAIN {correction}')
 
-    @property
     def screenshot(self):
         """."""
 

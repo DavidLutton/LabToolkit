@@ -299,7 +299,6 @@ class AgilentE44nn(IEEE488, SCPI):
         return self.inst.query_binary_values(f'TRAC:DATA? TRACE{1}', container=np.float64)
     
  
-    @property
     def screenshot(self):
         timeout = self.inst.timeout
         self.inst.timeout = 5000
