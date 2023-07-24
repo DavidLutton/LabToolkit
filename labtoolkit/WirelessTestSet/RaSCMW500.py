@@ -16,5 +16,19 @@ class RaSCMW500(IEEE488, SCPI):
         self.local
     
     def screenshot(self):
-        return NotImplementedError
+        """Capture a screenshot."""
+        # Usage
+        # image = self.screenshot()
+        # image.save(p / f'image{counter:04.0f}.png')
+
+        image = Image.open(io.BytesIO(
+            self.query_binary_values(
+                'HCOPy:DATA?',
+                datatype='B', 
+                is_big_endian=False, 
+                container=bytearray
+            )
+        ))
+        self.local
+        return image
         
