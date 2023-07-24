@@ -87,6 +87,46 @@ class AgilentE4406A(IEEE488, SCPI):
         self.inst.timeout = timeout
         return image
 
+    def trace_prototype(self, kind):
+        """."""
+        self.write(':FORMat REAL,32')
+        self.write(':FORMat:BORDer SWAPped')
+        match kind, self.query('CONFigure?'):
+            case 'Frequency', 'SPEC':
+                data = self.query_binary_values(f':FETCh:SPECtrum{4}?', container=np.float64)
+                return pd.DataFrame({
+                    # 'Frequency' : np.linspace(0, length, len(data)),
+                    'dBm': data,
+                }) # .set_index('Time')
+
+            case 'IQ', 'SPEC':
+                data = self.query_binary_values(f':FETCh:SPECtrum{0}?', container=np.float64)
+                data = data.view(np.complex128) # Fetch
+                return pd.DataFrame({
+                    # 'Time' : np.linspace(0, length, len(data)),
+                    'I': data.real,
+                    'Q': data.imag,
+                }) # .set_index('Time')
+
+            case 'Time', 'WAV':
+                data = self.query_binary_values(f':FETCh:WAVeform{2}?', container=np.float64)
+                length = len(data) * self.query_binary_values(f':FETCh:WAVeform{1}?')[0]
+                return pd.DataFrame({
+                    'Time' : np.linspace(0, length, len(data)),
+                    'dBm': data,
+                }).set_index('Time')
+
+            case 'IQ', 'WAV':
+                data = self.query_binary_values(f':FETCh:WAVeform{0}?', container=np.float64)
+                length = len(data) * self.query_binary_values(f':FETCh:WAVeform{1}?')[0]
+
+                data = data.view(np.complex128) # Fetch
+                return pd.DataFrame({
+                    'Time' : np.linspace(0, length, len(data)),
+                    'I': data.real,
+                    'Q': data.imag,
+                }).set_index('Time')
+
 
     def measure_power_at_marker(self):
         timeout = self.inst.timeout
