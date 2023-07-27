@@ -354,6 +354,8 @@ class Enumerate(metaclass=abc.ABCMeta):
         ['Anritsu', 'MG3695B', 'SignalGenerator', 'AnritsuMG369nAB'],
         ['Anritsu', 'MG3696B', 'SignalGenerator', 'AnritsuMG369nAB'],
 
+        ['Anritsu', 'MS2668C', 'SpectrumAnalyser', 'AnritsuMS266nC'],
+
         # MG369nC Series
         # SCPI capable, may differ from A,B series
 
