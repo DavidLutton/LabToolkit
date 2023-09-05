@@ -9,7 +9,7 @@ class Agilent83650B(SCPISignalGenerator, SignalGenerator):
     """
     @property
     def amplitude(self):
-        return self.query_float(':POWer:LEVel')
+        return self.query_float(':POWer:LEVel?')
 
     @amplitude.setter
     def amplitude(self, amplitude):
