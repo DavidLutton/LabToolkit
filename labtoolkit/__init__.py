@@ -318,7 +318,7 @@ class Enumerate(metaclass=abc.ABCMeta):
 
         ['Hewlett Packard', '83752B', 'SignalGenerator', 'HP83752B'],  # 0.01 - 20 GHz
         # ['Hewlett Packard', '83650B', 'SignalGenerator', 'HP83650B'],  # 0.01 - 50 GHz
-        ['Hewlett Packard', '83650B', 'SignalGenerator', 'SCPISignalGenerator'],  # 0.01 - 50 GHz
+        ['Hewlett Packard', '83650B', 'SignalGenerator', 'Agilent83650B'],  # 0.01 - 50 GHz
 
         ['Hewlett Packard', 'ESG-3000A', 'SignalGenerator', 'SCPISignalGenerator'],
         ['Hewlett Packard', 'ESG-3000B', 'SignalGenerator', 'SCPISignalGenerator'],  # labeled HP, E4421B
