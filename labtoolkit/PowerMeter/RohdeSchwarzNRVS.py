@@ -1,8 +1,8 @@
-from ..Instrument import Instrument
+from ..Instrument import Instrument, local_ren
 # from ..IEEE488 import IEEE488
 
 
-class RohdeSchwarzNRVS(Instrument):
+class RohdeSchwarzNRVS(Instrument, local_ren):
     """Rohde-Schwarz NRVS.
 
     .. figure::  images/PowerMeter/RohdeSchwarzNRVS.jpg
@@ -27,21 +27,13 @@ class RohdeSchwarzNRVS(Instrument):
 
         self.sw_offset_mag = 0
         
-        self.local
+        self.local()
 
         '''
         inst.query('ZV')
         inst.query('Z2')
         inst.query('ST')
         '''
-    @property
-    def sw_offset(self):
-        """."""
-        return self.sw_offset_mag
-
-    @sw_offset.setter
-    def sw_offset(self, offset):
-        self.sw_offset_mag = offset
 
     @property
     def frequency(self):
@@ -56,4 +48,4 @@ class RohdeSchwarzNRVS(Instrument):
     def amplitude(self):
         """."""
         # '   DBM   6.94910E+00'
-        return self.query_float('X3') + self.sw_offset_mag
+        return self.query_float('X3')

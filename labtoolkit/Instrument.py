@@ -95,3 +95,9 @@ class Instrument(metaclass=abc.ABCMeta):
             'SRE', 'STB', 'TRG', 'TST', 'WAI'
         ]
         return [x for x in dir(self) if not x.startswith('_') and x not in system] 
+
+
+class local_ren():
+    
+    def local(self):
+        self.inst.control_ren(VI_GPIB_REN_ADDRESS_GTL)
