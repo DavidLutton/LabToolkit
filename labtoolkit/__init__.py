@@ -112,7 +112,7 @@ class Enumerate(metaclass=abc.ABCMeta):
 
         # resources = [resource for resource in resources if resource not in ignores]
 
-        mapping = pd.DataFrame(columns=['Manufacturer', 'Model'])
+        mapping = pd.DataFrame(columns=['Manufacturer', 'Model', 'Resource', 'IDN', 'Serial', 'inst'])
         for number, resource in enumerate(self.resources):
 
             # print(f'{number} of {len(resources)-1} : {resource}')
