@@ -1,35 +1,10 @@
-#!/usr/bin/env python3
-"""."""
-# import pint
-
-from labtoolkit.GenericInstrument import GenericInstrument
-from labtoolkit.IEEE488 import IEEE488
-from labtoolkit.SCPI import SCPI
+from ..Instrument import Instrument
+from time import sleep
 
 
-# ureg = pint.UnitRegistry()
-# ureg.default_format = '~P'
-# Q_ = ureg.Quantity
-
-
-class Positioner(GenericInstrument):
-
-    def __init__(self, instrument):
-        super().__init__(instrument)
-
-    def __repr__(self):
-        return(f"{__class__}, {self.instrument}")
-
-
-class AnaheimAutomationSMC40(Positioner):
+class AnaheimAutomationSMC40(Instrument):
 
     # http://www.anaheimautomation.com/manuals/stepper/L010098%20-%20SMC40%20Users%20Guide.pdf
-
-    def __init__(self, instrument):
-        super().__init__(instrument)
-
-    def __repr__(self):
-        return(f"{__class__}, {self.instrument}")
 
     @property
     def heading(self):
@@ -74,8 +49,25 @@ class AnaheimAutomationSMC40(Positioner):
         if wait is True:
             self.WAI()
 
+'''
+import serial
+from serial.tools import list_ports
 
-REGISTER = {
-    'SMC40': AnaheimAutomationSMC40,
+	
+for each in list_ports.comports():
+    print('{}\t\t{}'.format(each.device, each.description))
+port = input('Serial Port? : ')
+# port = 'COM7'
 
-}
+with serial.Serial(port, 9600, timeout=1, bytesize=8, parity='N', stopbits=1) as ser:
+    while ser.isOpen():
+        ser.write(b'ID')
+        print(ser.readline())
+        # self.write('XMN{}'.format(int(stepsize*100)))  # 100 is 1 degree
+        # self.write('D+')  # Clockwise
+        # self.write('D-')  # Anti-Clockwise
+        # self.write('XGH')  # Go Home
+        # self.write('@0')  # Init?
+        # 'XMC'  # Complete?
+        
+'''
