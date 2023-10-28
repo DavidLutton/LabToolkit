@@ -122,11 +122,11 @@ def voltage_arb_load(self, arb, dwell=4*10.24e-6):
 
 
 '''
-RR to confirmed on order
 
-Using the ramp shapes and equation shown in the Keysight video for a 12V system you obtain: \\RN01\data\Calibration data\Python\Pulse2B.html
+Using the ramp shapes and equation shown in the Keysight video for a 12V system you obtain: 
+Python\Pulse2B.html
 Should also be able to do Pulse 4
-\\rn01\Data\Calibration data\Python\Pulse4 from ISO 7637-2 2004 Figure 10.html
+Python\Pulse4 from ISO 7637-2 2004 Figure 10.html
 
 [SOURce:]ARB:VOLTage:CDWell time
 dwell time In sec, rounded to nearest 0.00001024 s
