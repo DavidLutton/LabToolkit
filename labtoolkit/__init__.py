@@ -232,7 +232,7 @@ class Enumerate(metaclass=abc.ABCMeta):
 
 
     def IDN_fallback(self, inst, resource, mapping, number):
-        funcs = self.IDN_for_NVRS, self.IDN_for_HP8563E
+        funcs = self.IDN_for_NVRS, self.IDN_for_HP
         
         # https://stackoverflow.com/a/19523054 handling for loops that could except
         
@@ -256,11 +256,14 @@ class Enumerate(metaclass=abc.ABCMeta):
             mapping.loc[number, 'Serial'] = ''
             return True
 
-    def IDN_for_HP8563E(self, inst, resource, mapping, number):
-        if inst.query('ID?').strip() == 'HP8563E':
+    def IDN_for_HP(self, inst, resource, mapping, number):
+        ident = inst.query('ID?').strip()
+        if ident[0:2] == 'HP':
+            # HP 8563E
+            # HP 8564E
             mapping.loc[number, 'Resource'] = resource
             mapping.loc[number, 'Manufacturer'] = 'Hewlett Packard'
-            mapping.loc[number, 'Model'] = '8563E'  # 601 pts
+            mapping.loc[number, 'Model'] = ident[2:]
             mapping.loc[number, 'Serial'] = inst.query('SER?').strip()
             return True
 
