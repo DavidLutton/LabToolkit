@@ -247,26 +247,22 @@ class RaSESW(IEEE488, SCPI, SCPISpectrumAnalyser):
         return df
 
     def screenshot(self):
-        """."""
-
-        timeout = self.inst.timeout
-        self.inst.timeout = 5000
-        # DISP:LOGO OFF
-        self.write('HCOPy:DEVice:LANGuage PNG'
-        self.write("MMEM:NAME 'C:\R_S\instr\user\Screenshot.png'")
-        self.query_bool('HCOP:IMM,*OPC?')
-
+        self.write('HCOPy:DEVice:LANGuage PNG')
+        self.write(r"MMEM:NAME 'C:\R_S\instr\user\Screenshot.png'")
+        self.write('HCOP:CMAP:DEF4')  # match display cmap
+        self.write('DISP:LOGO ON')
+        self.write('HCOPy:TDSTamp:STATe1 OFF')  # turn off extra timestamp
+        self.write('HCOP:IMM')
+        
         image = Image.open(io.BytesIO(
-        self.query_binary_data(
-                "MMEMory:DATA? 'C:\R_S\instr\user\Screenshot.png'",
+            self.query_binary_values(
+                r"MMEMory:DATA? 'C:\R_S\instr\user\Screenshot.png'",
                 datatype='B',
                 is_big_endian=False,
-                container=bytearray
-            )
-        ))
-
-        self.inst.timeout = timeout
-
+                container=bytearray)))
+        self.write(r"MMEM:DELETE 'C:\R_S\instr\user\Screenshot.png'")
+        self.local
+        # image.save('0000.png')
         return image
 
         
