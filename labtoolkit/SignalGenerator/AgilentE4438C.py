@@ -2,6 +2,9 @@
 from .SCPISignalGenerator import SCPISignalGenerator
 # from .helper import SignalGenerator, amplitudelimiter
 import numpy as np
+import PIL.Image as Image
+import io
+from time import sleep
 
 
 class AgilentE4438C(SCPISignalGenerator):
@@ -28,3 +31,21 @@ class AgilentE4438C(SCPISignalGenerator):
     
     def arb_catalog(self):
         return self.query(':MEM:CATalog? "WFM1:"')
+    
+    def screenshot(self):
+        self.write(f':DISPlay:REMote {True:b}')
+        # inst.query(':DISPlay:REMote?')
+
+        self.write(':DISPlay:CAPTure')
+
+        sleep(0.5)
+        self.query_bool('*OPC?')
+        bins = self.query_binary_values(
+            ':MEM:DATA? "BINARY:DISPLAY.BMP"', 
+            datatype='B',
+            is_big_endian=False,
+            container=bytearray
+        )
+        # image.save('FILENAME.png')
+        return Image.open(io.BytesIO(bins))
+        
