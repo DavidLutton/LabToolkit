@@ -1,7 +1,6 @@
 """."""
 
-# import time
-# import logging
+from datetime import datetime as dt
 
 
 class SCPI(object):
@@ -36,3 +35,9 @@ class SCPI(object):
     def SCPI_local(self):
         """Go To Local."""
         return self.query_float(':SYSTem:COMMunicate:GTLocal?')
+    
+    def clock_update(self):
+        now = dt.now()
+        
+        self.write(f':SYSTem:DATE {now.year},{now.month},{now.day}')
+        self.write(f':SYSTem:TIME {now.hour},{now.minute},{now.second}')
