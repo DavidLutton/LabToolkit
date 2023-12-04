@@ -3,7 +3,38 @@
 
 Python package for instrument control, data acquisition and automation. 
 
-## Demo
+
+## Demo enumeration
+
+``` python
+import labtoolkit
+from pyvisa_py.tcpip import TCPIPInstrVxi11 as TCPVXI11  # TCPVXI11.list_resources()
+
+rm = labtoolkit.pyvisa.ResourceManager()
+resources = rm.list_resources('(GPIB[0129]::?*::INSTR)|(USB?*)')
+ignores = ['GPIB2::22::INSTR',]
+resources = [resource for resource in resources if resource not in ignores]
+
+resources = resources + TCPVXI11.list_resources()
+ignores = ['TCPIP::192.168.100.5::INSTR',]
+resources = [resource for resource in resources if resource not in ignores]
+
+lab = labtoolkit.Enumerate(resourcemanager=rm, resources=resourcess)
+
+sa = lab.enumeration.iloc[0].inst
+
+sa.frequency_center = 1e9
+sa.frequency_span = 10e6
+sa.sweep_points = 8192
+sa.OPC
+df = sa.trace
+# returns a DataFrame of the trace data
+df.plot(grid=True, figsize=(8, 6))
+df.attrs
+# df.attrs are used to store metadata (sweep_time, resolution_bandwidth, etc)
+```
+
+## Demo manual driver selection
 
 ``` python
 # Communicate with Hardware with PyVISA
