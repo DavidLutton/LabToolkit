@@ -8,9 +8,10 @@ Python package for instrument control, data acquisition and automation.
 
 ``` python
 import labtoolkit
+import pyvisa
 from pyvisa_py.tcpip import TCPIPInstrVxi11 as TCPVXI11  # TCPVXI11.list_resources()
 
-rm = labtoolkit.pyvisa.ResourceManager()
+rm = pyvisa.ResourceManager()
 resources = rm.list_resources('(GPIB[0129]::?*::INSTR)|(USB?*)')
 ignores = ['GPIB2::22::INSTR',]
 resources = [resource for resource in resources if resource not in ignores]
