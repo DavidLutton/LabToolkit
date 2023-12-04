@@ -19,7 +19,7 @@ resources = resources + TCPVXI11.list_resources()
 ignores = ['TCPIP::192.168.100.5::INSTR',]
 resources = [resource for resource in resources if resource not in ignores]
 
-lab = labtoolkit.Enumerate(resourcemanager=rm, resources=resourcess)
+lab = labtoolkit.Enumerate(resourcemanager=rm, resources=resources)
 
 sa = lab.enumeration.iloc[0].inst
 
