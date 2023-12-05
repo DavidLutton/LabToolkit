@@ -40,6 +40,14 @@ class IEC179Cweighting():
     def filter(self, f):
         return 20*np.log10(self.internal(f)) + 0.06
 
+class IEC179Dweighting():
+    def filter(self, f):
+       a = f/(6.8966888496476e-5)
+       h = ((1037918.48 - f**2)**2 + (1080768.16* f**2))/((9837328 - f**2)**2 + (11723776*f**2))
+       b = np.sqrt(
+           h/((f**2 + 79919.29) * (f**2 + 1345600.0))
+       )
+       return 20*np.log10(a*b)
 
 class ITU_R468noiseweighting():
     def filter(self, f):
