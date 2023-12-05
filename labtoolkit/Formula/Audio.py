@@ -52,5 +52,4 @@ class ITU_R468noiseweighting():
 
 
 # xa = np.linspace(20, 30e3, 2999)
-# flt = IEC179Aweighting()
-# ya = np.array([flt.filter(x) for x in xa])
+# ya = IEC179Aweighting().filter(xa)
