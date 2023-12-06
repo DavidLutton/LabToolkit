@@ -157,34 +157,34 @@ class dBOhmsTo:
 class dBuVTo:
 
     @staticmethod
-    def watt(dBuV):
+    def watt(dBμV):
         # Z = 50
-        return 10 ** ((dBuV - 137) / 10)
+        return 10 ** ((dBμV - 137) / 10)
 
     @staticmethod
-    def amp(dBuV):
+    def amp(dBμV):
         # Z = 50
-        return 10 ** ((dBuV - 154) / 20)
+        return 10 ** ((dBμV - 154) / 20)
 
     @staticmethod
-    def dBm(dBuV):
+    def dBm(dBμV):
         Z = 50
-        # return dBuV - 90 + 10*log10(Z)
-        return dBuV - 10 * log10(Z) - 90
+        # return dBμV - 90 + 10*log10(Z)
+        return dBμV - 10 * log10(Z) - 90
 
     @staticmethod
-    def dBuA(dBuV):
+    def dBuA(dBμV):
         Z = 50
-        # return dBuV - log20(Z)
-        return dBuV - 20 * log10(Z)
+        # return dBμV - log20(Z)
+        return dBμV - 20 * log10(Z)
 
     @staticmethod
-    def volt(dBuV):
-        return 10**((dBuV - 120) / 20)  # checked against R&S unit converter
+    def volt(dBμV):
+        return 10**((dBμV - 120) / 20)  # checked against R&S unit converter
 
     @staticmethod
-    def dBV(dBuV):
-        return dBuV - 120
+    def dBV(dBμV):
+        return dBμV - 120
 
 
 class dBVTo:
@@ -201,33 +201,40 @@ class dBVTo:
 class dBuATo:
 
     @staticmethod
-    def dBuV(dBuA):
+    def dBuV(dBμA):
         Z = 50
-        # return dBuA + log20(Z)
-        return dBuA + 20 * log10(Z)
+        return dBμA + 20 * log10(Z)
 
     @staticmethod
-    def dBm(dBuA):
+    def dBm(dBμA):
         Z = 50
-        return dBuA + 10 * log10(Z) - 90
+        return dBμA + 10 * log10(Z) - 90
 
     @staticmethod
-    def amp(dBuA):
-        return 10 ** ((dBuA - 120) / 20)
-
-    # uA = 10**(dBuA / 20)
+    def amp(dBμA):
+        return 10 ** ((dBμA - 120) / 20)
 
     @staticmethod
-    def volt(dBuA):
-        return 10 ** ((dBuA - 86) / 20)
+    def uA(dBμA):
+        return 10 ** (dBμA / 20)
 
     @staticmethod
-    def watt(dBuA):
-        return 10 ** ((dBuA - 103) / 10)
+    def volt(dBμA):
+        return 10 ** ((dBμA - 86) / 20)
 
     @staticmethod
-    def dBA(dBuA):
-        return dBuA - 120
+    def watt(dBμA):
+        return 10 ** ((dBμA - 103) / 10)
+
+    @staticmethod
+    def dBA(dBμA):
+        return dBμA - 120
+
+class uATo:
+    
+    @staticmethod
+    def dBuA(μA):
+        return 20 * log10(μA)
 
 
 class dBATo:
@@ -271,9 +278,38 @@ class AmpTo:
 class uTTo:
 
     @staticmethod
-    def A_m(uT):
-        return uT / 1.25
+    def A_m(μT):
+        return μT / 1.25
 
+class A_mTo:
+
+    @staticmethod
+    def uT(A_m):
+        return 1.25 * A_m
+
+class RatioOf:
+
+    @staticmethod
+    def Amp(a):
+        return 20 * log10(a)
+    
+    @staticmethod
+    def Volt(a):
+        return 20 * log10(a)
+    
+    @staticmethod
+    def Watt(a):
+        return 10 * log10(a)
+
+class DeltaDue:
+    
+    @staticmethod
+    def volt(dB, voltage):
+        return 10**(dB + RatioOf.Volt(voltage) / 20)
+
+    @staticmethod
+    def watt(dB, watt):
+        return 10**(dB + RatioOf.Watt(watt) / 10)
 
 def impedance_of_free_space():
     c = constants.speed_of_light  # Speed of Light
@@ -299,3 +335,63 @@ def impedance_of_free_space():
 
     return round(impedance_of_free_space, 9)
     # uncertainty beyond 9 decimal places, according to NIST publication
+
+
+
+class dBuV_mTo: # dBμV_m
+    
+    @classmethod
+    def V_m(dBμV_m):
+        return 10**((dBμV_m)-120)/20
+
+    @classmethod
+    def  dBuV_m2(dBμV_m):
+        return dBμV_m - 115.8
+
+    @classmethod
+    def dBuA_m(dBμV_m):
+        return dBμV_m - 51.5
+
+class V_mTo:
+
+    @classmethod
+    def dBuV_m(V_m):
+        return 20 * log10(V_m) + 120
+
+    @classmethod
+    def W_m2(V_m):
+        return (V/m**2) / 377
+
+class W_m2To:
+
+    @classmethod
+    def V_m(W_m2):
+        return sqrt(W_m2*377)
+
+class dBpTTo:
+
+    @classmethod
+    def dBuA_m(dBpT):
+        return dBpT - 2
+
+class dBuA_mTo:
+
+    @classmethod
+    def dBpT(dBuA_m):
+        return dBuA_m + 2
+    
+    @classmethod
+    def dBuV_m(dBuA_m):
+        return dBuA_m + 251.5
+
+class dBuV_m2To: # dBμV_m
+    
+    @classmethod
+    def dBuV_m(dBμV_m2):
+        return dBμV_m2 + 115.8
+
+ # Wound coil flux density μT = (4Pi(Turns)(Amps)) / 20 ( radius, m)
+
+ def WCFD_uT(turns, amps, radius):
+    """Wound Coil Flux Density in μT."""
+    return (4 *pi * turns * amps) / 20 (radius)
