@@ -141,7 +141,7 @@ class Enumerate(metaclass=abc.ABCMeta):
                     parts = [part.strip() for part in parts]  # strip stray whitespace
 
                     parts[0] = parts[0].title().replace('-', ' ').replace('_', ' ')
-                    parts[0] = parts[0].removesuffix(' Inc').removesuffix('.')
+                    parts[0] = parts[0].removesuffix('.').removesuffix(' Inc')
                     # HEWLETT-PACKARD,
                     # HEWLETT PACKARD,
                     # Hewlett-Packard,
