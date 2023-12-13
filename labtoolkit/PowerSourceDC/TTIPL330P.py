@@ -50,25 +50,26 @@ http://www.tti-test.com/downloads/drivers-download.htm
     @property
     def volts(self):
         """."""
-        self.query('V1?')
+        return self.query_float('V1?')
 
     @volts.setter
     def volts(self, volts):
-        self.write(f'V1{volts}')
+        self.write(f'V1 {volts}')
 
     @property
     def current(self):
         """."""
-        self.query('I1?')
+        return self.query_float('I1?')
 
     @current.setter
     def current(self, current):
-        self.write(f'I1{current}')
+        self.write(f'I1 {current}')
 
     @property
     def output(self):
         """."""
-        self.query('OP1?')
+        # return self.query_bool('OP1?')
+        return bool(self.query('*LRN?').split(';')[2][4])
 
     @output.setter
     def output(self, boolean=False):
