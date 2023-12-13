@@ -1,4 +1,4 @@
-from ..GenericInstrument import GenericInstrument
+from ..Instrument import Instrument
 from ..IEEE488 import IEEE488
 from ..SCPI import SCPI
 
@@ -33,7 +33,7 @@ class Switch:
             self.switch(route[1].Switch, route[1].State)
 
 
-class HP3488A(GenericInstrument, Switch):
+class HP3488A(Instrument, Switch):
 
     def __post__(self):
         self.inst.read_termination = '\r\n'

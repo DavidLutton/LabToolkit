@@ -83,6 +83,9 @@ class Enumerate(metaclass=abc.ABCMeta):
 
     def df(self):
         return self.enumeration
+
+    def select(self, index):
+        return self.enumeration.iloc[index].inst
     
     def show(self):
         return self.enumeration.drop([
@@ -137,7 +140,7 @@ class Enumerate(metaclass=abc.ABCMeta):
                     parts = IDN.split(',')
                     parts = [part.strip() for part in parts]  # strip stray whitespace
 
-                    parts[0] = parts[0].title().replace('-', ' ').replace('_', ' ')
+                    parts[0] = parts[0].title().replace('-', ' ').replace('_', ' ').strip('.')
                     # HEWLETT-PACKARD,
                     # HEWLETT PACKARD,
                     # Hewlett-Packard,
@@ -423,6 +426,8 @@ class Enumerate(metaclass=abc.ABCMeta):
         ['Advantest', 'R3172', 'SpectrumAnalyser', 'AdvantestR3172'],
 
         ['Hewlett Packard', '3488A', 'Switch', 'HP3488A'],
+        ['Keithley Instruments Inc', 'MODEL 7999-6', 'Switch', 'Keithley79996'],
+    
 
         ['Hewlett Packard', '33120A', 'WaveformGenerator', 'HP33120A'],
         ['Hewlett Packard', '8116A', 'WaveformGenerator', 'HP8116A'],  # 'ID?'?
