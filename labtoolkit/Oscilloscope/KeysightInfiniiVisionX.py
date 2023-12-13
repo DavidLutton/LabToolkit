@@ -75,7 +75,6 @@ class KeysightInfiniiVisionX(IEEE488, SCPI):
             NUMBER_ANALOG_CHS = int(MODEL[len(MODEL) - 2])
         return np.arange(1, NUMBER_ANALOG_CHS + 1)
 
-    @property
     def displayed(self, channel):
         return self.query_bool(f':CHANnel{channel}:DISPlay?')
 
