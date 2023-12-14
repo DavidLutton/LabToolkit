@@ -1,6 +1,7 @@
 from ..Instrument import Instrument
 from time import sleep
 from dataclasses import dataclass
+import struct
 
 
 class VDIPM5B(Instrument):
