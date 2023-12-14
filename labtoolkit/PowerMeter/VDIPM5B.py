@@ -17,18 +17,9 @@ class VDIPM5B(Instrument):
         command = cmd.encode() + nulls * pads + end
         return command
 
-    def reading_formula(self, rangevalue, countvalue):
+    def reading_formula(self, SelectedRange, countvalue):
         """Convert reading data into a reading."""
-        match rangevalue:
-            case 1:
-                rangemax = 200e-6
-            case 2:
-                rangemax = 2e-3
-            case 3:
-                rangemax = 20e-3
-            case 4:
-                rangemax = 200e-3
-        reading = countvalue * 2. * rangemax / 59576
+        reading = countvalue * 2. * (SelectedRange / 59576)
         # where rangemax = 200.E-6 for rangeval=1, or 2.E-3 for rangeval=2, or 20.E-3 for rangeval=3, or 200.E-3 for rangeval=4. 
         # The range value setting is also available in the status bytes (see below). 
         # If there is a cal factor on the front panel, the reading from the formula above should be further modified as:
@@ -48,24 +39,65 @@ class VDIPM5B(Instrument):
         SelectedRange: float
         # ReadingdBm: float
         
-    def decoderD(self, bins):
+    def decoderD(self, data):
         """Decode a D packet of reading & state"""
-        bits = np.unpackbits(np.array([r for r in bins], dtype=np.uint8))
-        
-        tens, ones, decimal = bins[6] & 0x0F, bins[5] >> 4, bins[5] & 0x0F  
-        CalibrationFactor = tens * 10 + ones + decimal / 10   # needs sign bit
-        
-        countbits = bits[8:24]
-        countvalue = int(''.join([str(x) for x in countbits]), 2)
-        rangevalue = 2
 
-        AutoRange = None
-        CalibrationHeater = None
-        CalibratiorSwitchRear = None
-        Remote = None  # what is remote
-        SelectedRange = None
+        bitmap = [f'{byte:08b}' for byte in data]
+
+        AutoRange = True if bitmap[4][7] == '1' else False
+
+        CalibrationHeater = bitmap[4][1+3:4+3]
+        CalibratiorSwitchRear = bitmap[4][1:4]
+        Remote = True if bitmap[4][0] == '1' else False
+        SelectedRange = bitmap[6][0:3]
+
+        CalFactorSign = -1 if bitmap[6][3] == '1' else 1
+        CalFactorTens = int(bitmap[6][4:8], 2)
+        CalFactorOnes = int(bitmap[5][0:4], 2)
+        CalFactorDeci = int(bitmap[5][4:8], 2)
+
+        CalibrationFactor = CalFactorSign * (CalFactorTens * 10 + CalFactorOnes + CalFactorDeci / 10)
+
+        match CalibrationHeater:
+            case '000':
+                CalibrationHeater = False
+            case '001':
+                CalibrationHeater = 0.1e-3
+            case '010':
+                CalibrationHeater = 1e-3
+            case '011':
+                CalibrationHeater = 10e-3
+            case '100':
+                CalibrationHeater = 100e-3
+
+        match CalibratiorSwitchRear:
+            case '000':
+                CalibratiorSwitchRear = False
+            case '001':
+                CalibratiorSwitchRear = 0.1e-3
+            case '010':
+                CalibratiorSwitchRear = 1e-3
+            case '011':
+                CalibratiorSwitchRear = 10e-3
+            case '100':
+                CalibratiorSwitchRear = 100e-3
+     
+        match SelectedRange:
+            case '000':
+                SelectedRange = False
+            case '001':
+                SelectedRange = 0.2e-3
+            case '010':
+                SelectedRange = 2e-3
+            case '011':
+                SelectedRange = 20e-3
+            case '100':
+                SelectedRange = 200e-3
+            case '111':
+                SelectedRange = None
         
-        watt = self.reading_formula(rangevalue, countvalue)
+        watt = instd.reading_formula(SelectedRange, struct.unpack('<h', data[2:4])[0])
+        # dBm = WattTo.dBm(watt).round(3) if watt > 0 else -100
         return self.Reading(
             watt, 
             AutoRange, 
@@ -74,8 +106,9 @@ class VDIPM5B(Instrument):
             Remote, 
             CalibrationFactor, 
             SelectedRange,
-            # WattTo.dBm(watt).round(3) if watt > 0 else -100
         )
+
+                
         
     def decoderVC(self, bins):
         """Decode a VC packet of firmware versions"""
