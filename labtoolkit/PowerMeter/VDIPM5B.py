@@ -14,8 +14,7 @@ class VDIPM5B(Instrument):
             # if Serial add maping of serial to PyVISA commands
             self.inst.write_raw = self.inst.write
             self.inst.read_bytes = self.inst.read
-
-        
+       
     def padding(self, cmd):
         """Format command string by adding padding & termination."""
         nulls = b'\x00'
@@ -32,7 +31,6 @@ class VDIPM5B(Instrument):
         # If there is a cal factor on the front panel, the reading from the formula above should be further modified as:
         # reading = reading * 10^(calfactor/10.)
         return reading
-
             
     @dataclass
     class Reading:
@@ -115,16 +113,14 @@ class VDIPM5B(Instrument):
             SelectedRange,
         )
 
-                
-        
-    def decoderVC(self, bins):
+    def decoderVC(self, data):
         """Decode a VC packet of firmware versions"""
         # VC....
         # Byte 3 is the decimal portion of the firmware code revision
         # Byte 4 is the integer portion of the firmware code revision
         # Byte 5 is the decimal portion of the secondary firmware code revision
         # Byte 6 is the integer portion of the secondary firmware code revision
-        return NotImplemented
+        return data[4] + data[3] / 10, data[6] + data[5] / 10 
 
     def query(self, cmd):
         """Run a query."""
@@ -137,6 +133,7 @@ class VDIPM5B(Instrument):
                     return self.decoderD(bytes_)
             case '?VC':
                 bytes_ = self.inst.read_bytes(7)
+                return self.decoderVC(bytes_)
             case _:
                 bytes_ = self.inst.read_bytes(1)
                 if bytes_[0] == 6:
