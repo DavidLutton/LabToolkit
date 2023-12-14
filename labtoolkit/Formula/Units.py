@@ -390,8 +390,8 @@ class dBuV_m2To: # dBμV_m
     def dBuV_m(dBμV_m2):
         return dBμV_m2 + 115.8
 
- # Wound coil flux density μT = (4Pi(Turns)(Amps)) / 20 ( radius, m)
 
- def WCFD_uT(turns, amps, radius):
+ # Wound coil flux density μT = (4Pi(Turns)(Amps)) / 20 ( radius, m)
+def WCFD_uT(turns, amps, radius):
     """Wound Coil Flux Density in μT."""
     return (4 *pi * turns * amps) / 20 (radius)
