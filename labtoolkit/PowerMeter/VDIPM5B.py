@@ -46,8 +46,8 @@ class VDIPM5B(Instrument):
 
         AutoRange = True if bitmap[4][7] == '1' else False
 
-        CalibrationHeater = bitmap[4][1+3:4+3]
-        CalibratiorSwitchRear = bitmap[4][1:4]
+        CalibratiorSwitchRear = bitmap[4][4:7]
+        CalibrationHeater = bitmap[4][1:4]
         Remote = True if bitmap[4][0] == '1' else False
         SelectedRange = bitmap[6][0:3]
 
@@ -127,11 +127,12 @@ class VDIPM5B(Instrument):
             case '?D1':
                 he = self.inst.read_bytes(7)
                 if he[0] == 6:
-                    pass
                     return self.decoderD(he)
             case '?VC':
                 he = self.inst.read_bytes(7)
             case _:
                 he = self.inst.read_bytes(1)
+                if he[0] == 6:
+                    return True
         # print(he.hex())
         return he 
