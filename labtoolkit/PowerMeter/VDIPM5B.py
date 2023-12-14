@@ -2,6 +2,7 @@ from ..Instrument import Instrument
 from time import sleep
 from dataclasses import dataclass
 import struct
+import serial
 
 
 class VDIPM5B(Instrument):
@@ -9,6 +10,11 @@ class VDIPM5B(Instrument):
 
     def __post__(self):
         self.inst.query_delay = 0.05
+        if isinstance(self.inst, serial.Serial):
+            # if Serial add maping of serial to PyVISA commands
+            self.inst.write_raw = self.inst.write
+            self.inst.read_bytes = self.inst.read
+
         
     def padding(self, cmd):
         """Format command string by adding padding & termination."""
@@ -126,14 +132,14 @@ class VDIPM5B(Instrument):
         sleep(self.inst.query_delay)
         match cmd:
             case '?D1':
-                he = self.inst.read_bytes(7)
-                if he[0] == 6:
-                    return self.decoderD(he)
+                bytes_ = self.inst.read_bytes(7)
+                if bytes_[0] == 6:
+                    return self.decoderD(bytes_)
             case '?VC':
-                he = self.inst.read_bytes(7)
+                bytes_ = self.inst.read_bytes(7)
             case _:
-                he = self.inst.read_bytes(1)
-                if he[0] == 6:
+                bytes_ = self.inst.read_bytes(1)
+                if bytes_[0] == 6:
                     return True
-        # print(he.hex())
-        return he 
+        # print(bytes_.hex())
+        return bytes_ 
