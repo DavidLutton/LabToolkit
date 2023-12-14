@@ -96,7 +96,7 @@ class VDIPM5B(Instrument):
             case '111':
                 SelectedRange = None
         
-        watt = instd.reading_formula(SelectedRange, struct.unpack('<h', data[2:4])[0])
+        watt = self.reading_formula(SelectedRange, struct.unpack('<h', data[2:4])[0])
         # dBm = WattTo.dBm(watt).round(3) if watt > 0 else -100
         return self.Reading(
             watt, 
