@@ -156,6 +156,9 @@ class Enumerate(metaclass=abc.ABCMeta):
                         # This is show & not explained in HP/Agilent manual
                         parts = [parts[0], parts[2], parts[1], parts[3]]
 
+                    parts[1].removeprefix('MODEL ') if 'MODEL ' in parts[1] else parts[1]
+                    # FAO Keithley 7999-6
+
                     # mapping.loc[number, 'inst'] = inst
                     mapping.loc[number, 'Resource'] = resource
                     mapping.loc[number, 'IDN'] = ', '.join(parts)
@@ -427,7 +430,7 @@ class Enumerate(metaclass=abc.ABCMeta):
         ['Advantest', 'R3172', 'SpectrumAnalyser', 'AdvantestR3172'],
 
         ['Hewlett Packard', '3488A', 'Switch', 'HP3488A'],
-        ['Keithley Instruments', 'MODEL 7999-6', 'Switch', 'Keithley79996'],
+        ['Keithley Instruments', '7999-6', 'Switch', 'Keithley79996'],
     
 
         ['Hewlett Packard', '33120A', 'WaveformGenerator', 'HP33120A'],
