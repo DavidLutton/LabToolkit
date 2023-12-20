@@ -3,6 +3,9 @@ from ..SCPI import SCPI
 import numpy as np
 import pandas as pd
 
+import PIL.Image as Image
+import io
+
 '''
 inst.write(':WAVEFORM:SOURCE CHANNEL 1')
 print(int(inst.query(':ACQuire:POINts?')))
@@ -64,6 +67,22 @@ class KeysightInfiniiVisionX(IEEE488, SCPI):
     https://www.keysight.com/gb/en/support/key-35068/infiniivision-3000t-x-series-oscilloscopes.html#drivers
     # '''
     
+    def screenshot(self):
+        self.query(':SYSTEM:DSP "";*OPC?')  # clear messages
+        self.write(":HARDCOPY:INKSAVER OFF")
+
+        model = self.IDN.split(',')[1]
+        if model[3] == "-" or model[1] == "9":
+            screenshot_command = ":DISPlAY:DATA? PNG, COLOR"  # DSOX series
+        else:
+            screenshot_command = ":DISPlAY:DATA? PNG, SCREEN, COLOR"  # DSO series
+
+        return Image.open(io.BytesIO(self.query_binary_values(
+            screenshot_command,
+            datatype='B',
+            is_big_endian=False,
+            container=bytearray)))
+
     @property    
     def channels(self):
         IDN = str(self.query('*IDN?'))
