@@ -4,7 +4,7 @@ from ..IEEE488 import IEEE488
 from ..SCPI import SCPI
 
 from time import sleep
-
+from datetime import datetime as dt
 
 import PIL.Image as Image
 import io
@@ -12,6 +12,12 @@ import io
 
 class TektronixTDS7104(IEEE488,):
     """."""
+
+    def __post__(self):
+        now = dt.now()
+        
+        self.write(f'DATE "{now.year}-{now.month}-{now.day}"')
+        self.write(f'TIME "{now.hour}:{now.minute}:{now.second}"')
 
     def screenshot(self):
         self.write('HARDCOPY:FILENAME "C:/FILE.BMP"')

@@ -66,6 +66,10 @@ class KeysightInfiniiVisionX(IEEE488, SCPI):
     ## DSO5000A, DSO/MSO6000A/L, DSO/MSO7000A/B, DSO/MSO-X2000A, DSO/MSO-X3000A/T, DSO/MSO-X4000A, DSO/MSO-X6000A
     https://www.keysight.com/gb/en/support/key-35068/infiniivision-3000t-x-series-oscilloscopes.html#drivers
     # '''
+
+    def __post__(self):
+        self.clock_update()
+        
     
     def screenshot(self):
         self.query(':SYSTEM:DSP "";*OPC?')  # clear messages
