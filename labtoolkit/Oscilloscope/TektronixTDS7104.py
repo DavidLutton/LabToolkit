@@ -3,52 +3,34 @@
 from ..IEEE488 import IEEE488
 from ..SCPI import SCPI
 
+from time import sleep
+
+
+import PIL.Image as Image
+import io
+
 
 class TektronixTDS7104(IEEE488,):
     """."""
 
+    def screenshot(self):
+        self.write('HARDCOPY:FILENAME "C:/FILE.BMP"')
+        # self.write('HARDCopy:PORT Gpib') # Printer
+        self.write('HARDCopy:IMAGe NORMal')
+        self.write('HARDCopy:PALEtte COLOr')
+        self.write('HARDCopy:VIEW FULLSCREEN') # GRAticule
 
-    pass
+        self.write('HARDCopy STArt')
+        sleep(1)
+        self.write('FILESYSTEM:READFILE "C:/FILE.BMP"')
+      
+        img = Image.open(io.BytesIO(self.inst.read_bytes(921654)))
+        self.write('FILESYSTEM:DELETE "C:/FILE.BMP"')
+        return img
 
 
 
 '''
-import visa
-# import matplotlib.pyplot as plt
-import numpy as np
-import datetime
-from PIL import Image
-import io
-
-
-print(inst.query('HARDCopy?'))
-# inst.write('FILESystem:DELEte "C:\\TekScope\\Images\\screenshot.bmp"')
-inst.write('HARDCopy:FILEName "C:\\TekScope\\Images\\screenshot.bmp"')
-# print(inst.query('HARDCopy:FILEName?'))
-
-# st.write('HARDCopy:PORT Gpib') # Printer
-# HARDCopy:FORMat
-# HARDCopy:LAYout
-
-inst.write('HARDCopy STARt')
-timeout = inst.timeout
-inst.timeout = 10000
-print(inst.query('*OPC?'))
-inst.timeout = timeout
-
-# img = inst.query_binary_values('FILESystem:PRInt "C:\\TekScope\\Images\\screenshot.bmp", GPIb', header_fmt='empty', datatype='?')
-# len(img)
-inst.write('FILESystem:PRInt "C:\\TekScope\\Images\\screenshot.bmp", GPIb',)
-img = inst.read_bytes(921655)
-# len(img)
-image = Image.open(io.BytesIO(img))
-image.show()
-
-
-
-
-
-
 
 
 
