@@ -51,7 +51,7 @@ Homepage = "https://github.com/DavidLutton/LabToolkit"
 Issues = "https://github.com/DavidLutton/LabToolkit/issues"
 
 [tool.hatch.version]
-path = "src/__about__.py"
+path = "src/labtoolkit/__about__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
+packages = ["src/labtoolkit"]
