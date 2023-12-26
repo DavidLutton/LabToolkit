@@ -7,6 +7,16 @@ from time import sleep
 import pandas as pd
 # import numpy as np
 import pyvisa
+from importlib.metadata import version  
+
+
+
+__version__ = "unknown package is not installed"
+try:
+    __version__ = version(__name__)
+except PackageNotFoundError:
+    pass  # package is not installed
+
 
 """Example Google style docstrings.
 

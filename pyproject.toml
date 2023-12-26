@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "LabToolkit"
+dynamic = ["version"]
+authors = [
+  { name="David Lutton", email="david.lutton@gmail.com" },
+]
+description = "Python package for instrument control, data acquisition and automation"
+readme = "README.md"
+requires-python = ">= 3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+keywords = [
+    "VISA",
+    "GPIB",
+    "USB",
+    "Serial",
+    "RS232",
+    "Measurement",
+    "Acquisition",
+]
+
+dependencies = [
+  "pyvisa",
+  "pandas",
+  "numpy",
+]
+
+[project.optional-dependencies]
+VXI11 = [
+  "pyvisa_py",
+]
+screenshots = [
+  "Pillow",
+]
+[project.urls]
+Homepage = "https://github.com/DavidLutton/LabToolkit"
+Issues = "https://github.com/DavidLutton/LabToolkit/issues"
+
