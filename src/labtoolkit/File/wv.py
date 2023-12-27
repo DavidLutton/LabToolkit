@@ -23,6 +23,9 @@ def read(file):
     data = data.astype(np.float32)
     data = data.view(np.complex64)
     
+    key_end = 0  # stub for linter
+    data_begin = 0  # stub for linter
+    
     headers = {}
     for index, char in enumerate(header_raw):
         match char:

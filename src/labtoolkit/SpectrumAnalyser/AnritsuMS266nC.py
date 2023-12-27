@@ -21,4 +21,7 @@ class AnritsuMS266nC(HPGreenScreen):
                 x = np.linspace(self.frequency_start, self.frequency_stop, len(y))
                 columns = ['Frequency (Hz)', 'dBm']  # TODO Unit Power
 
-        return pd.DataFrame(np.column_stack((x, y, columns=columns)).set_index(columns[0])
+        return pd.DataFrame(
+            np.column_stack((x, y)),
+            columns=columns,
+        ).set_index(columns[0])
