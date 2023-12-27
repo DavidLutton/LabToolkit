@@ -1,5 +1,6 @@
 from .HPGreenScreen import HPGreenScreen
 import numpy as np
+import pandas as pd
 
 
 class AnritsuMS266nC(HPGreenScreen):
