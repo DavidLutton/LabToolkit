@@ -47,6 +47,8 @@ logger = logging.getLogger(__name__) # .addHandler(logging.NullHandler())
 # from .Utils.enumerate import drivers_list, drivers_show, enumerate_instruments
 # from .Utils.modulation import Modulation
 
+class labtoolkit():
+    ...
 
 class Enumerate(metaclass=abc.ABCMeta):
 
@@ -91,12 +93,15 @@ class Enumerate(metaclass=abc.ABCMeta):
         pass
 
     def df(self):
+        """."""
         return self.enumeration
 
     def select(self, index):
+        """."""
         return self.enumeration.iloc[index].inst
     
     def show(self):
+        """."""
         return self.enumeration.drop([
             'IDN', 'inst'
             ], axis=1)
@@ -471,9 +476,7 @@ class Enumerate(metaclass=abc.ABCMeta):
             ]]
 
     def driver_load_all(self):
-            
-            for index, value in self.drivers_sorted()[['Type','Driver']].drop_duplicates().iterrows():
-
-                print(f"labtoolkit.{value.Type}.{value.Driver}")
-
-                module = importlib.import_module(f'.{value.Type}.{value.Driver}', package='labtoolkit')
+        """."""
+        for index, value in self.drivers_sorted()[['Type','Driver']].drop_duplicates().iterrows():
+            # print(f"labtoolkit.{value.Type}.{value.Driver}")
+            module = importlib.import_module(f'.{value.Type}.{value.Driver}', package='labtoolkit')

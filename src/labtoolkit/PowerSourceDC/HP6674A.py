@@ -26,6 +26,7 @@ class HP6674A():
     
     @property
     def output(self):
+        """."""
         return self.query_bool('OUTP:STAT?')
 
     @output.setter

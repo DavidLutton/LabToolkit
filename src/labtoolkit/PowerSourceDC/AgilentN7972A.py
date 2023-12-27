@@ -12,6 +12,7 @@ class AgilentN7972A(IEEE488, SCPI):
 
     @property
     def voltage(self):
+        """."""
         return self.query_float('VOLTage?')
 
     @voltage.setter
@@ -20,6 +21,7 @@ class AgilentN7972A(IEEE488, SCPI):
 
     @property
     def current_limit(self):
+        """."""
         return self.query_float(':SOURce:CURRent:LIMit:POSitive:IMMediate:AMPLitude?')
 
     @current_limit.setter
@@ -28,6 +30,7 @@ class AgilentN7972A(IEEE488, SCPI):
 
     @property
     def output(self):
+        """."""
         return self.query_bool(':OUTPut:STATe?')
 
     @output.setter

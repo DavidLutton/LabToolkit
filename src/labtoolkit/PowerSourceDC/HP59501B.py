@@ -13,4 +13,5 @@ class HP59501B(Instrument):
     # an.query('*ID?')
 
     def set(self, vrange, setpoint):
+        """."""
         self.write(f'{vrange}{setpoint}')

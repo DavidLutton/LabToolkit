@@ -11,6 +11,7 @@ class AgilentE4438C(SCPISignalGenerator):
     """."""
 
     def arb_read(self, waveform):
+        """."""
         arb = self.query_binary_values(
             f':MEM:DATA? "{waveform}"',
             datatype='h',
@@ -30,9 +31,11 @@ class AgilentE4438C(SCPISignalGenerator):
         )
     
     def arb_catalog(self):
+        """."""
         return self.query(':MEM:CATalog? "WFM1:"')
     
     def screenshot(self):
+        """."""
         self.write(f':DISPlay:REMote {True:b}')
         # inst.query(':DISPlay:REMote?')
 

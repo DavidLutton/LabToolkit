@@ -22,6 +22,7 @@ class RaSESW(IEEE488, SCPI, SCPISpectrumAnalyser):
 
     @property
     def select(self):
+        """."""
         return self.query(':INST:SEL?')
     
     @select.setter
@@ -117,6 +118,7 @@ class RaSESW(IEEE488, SCPI, SCPISpectrumAnalyser):
     
     @property
     def trace(self):
+        """."""
         if self.select == 'SA':
             return self.trace_sa
         
@@ -247,6 +249,7 @@ class RaSESW(IEEE488, SCPI, SCPISpectrumAnalyser):
         return df
 
     def screenshot(self):
+        """."""
         self.write('HCOPy:DEVice:LANGuage PNG')
         self.write(r"MMEM:NAME 'C:\R_S\instr\user\Screenshot.png'")
         self.write('HCOP:CMAP:DEF4')  # match display cmap

@@ -29,6 +29,7 @@ class AgilentE44nn(IEEE488, SCPI):
     '''
     @property
     def select(self):
+        """."""
         return self.query(':INST:SEL?').strip('"')
     
     @select.setter

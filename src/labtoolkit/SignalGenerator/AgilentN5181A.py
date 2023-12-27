@@ -8,8 +8,7 @@ class AgilentN5181A(SCPISignalGenerator, SignalGenerator):
     .. figure::  images/SignalGenerator/AgilentN5181A.jpg
     """
 
-    def __init__(self, inst):
-        super().__init__(inst)
+    def __post__(self, inst):
         self.inst.read_termination = '\n'
         self.inst.write_termination = '\n'
         self._modulations = ['AM', 'FM', 'PULM', 'PM']

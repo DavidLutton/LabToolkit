@@ -72,6 +72,7 @@ class KeysightInfiniiVisionX(IEEE488, SCPI):
         
     
     def screenshot(self):
+        """."""
         self.query(':SYSTEM:DSP "";*OPC?')  # clear messages
         self.write(":HARDCOPY:INKSAVER OFF")
 
@@ -89,6 +90,7 @@ class KeysightInfiniiVisionX(IEEE488, SCPI):
 
     @property    
     def channels(self):
+        """."""
         IDN = str(self.query('*IDN?'))
         IDN = IDN.split(',')  # IDN parts are separated by commas, so parse on the commas
         MODEL = IDN[1]
@@ -99,9 +101,11 @@ class KeysightInfiniiVisionX(IEEE488, SCPI):
         return np.arange(1, NUMBER_ANALOG_CHS + 1)
 
     def displayed(self, channel):
+        """."""
         return self.query_bool(f':CHANnel{channel}:DISPlay?')
 
     def get_traces_from_displayed_channels(self):
+        """."""
         # # Actually find which channels are on, have acquired data, and get the pre-amble info if needed.
         # # The assumption here is that, if the channel is off, even if it has data behind it, data will not be retrieved from it.
         # # Note that this only has to be done once for repetitive acquisitions if the channel scales (and on/off) are not changed.
@@ -111,6 +115,7 @@ class KeysightInfiniiVisionX(IEEE488, SCPI):
         return displayed_channels
 
     def trace(self, channel):
+        """."""
         self.write(f':WAVEFORM:SOURCE CHANNEL{channel}')
         self.write(":WAVeform:POINts:MODE MAX")  # MAX mode works for all acquisition types, so this is done here to avoid Acq. Type vs points mode problems. Adjusted later for specific acquisition types.
 

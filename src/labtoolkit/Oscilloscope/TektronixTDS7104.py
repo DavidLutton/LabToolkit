@@ -20,6 +20,7 @@ class TektronixTDS7104(IEEE488,):
         self.write(f'TIME "{now.hour}:{now.minute}:{now.second}"')
 
     def screenshot(self):
+        """."""
         self.write('HARDCOPY:FILENAME "C:/FILE.BMP"')
         # self.write('HARDCopy:PORT Gpib') # Printer
         self.write('HARDCopy:IMAGe NORMal')

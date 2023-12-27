@@ -6,6 +6,7 @@ class AgilentN9039A(IEEE488, SCPI):
     """."""
 
     def status(self):
+        """."""
         return {
             'Gain': self.gain,
             'Attenuation': self.attenuation,
@@ -19,6 +20,7 @@ class AgilentN9039A(IEEE488, SCPI):
         }
 
     def states(self):
+        """."""
         return {
             'Gain': [0, 1],
             'Attenuation': [10.0, 12.5, 15.0, 17.5, 20.0, 22.5, 25.0, 27.5, 30.0, 32.5, 35.0, 37.5, 40.0, 42.5, 45.0, 47.5, 50.0, 52.5, 55.0, 57.5],
@@ -52,6 +54,7 @@ class AgilentN9039A(IEEE488, SCPI):
 
     @property
     def feed(self):
+        """."""
         return self.query(':SERV:FEED?')
 
     @feed.setter
@@ -62,6 +65,7 @@ class AgilentN9039A(IEEE488, SCPI):
 
     @property
     def path(self):
+        """."""
         return self.query(':SERV:FEED:PATH?')
 
     @path.setter
@@ -72,6 +76,7 @@ class AgilentN9039A(IEEE488, SCPI):
 
     @property
     def filterbank(self):
+        """."""
         return self.query(':SERV:PROD:PATH?')
 
     @filterbank.setter
@@ -84,6 +89,7 @@ class AgilentN9039A(IEEE488, SCPI):
 
     @property
     def conducted(self):
+        """."""
         return self.query(':SERV:PROD:FILT:COND:BAND?')
 
     @conducted.setter
@@ -92,6 +98,7 @@ class AgilentN9039A(IEEE488, SCPI):
 
     @property
     def radiated(self):
+        """."""
         return self.query(':SERV:PROD:FILT:RAD:BAND?')
 
     @radiated.setter
@@ -100,6 +107,7 @@ class AgilentN9039A(IEEE488, SCPI):
 
     @property
     def center(self):
+        """."""
         return self.query_float(':SERV:FREQ:CENT?')
 
     @center.setter

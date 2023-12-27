@@ -16,16 +16,19 @@ class IQTo:
 
     @staticmethod
     def Magnitude(data):
+        """."""
         # https://www.rohde-schwarz.com/tr/faq/how-to-read-iq-data-from-spectrum-analyzer-and-convert-to-dbm-values-faq_78704-781632.html
         # 3.46423039446e-4, 4.35582856881e-4
         return sqrt(data.real**2 + data.imag**2)
 
     @classmethod
     def Watts(cls, data):
+        """."""
         return cls.Mag(data.real, data.imag)**2 / 50
 
     @classmethod
     def dBm(cls, data):
+        """."""
         # return 10 * log10(cls.Watts(I, Q) / 0.001)
         return 10 * log10(10 * (data.real**2 + data.imag**2))
         # https://www.tek.com/en/blog/calculating-rf-power-iq-samples
@@ -35,18 +38,22 @@ class IQTo:
 
     @staticmethod
     def Phase(data):
+        """."""
         return arctan2(data.imag, data.real)  # Phase Angle Rad
 
     @classmethod
     def Phase_deg(cls, data):
+        """."""
         return cls.Phase(data) * 180 / pi  # Phase Angle Deg
 
     @staticmethod
     def Complex(I, Q):
+        """."""
         return I + 1j * Q
     
     @classmethod
     def AM_Demod(cls, data):
+        """."""
         mag = cls.Magnitude(data)
         maxima = mag.max()
         minima = mag.min()
@@ -72,6 +79,7 @@ class IQTo:
     
     @classmethod
     def AM_Demod_with_lowpass(cls, mag):
+        """."""
         # mag = cls.Magnitude(data)
         #mag = butter_lowpass_filter(mag, 10e3, fs=50000, order=5)[25:] 
         # return mag
@@ -97,6 +105,7 @@ class IQTo:
         
     @classmethod
     def FM_audio_Demod(cls, data):
+        """."""
         # IQ = cls.Complex(I, Q)
 
         # https://witestlab.poly.edu/blog/capture-and-decode-fm-radio/

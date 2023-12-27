@@ -9,6 +9,7 @@ class SCPISignalGenerator(IEEE488, SCPI):
 
     @property
     def frequency(self):
+        """."""
         return self.query_float('SOURce:FREQuency:CW?')
 
     @frequency.setter
@@ -17,6 +18,7 @@ class SCPISignalGenerator(IEEE488, SCPI):
 
     @property
     def amplitude(self):
+        """."""
         return self.query_float('SOURce:POWer:LEVel:AMPLitude?')
 
     @amplitude.setter
@@ -25,6 +27,7 @@ class SCPISignalGenerator(IEEE488, SCPI):
 
     @property
     def output(self):
+        """."""
         return self.query_bool('OUTPut:STATe?')
 
     @output.setter
@@ -33,6 +36,7 @@ class SCPISignalGenerator(IEEE488, SCPI):
 
     @property
     def modulations_enabled(self):
+        """."""
         return [mod for mod in self._modulations if self.modulation_state(mod)]  # pylint: disable=no-member
 
     def modulation_state(self, modulation):
@@ -46,6 +50,7 @@ class SCPISignalGenerator(IEEE488, SCPI):
 
     @property
     def modulation_output(self):
+        """."""
         return self.query_bool(':OUTPut:MODulation:STATe?')
 
     @modulation_output.setter

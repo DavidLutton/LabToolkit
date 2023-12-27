@@ -36,6 +36,7 @@ class RaSCMU200Audio(Instrument, SCPI):
         # THD: float MIA
 
     def Measurement(self):
+        """."""
         # print(inst.query('FETCh:AFANalyzer:PRIMary:STATus?'))
         data = self.query_ascii_values('READ:SCALar:AFANalyzer:PRIMary?', container=np.array)
         return self.AFResults(*data)
