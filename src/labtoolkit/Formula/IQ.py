@@ -1,4 +1,4 @@
-from numpy import sqrt, log10, pi, arctan2, average # arccosh, conj
+from numpy import sqrt, log10, pi, arctan2, average, conj, gradient, angle # arccosh, 
 # Prefer numpy over math as handling list/arrays of values works in numpy
 # Produces same result for single values
 
@@ -115,8 +115,8 @@ class IQTo:
         # This turns out to be the instantaneous frequency
         # of the sampled FM signal.
 
-        rad = data[1:] * np.conj(data[:-1])  # radians?
-        return np.angle(rad)  # degrees ?
+        rad = data[1:] * conj(data[:-1])  # radians?
+        return angle(rad)  # degrees ?
     
         '''
         a = np.arctan2(Q, I)

@@ -3,7 +3,10 @@
 # from https://en.wikipedia.org/wiki/A-weighting#Function_realisation_of_some_common_weightings
 
 import numpy as np
+import scipy.constants as constants
+from scipy import signal
 
+import sounddevice as sd
 
 class Aweighting():
     def internal(self, f):
@@ -77,11 +80,6 @@ class ITU_R468noiseweighting():
 
 
 
-import numpy as np
-import scipy.constants as constants
-from scipy import signal
-
-import sounddevice as sd
 
 
 
@@ -102,7 +100,7 @@ class tones:
     def progress():
         frequency = 440
         duration = 0.3
-        time = np.linspace(0., duration, int(sample_rate * duration))
+        time = np.linspace(0., duration, int(self.sample_rate * duration))
         waveform = \
             1.0 * np.sin(frequency * np.pi * time) + \
             1.0 * np.sin(frequency * constants.golden * np.pi * time)
@@ -112,7 +110,7 @@ class tones:
     def marginal():
         frequency = 640
         duration = 0.3
-        time = np.linspace(0., duration, int(sample_rate * duration))
+        time = np.linspace(0., duration, int(self.sample_rate * duration))
 
         waveform = \
             1.0 * np.sin(frequency * np.pi * time) + \
@@ -124,7 +122,7 @@ class tones:
     def negative():
         frequency = 440
         duration = 0.3
-        time = np.linspace(0., duration, int(sample_rate * duration))
+        time = np.linspace(0., duration, int(self.sample_rate * duration))
 
         waveform = \
             0.8 * signal.sawtooth(frequency * np.pi * time) + \
@@ -138,9 +136,9 @@ class tones:
         length = 0.35  # s,
 
         N, tau = 1, 4000
-        time = np.arange(sample_rate * length)
+        time = np.arange(self.sample_rate * length)
 
-        sample = 0.9 * np.sin(2 * np.pi * f / sample_rate * time)
+        sample = 0.9 * np.sin(2 * np.pi * f / self.sample_rate * time)
 
         decay = N * np.exp(-time/tau)
         waveform = sample * decay
@@ -152,7 +150,7 @@ class tones:
         f = 341  # frequency
         length = 0.25  # s,
 
-        time = np.arange(sample_rate * length)
+        time = np.arange(self.sample_rate * length)
 
         waveform = \
             1.0 * np.sin(f * np.pi * time) + \
@@ -174,8 +172,8 @@ class tones:
     def boop():
         f = 650  # frequency
         length = 0.15  # s,
-        time = np.arange(sample_rate * length)
-        return 1 * np.sin(2 * np.pi * f / sample_rate * time)
+        time = np.arange(self.sample_rate * length)
+        return 1 * np.sin(2 * np.pi * f / self.sample_rate * time)
 
     @staticmethod
     def aircraft_seatbelt():
@@ -184,9 +182,9 @@ class tones:
 
         N, tau = 1, 14000
 
-        time = np.arange(sample_rate * length)
+        time = np.arange(self.sample_rate * length)
 
-        sample = np.sin(2 * np.pi * f / sample_rate * time)
+        sample = np.sin(2 * np.pi * f / self.sample_rate * time)
 
         decay = N * np.exp(-time/tau)
         waveform = sample * decay
@@ -207,9 +205,9 @@ class tones:
 
         tau = 14000
 
-        time = np.arange(sample_rate * length)
+        time = np.arange(self.sample_rate * length)
 
-        sample = np.sin(2 * np.pi * f / sample_rate * time)
+        sample = np.sin(2 * np.pi * f / self.sample_rate * time)
 
         waveform = sample * np.exp(-time / tau)
         return 0.4 * waveform
@@ -231,7 +229,7 @@ class tones:
 
         # get timesteps for each sample, T is note duration in seconds
         T = 0.25
-        t = np.linspace(0, T, int(T * sample_rate), False)
+        t = np.linspace(0, T, int(T * self.sample_rate), False)
 
         # genesample_rate sine wave notes
         A_note = np.sin(A_freq * t * 2 * np.pi)
@@ -245,20 +243,20 @@ class tones:
 
 
 
-def play(sample, device=None):
+def play(samples, device=None, sample_rate):
     cuttoff_samples = int(sample_rate / 10)  # 0.1 seconds
-    if len(sample) > cuttoff_samples: 
+    if len(samples) > cuttoff_samples: 
         time = np.arange(cuttoff_samples)
         N, tau = 1, 1600
         decay = N * np.exp(-time/tau)
         
-        sample[-cuttoff_samples:] = sample[-cuttoff_samples:] * decay
+        samples[-cuttoff_samples:] = samples[-cuttoff_samples:] * decay
         # modify end of signal
     if not device:
-        return sd.play(sample, 44100)
+        return sd.play(samples, 44100)
     else:
         return sd.play(
-            sample, 
+            samples, 
             44100,
             device=device,
         )
