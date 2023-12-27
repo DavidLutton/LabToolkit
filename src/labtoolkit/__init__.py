@@ -465,3 +465,11 @@ class Enumerate(metaclass=abc.ABCMeta):
             ).reset_index()[[
                 'Type', 'Manufacturer', 'Model', 'Driver'
             ]]
+
+    def driver_load_all(self):
+            
+            for index, value in self.drivers_sorted().iterrows():
+
+                # print(f"labtoolkit.{value.Type}.{value.Driver}")
+
+                module = importlib.import_module(f'.{value.Type}.{value.Driver}', package='labtoolkit')
