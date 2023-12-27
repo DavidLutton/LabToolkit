@@ -1,9 +1,9 @@
 import numpy as np
 
-from ..GenericInstrument import GenericInstrument
+from ..Instrument import Instrument
 
 
-class Wiltron360(GenericInstrument):
+class Wiltron360(Instrument):
     """Wiltron 360.
 
     .. figure::  images/NetworkAnalyser/Wiltron360.jpg

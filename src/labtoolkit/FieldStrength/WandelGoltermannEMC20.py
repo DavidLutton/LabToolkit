@@ -1,18 +1,16 @@
 
-import sys
-import serial
+# import sys
+# import serial
+from ..Instrument import Instrument
 
 
-class EMC20():
+class EMC20(Instrument):
     """Wandel and Goltermann EMR-20 Field Strength probe.
 
     .. figure::  images/FieldStrength/EMR20.jpg
     """
 
-    def __init__(self, instrument):
-        """."""
-        super().__init__(instrument)
-        # ser = serial.Serial('COM5', 4800, timeout=2)
+    # ser = serial.Serial('COM5', 4800, timeout=2)
 
     def setup(self):
         """Send setup commands to probe."""

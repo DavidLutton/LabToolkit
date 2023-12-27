@@ -4,8 +4,8 @@ import struct
 
 from pprint import pprint
 
-import serial
-from serial.tools import list_ports
+# import serial
+# from serial.tools import list_ports
 
 from ..Instrument import Instrument
 

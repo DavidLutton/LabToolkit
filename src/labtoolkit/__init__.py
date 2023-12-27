@@ -294,6 +294,7 @@ class Enumerate(metaclass=abc.ABCMeta):
 
         ['Lumiloop', 'LSProbe', 'FieldStrength', 'LumiloopLSProbe'],
         ['Wandel Goltermann', 'EMC20', 'FieldStrength', 'WandelGoltermannEMC20'],
+        ['Narda', '601', 'FieldStrength', 'Narda601'],
 
         ['Agilent Technologies', 'N9039A', 'FilterRF', 'AgilentN9039A'],
 
@@ -317,6 +318,9 @@ class Enumerate(metaclass=abc.ABCMeta):
         ['Hewlett Packard', 'E4418B', 'PowerMeter', 'AgilentE4418B'],  # TBC
         ['Agilent Technologies', 'E4418B', 'PowerMeter', 'AgilentE4418B'],
         ['Rohde Schwarz', 'NRVS', 'PowerMeter', 'RohdeSchwarzNRVS'],
+        ['VDI', 'PM5B', 'PowerMeter', 'VDIPM5B'],
+        ['ELVA', 'DPM', 'PowerMeter', 'ELVA1DPM'],
+
 
         ['Hewlett Packard', '59501B', 'PowerSourceDC', 'HP59501B'],  # No IDN / ID capablity
         ['Agilent Technologies', 'N7972A', 'PowerSourceDC', 'AgilentN7972A'],
@@ -468,8 +472,8 @@ class Enumerate(metaclass=abc.ABCMeta):
 
     def driver_load_all(self):
             
-            for index, value in self.drivers_sorted().iterrows():
+            for index, value in self.drivers_sorted()[['Type','Driver']].drop_duplicates().iterrows():
 
-                # print(f"labtoolkit.{value.Type}.{value.Driver}")
+                print(f"labtoolkit.{value.Type}.{value.Driver}")
 
                 module = importlib.import_module(f'.{value.Type}.{value.Driver}', package='labtoolkit')

@@ -2,7 +2,7 @@ from ..Instrument import Instrument
 from time import sleep
 from dataclasses import dataclass
 import struct
-import serial
+# import serial
 
 
 class VDIPM5B(Instrument):
