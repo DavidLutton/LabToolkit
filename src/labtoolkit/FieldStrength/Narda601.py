@@ -7,16 +7,14 @@ from pprint import pprint
 import serial
 from serial.tools import list_ports
 
+from ..Instrument import Instrument
 
-class Narda601(FieldStrength):
+
+class Narda601(Instrument):
     """Narda601.
 
     .. figure::  images/FieldStrength/Narda601.jpg
     """
-
-    def __init__(self, instrument):
-        """."""
-        super().__init__(instrument)
 
     def setup(self):
         """Send setup commands to probe."""
@@ -41,11 +39,11 @@ class Narda601(FieldStrength):
         return binary[1:].decode()  # Remove leading character from binary and decode
 
 
-    def decode_example(self):
+    def decode_example(self, hexes):
         for hexstring in hexes:
             hexstring = hexstring.replace(' ', '')  # Remove spaces in hexstring
             bins = binascii.unhexlify(hexstring)  # encode to binary, as you would receive over serial
-            print('{}\t::\t{}\t::\t{}'.format(hexstring, binarytoVm(bins), bins))  # print(Hex, Value, Binary)
+            print('{}\t::\t{}\t::\t{}'.format(hexstring, self.binarytoVm(bins), bins))  # print(Hex, Value, Binary)
 
 
     def query(self, ser, command):

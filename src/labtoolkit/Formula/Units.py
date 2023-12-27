@@ -360,7 +360,7 @@ class V_mTo:
 
     @classmethod
     def W_m2(V_m):
-        return (V/m**2) / 377
+        return (V_m**2) / 377
 
 class W_m2To:
 

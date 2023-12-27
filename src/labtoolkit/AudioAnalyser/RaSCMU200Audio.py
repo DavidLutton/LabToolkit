@@ -1,14 +1,14 @@
 import numpy as np
 from dataclasses import dataclass
 
-from ..IEEE488 import IEEE488
+from ..Instrument import Instrument
 from ..SCPI import SCPI
 
 
 class RaSCMU200Audio(Instrument, SCPI):
     """."""
     def __post__(self):
-        # if seconday
+        # if secondary
         self.write('INITiate:AFANalyzer:PRIMary')
 
         self.write('INITiate:AFGenerator:PRIMary')

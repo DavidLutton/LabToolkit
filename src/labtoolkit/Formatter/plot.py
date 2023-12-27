@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import EngFormatter
+import numpy as np
+
 
 def plot_add_minor_min_max_labels(ax):
     lo = np.inf
