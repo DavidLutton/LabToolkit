@@ -5,8 +5,12 @@ Welcome to LabToolkit's documentation!
    :maxdepth: 2
    :caption: Contents:
 
- .. automodule:: labtoolkit
-    :members:
+
+Auto Module
+===========
+
+.. automodule:: labtoolkit
+   :members:
 
 Indices and tables
 ==================
