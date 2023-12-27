@@ -7,8 +7,7 @@ from time import sleep
 import pandas as pd
 # import numpy as np
 import pyvisa
-from importlib.metadata import version  
-
+from importlib.metadata import version, PackageNotFoundError
 
 
 __version__ = "unknown package is not installed"

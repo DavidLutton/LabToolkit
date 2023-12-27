@@ -243,7 +243,7 @@ class tones:
 
 
 
-def play(samples, device=None, sample_rate):
+def play(samples, sample_rate, device=None):
     cuttoff_samples = int(sample_rate / 10)  # 0.1 seconds
     if len(samples) > cuttoff_samples: 
         time = np.arange(cuttoff_samples)

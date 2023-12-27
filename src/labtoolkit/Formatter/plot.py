@@ -28,7 +28,7 @@ def plot_add_minor_min_max_labels(ax):
         
     return label
 
-if __name__ is '__main__':
+if __name__ == '__main__':
     plt.rcdefaults()  # Restore the rcParams from Matplotlib's internal default style.
     
     # plt.rcParams['figure.figsize'] = (15, 10)

@@ -170,7 +170,7 @@ class AgilentE4406A(IEEE488, SCPI):
         line_nums = []
         df = pd.DataFrame(None, columns=['Hz', 'dBm'])
 
-        for each in tqdm(range(0, total_num_scans)):
+        for each in range(0, total_num_scans):
             # print(each)
             span = 10e6
             center_freq = start_freq + 0.5 * span + each * span   # calculate the center frequency

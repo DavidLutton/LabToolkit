@@ -7,7 +7,7 @@ class HP6674A():
     @property
     def volt(self):
         """."""
-        return self.query_float('VOLT?'))
+        return self.query_float('VOLT?')
         # self.query_float('CURR?'))
 
     @volt.setter
@@ -17,7 +17,7 @@ class HP6674A():
     @property
     def current_limit(self):
         """."""
-        return self.query_float('CURR?'))
+        return self.query_float('CURR?')
         # self.query_float('CURR?'))
     
     @current_limit.setter
@@ -35,12 +35,12 @@ class HP6674A():
     @property
     def measurevolt(self):
         """."""
-        return self.query_float('MEAS:VOLT?'))
+        return self.query_float('MEAS:VOLT?')
     
     @property
     def measurecurrent(self):
         """."""
-        return self.query_float('MEAS:CURR?'))
+        return self.query_float('MEAS:CURR?')
 
 # inst.query('syst:lang?')
 # float(inst.query('VOLT:PROT?'))

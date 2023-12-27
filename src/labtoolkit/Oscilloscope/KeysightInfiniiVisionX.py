@@ -250,7 +250,7 @@ class KeysightInfiniiVisionX(IEEE488, SCPI):
 
         time = ((np.linspace(0,NUMBER_OF_POINTS_TO_ACTUALLY_RETRIEVE-1,NUMBER_OF_POINTS_TO_ACTUALLY_RETRIEVE)-X_REFerence)*X_INCrement)+X_ORIGin
         if ACQ_TYPE == "PEAK": # This means Peak Detect Acq. Type
-            DataTime = np.repeat(DataTime,2)
+            DataTime = np.repeat(time, 2)
             ##  The points come out as Low(time1),High(time1),Low(time2),High(time2)....
             ### SEE IMPORTANT NOTE ABOUT PEAK DETECT AT VERY END, specific to fast time scales
         ###################################################################################################

@@ -50,7 +50,7 @@ class HP8657A(Instrument, SignalGenerator):
 
     @property
     def modulation_basic(self):
-        return NotImplmentedError
+        raise NotImplmentedError
 
     @modulation_basic.setter
     def modulation_basic(self, scheme):
