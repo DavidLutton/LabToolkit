@@ -96,8 +96,7 @@ class tones:
         values = [getattr(self, keys) for keys in keys]
         return dict(zip(keys, values)).items()
         
-    @staticmethod
-    def progress():
+    def progress(self):
         frequency = 440
         duration = 0.3
         time = np.linspace(0., duration, int(self.sample_rate * duration))
@@ -106,8 +105,7 @@ class tones:
             1.0 * np.sin(frequency * constants.golden * np.pi * time)
         return waveform * 0.5
 
-    @staticmethod
-    def marginal():
+    def marginal(self):
         frequency = 640
         duration = 0.3
         time = np.linspace(0., duration, int(self.sample_rate * duration))
@@ -118,8 +116,7 @@ class tones:
             0.3 * np.sin(4.2 * frequency * np.pi * time)
         return waveform * 0.4
 
-    @staticmethod
-    def negative():
+    def negative(self):
         frequency = 440
         duration = 0.3
         time = np.linspace(0., duration, int(self.sample_rate * duration))
@@ -129,8 +126,7 @@ class tones:
             1.0 * np.sin(frequency * np.pi * time)
         return waveform * 0.25
 
-    @staticmethod
-    def carry_on():  # was next but reserverd word 
+    def carry_on(self):  # was next but reserverd word 
         # fs = 44100  # sampling sample_rate
         f = 441  # frequency
         length = 0.35  # s,
@@ -144,8 +140,7 @@ class tones:
         waveform = sample * decay
         return waveform * 0.6
 
-    @staticmethod
-    def attention():
+    def attention(self):
         # fs = 44100  # sampling sample_rate
         f = 341  # frequency
         length = 0.25  # s,
@@ -168,15 +163,13 @@ class tones:
 
         return sam * 0.25
 
-    @staticmethod
-    def boop():
+    def boop(self):
         f = 650  # frequency
         length = 0.15  # s,
         time = np.arange(self.sample_rate * length)
         return 1 * np.sin(2 * np.pi * f / self.sample_rate * time)
 
-    @staticmethod
-    def aircraft_seatbelt():
+    def aircraft_seatbelt(self):
         f = 441  # frequency
         length = 0.5  # s
 
@@ -197,8 +190,7 @@ class tones:
         '''
         return 0.6 * waveform
 
-    @staticmethod
-    def bell():
+    def bell(self):
 
         f = 4444  # frequency
         length = 0.25  # s
@@ -220,8 +212,7 @@ class tones:
     # recording = sd.rec(int(duration * fs), sample_rate=fs, channels=2)
 
     # sd.query_devices()
-    @staticmethod
-    def rising():
+    def rising(self):
         # calculate note frequencies
         A_freq = 440
         Csh_freq = A_freq * 2 ** (4 / 12)

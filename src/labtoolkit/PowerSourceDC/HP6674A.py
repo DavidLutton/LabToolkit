@@ -22,7 +22,7 @@ class HP6674A():
     
     @current_limit.setter
     def current_limit(self, current_limit):
-        self.write(f'CURR:LEV {currcurrent_limitent}')
+        self.write(f'CURR:LEV {current_limit}')
     
     @property
     def output(self):
