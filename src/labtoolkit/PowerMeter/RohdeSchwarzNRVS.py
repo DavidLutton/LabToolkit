@@ -47,5 +47,25 @@ class RohdeSchwarzNRVS(Instrument, local_ren):
     @property
     def amplitude(self):
         """."""
-        # '   DBM   6.94910E+00'
+        # '   DBM   6.94910E+00' with N0 headers on
         return self.query_float('X3')
+
+    @property
+    def calibration_data(self):
+        self.write('SI')
+        return [self.inst.read().strip() for i in range(1,32)]
+
+    @property
+    def calibration_dates(self):
+        self.write('S4')
+        return [self.inst.read().strip() for i in range(1,6)]
+
+    @property
+    def sensor(self):
+        # 'NRV-Z5 /  nnnnnnnn/nnnnn.nn.nn                                                    3X'
+        return self.query('SP')
+
+    @property
+    def setup(self):
+        # 'A0,AV09,B1,G1,KA0,KF1,M0,N1,O1,Q0,RG0,RS3,SC1,U 1,W5'
+        return self.query('ST')

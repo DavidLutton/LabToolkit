@@ -296,6 +296,7 @@ class Enumerate(metaclass=abc.ABCMeta):
 
         ['Hewlett Packard', '34401A', 'DigitalMultimeter', 'HP34401A'],
         ['Hewlett Packard', '3457A', 'DigitalMultimeter', 'HP3457A'],
+        ['Thurlby Thandar', '1705', 'DigitalMultimeter', 'TTI1705'],        
 
         ['Lumiloop', 'LSProbe', 'FieldStrength', 'LumiloopLSProbe'],
         ['Wandel Goltermann', 'EMC20', 'FieldStrength', 'WandelGoltermannEMC20'],
