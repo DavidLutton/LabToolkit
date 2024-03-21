@@ -167,7 +167,7 @@ class Enumerate(metaclass=abc.ABCMeta):
                         # Hewlett-Packard, XXnnnnnnnn, ESG-3000A, A.01.00
                         # reorder to match normal IDNs
                         # Hewlett Packard,ESG-3000A,XXnnnnnnnn,A.01.00
-                        # This is show & not explained in HP/Agilent manual
+                        # This is shown & not explained in HP/Agilent manual
                         parts = [parts[0], parts[2], parts[1], parts[3]]
 
                     parts[1].removeprefix('MODEL ') if 'MODEL ' in parts[1] else parts[1]
@@ -217,6 +217,11 @@ class Enumerate(metaclass=abc.ABCMeta):
                         mapping.loc[number, 'Serial'] = ''
 
                         # mapping.loc[number, 'Serial'] = '0'
+                if ' NO MESSAGE' in IDN or ' SYNTAX' in IDN:
+                    mapping.loc[number, 'Resource'] = resource
+                    mapping.loc[number, 'Manufacturer'] = 'Hewlett Packard'
+                    mapping.loc[number, 'Model'] = '8116A'
+                    mapping.loc[number, 'Serial'] = ''
 
             except IndexError:
                 pass
@@ -279,6 +284,12 @@ class Enumerate(metaclass=abc.ABCMeta):
 
     def IDN_for_HP(self, inst, resource, mapping, number):
         ident = inst.query('ID?').strip()
+        if ident == 'HP3457A':
+            mapping.loc[number, 'Resource'] = resource
+            mapping.loc[number, 'Manufacturer'] = 'Hewlett Packard'
+            mapping.loc[number, 'Model'] = ident[2:]
+            mapping.loc[number, 'Serial'] = ''
+            return True
         if ident[0:2] == 'HP':
             # HP 8563E
             # HP 8564E
@@ -481,3 +492,4 @@ class Enumerate(metaclass=abc.ABCMeta):
         for index, value in self.drivers_sorted()[['Type','Driver']].drop_duplicates().iterrows():
             # print(f"labtoolkit.{value.Type}.{value.Driver}")
             module = importlib.import_module(f'.{value.Type}.{value.Driver}', package='labtoolkit')
+            

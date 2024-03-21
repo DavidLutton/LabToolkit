@@ -1,5 +1,4 @@
 from ..Instrument import Instrument
-from ..IEEE488 import IEEE488
 
 
 class HP8116A(Instrument):
@@ -52,19 +51,28 @@ class HP8116A(Instrument):
 
     @amplitude.setter
     # @AmplitudeLimiter
-    def amplitude(self, amplitude:
+    def amplitude(self, amplitude):
         self.write(f"AMP {amplitude} V")
 
     @property
     def offset(self):
         return self.query("IOFS")
 
-    @offset.setter
     # @AmplitudeLimiter
-    def offset(self, amplitude:
+    @offset.setter
+    def offset(self, amplitude):
         self.write(f"OFS {amplitude} V")
 
     @property
     def setup(self):
         # ' M1,CT0,T0,W0,H0,A0,L0,C0,D0,FRQ 55.0 HZ,DTY   50  %,WID 500  MS,AMP 1.00  V,OFS 7.50  V,'
-        return self.query('CST')
+        setup_str = self.query('CST').strip()
+        # 'M1,CT0,T0,W0,H0,A0,L0,C0,D0,FRQ 55.0 HZ,DTY   50  %,WID 500  MS,AMP 1.00  V,OFS 7.50  V,'
+        
+        flags = [x for x in setup_str.split(',') if len(x) == 2 or len(x) == 3]
+        # ['M1', 'CT0', 'T0', 'W0', 'H0', 'A0', 'L0', 'C0', 'D0']
+
+        values = [x for x in setup_str.split(',') if len(x) > 3]
+        # ['FRQ 55.0 HZ', 'DTY   50  %', 'WID 500  MS', 'AMP 1.00  V', 'OFS 7.50  V']
+        return setup_str
+        
