@@ -414,7 +414,17 @@ class Enumerate(metaclass=abc.ABCMeta):
         ['Hewlett Packard', 'E4406A', 'SpectrumAnalyser', 'AgilentE4406A'],  # VSA
 
         ['Rohde&Schwarz', 'ESW-8', 'SpectrumAnalyser', 'RaSESW'],
-
+        ['Rohde&Schwarz', 'ESW-26', 'SpectrumAnalyser', 'RaSESW'],
+        ['Rohde&Schwarz', 'ESW-44', 'SpectrumAnalyser', 'RaSESW'],
+        
+        ['Rohde&Schwarz', 'FSW-8', 'SpectrumAnalyser', 'RaSESW'],
+        ['Rohde&Schwarz', 'FSW-13', 'SpectrumAnalyser', 'RaSESW'],
+        ['Rohde&Schwarz', 'FSW-26', 'SpectrumAnalyser', 'RaSESW'],
+        ['Rohde&Schwarz', 'FSW-43', 'SpectrumAnalyser', 'RaSESW'],
+        ['Rohde&Schwarz', 'FSW-50', 'SpectrumAnalyser', 'RaSESW'],
+        ['Rohde&Schwarz', 'FSW-67', 'SpectrumAnalyser', 'RaSESW'],
+        ['Rohde&Schwarz', 'FSW-85', 'SpectrumAnalyser', 'RaSESW'],
+        
         # 'HP8546A': HP8546A,
         # 'HP8563E': HP8563E,
         # 'HP8564E': HP8564E,
