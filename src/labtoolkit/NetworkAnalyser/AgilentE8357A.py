@@ -2,6 +2,8 @@ from ..IEEE488 import IEEE488
 from ..SCPI import SCPI
 import numpy as np
 import pandas as pd
+import PIL.Image as Image
+import io
 
 
 class AgilentE8357A(IEEE488, SCPI):
@@ -142,7 +144,20 @@ class AgilentE8357A(IEEE488, SCPI):
         """
         return self.query('SENSe:ROSCillator:SOURce?')
 
+    def screenshot(self):
+        self.write('HCOPY:FILE \'screen.png\'')
 
+        image = Image.open(io.BytesIO(
+            self.query_binary_values(
+                ':MMEMory:TRANsfer? \'screen.png\'',
+                datatype='B', 
+                is_big_endian=False, 
+                container=bytearray
+            )
+        ))
+        self.write('MMEMory:DELete \'screen.png\'')
+        return image
+    
     '''
     @property
     def form(self):
