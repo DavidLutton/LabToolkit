@@ -88,7 +88,7 @@ class Enumerate(metaclass=abc.ABCMeta):
         for index, instrument in self.enumeration.iterrows():
             data = self.enumeration.iloc[index].drop(['IDN', 'inst'])
             self.enumeration.iloc[index].inst.description = data.to_dict()
-        
+
         self.__post__()
         # return self.enumeration
 
@@ -256,13 +256,12 @@ class Enumerate(metaclass=abc.ABCMeta):
                     # Dosn't necessarily clear then either
                     pass
 
-        # print(f'{resource} {e}')
-
+                # print(f'{resource} {e}')
         return mapping.reset_index(drop=True)
 
 
     def IDN_fallback(self, inst, resource, mapping, number):
-        funcs = self.IDN_for_NVRS, self.IDN_for_HP
+        funcs = self.IDN_for_NVRS, self.IDN_for_HP, self.IDN_for_HP8903
         
         # https://stackoverflow.com/a/19523054 handling for loops that could except
         
@@ -302,7 +301,27 @@ class Enumerate(metaclass=abc.ABCMeta):
             mapping.loc[number, 'Model'] = ident[2:]
             mapping.loc[number, 'Serial'] = inst.query('SER?').strip()
             return True
+    
+    def IDN_for_HP8903(self, inst, resource, mapping, number):
+        inst.write_termination = '\n'
+        inst.read_termination = '\r\n'
+        
+        inst.write('21.1 SP')  # read GPIB address
+            
+        if int(float(inst.query('RR'))) == inst.primary_address:
+          
 
+            inst.write('*CL')  # Clear
+            # sleep(0.5)
+            # print(inst.query('RR'))
+            # if float(inst.query('RR')) != inst.primary_address:
+
+            mapping.loc[number, 'Resource'] = resource
+            mapping.loc[number, 'Manufacturer'] = 'Hewlett Packard'
+            mapping.loc[number, 'Model'] = '8903B'
+            mapping.loc[number, 'Serial'] = ''
+            return True
+    
     drivers = pd.DataFrame([
         ['Marconi Instruments', '2187', 'Attenuator', 'MI2187'],
         ['MI Wave', '511', 'Attenuator', 'MIWave5nn'],
@@ -428,7 +447,9 @@ class Enumerate(metaclass=abc.ABCMeta):
         ['Rohde&Schwarz', 'FSW-50', 'SpectrumAnalyser', 'RaSESW'],
         ['Rohde&Schwarz', 'FSW-67', 'SpectrumAnalyser', 'RaSESW'],
         ['Rohde&Schwarz', 'FSW-85', 'SpectrumAnalyser', 'RaSESW'],
-        
+
+        ['Rohde&Schwarz', 'CMW', 'WirelessTestSet', 'RaSCMW500'],
+
         # 'HP8546A': HP8546A,
         # 'HP8563E': HP8563E,
         # 'HP8564E': HP8564E,
@@ -506,4 +527,3 @@ class Enumerate(metaclass=abc.ABCMeta):
         for index, value in self.drivers_sorted()[['Type','Driver']].drop_duplicates().iterrows():
             # print(f"labtoolkit.{value.Type}.{value.Driver}")
             module = importlib.import_module(f'.{value.Type}.{value.Driver}', package='labtoolkit')
-            
