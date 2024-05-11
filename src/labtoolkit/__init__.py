@@ -261,7 +261,7 @@ class Enumerate(metaclass=abc.ABCMeta):
 
 
     def IDN_fallback(self, inst, resource, mapping, number):
-        funcs = self.IDN_for_NVRS, self.IDN_for_HP, self.IDN_for_HP8903
+        funcs = self.IDN_for_NRVS, self.IDN_for_HP, self.IDN_for_HP8903
         
         # https://stackoverflow.com/a/19523054 handling for loops that could except
         
@@ -272,7 +272,7 @@ class Enumerate(metaclass=abc.ABCMeta):
             except pyvisa.VisaIOError as error:
                 pass
 
-    def IDN_for_NVRS(self, inst, resource, mapping, number):
+    def IDN_for_NRVS(self, inst, resource, mapping, number):
         # sleep(.25)
         # inst.write_termination = None
         sleep(0.05)
