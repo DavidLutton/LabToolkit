@@ -84,7 +84,11 @@ class Enumerate(metaclass=abc.ABCMeta):
         self.driver_map()
         # display(self.enumeration)
         self.driver_load()
-
+        
+        for index, instrument in self.enumeration.iterrows():
+            data = self.enumeration.iloc[index].drop(['IDN', 'inst'])
+            self.enumeration.iloc[index].inst.description = data.to_dict()
+        
         self.__post__()
         # return self.enumeration
 
