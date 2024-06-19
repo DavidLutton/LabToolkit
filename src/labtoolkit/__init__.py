@@ -513,6 +513,11 @@ class Enumerate(metaclass=abc.ABCMeta):
         self.enumeration = pd.merge(
             self.drivers, self.enumeration, how="right", on=['Manufacturer', 'Model']
         )
+        for index, inst in self.enumeration.iterrows():
+            if pd.isnull(inst['Type']) and pd.isnull(inst['Driver']):
+                self.enumeration.loc[index, 'Type'] = 'Unknown'
+                self.enumeration.loc[index, 'Driver'] = 'Unknown'
+
 
     def drivers_sorted(self):
         """."""
