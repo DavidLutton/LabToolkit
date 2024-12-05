@@ -447,7 +447,16 @@ class Enumerate(metaclass=abc.ABCMeta):
         ['Rohde&Schwarz', 'FSW-50', 'SpectrumAnalyser', 'RaSESW'],
         ['Rohde&Schwarz', 'FSW-67', 'SpectrumAnalyser', 'RaSESW'],
         ['Rohde&Schwarz', 'FSW-85', 'SpectrumAnalyser', 'RaSESW'],
+        
+        ['Rohde&Schwarz', 'FPL1003', 'SpectrumAnalyser', 'RaSESW'],
+        ['Rohde&Schwarz', 'FPL1007', 'SpectrumAnalyser', 'RaSESW'],
+        ['Rohde&Schwarz', 'FPL1014', 'SpectrumAnalyser', 'RaSESW'],
+        ['Rohde&Schwarz', 'FPL1026', 'SpectrumAnalyser', 'RaSESW'],
+        
+        ['Rohde&Schwarz', 'ETL', 'SpectrumAnalyser', 'RaSESW'],
 
+        ['Rohde&Schwarz', 'FSV', 'SpectrumAnalyser', 'RaSESW'],
+        
         ['Rohde&Schwarz', 'CMW', 'WirelessTestSet', 'RaSCMW500'],
 
         # 'HP8546A': HP8546A,
