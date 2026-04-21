@@ -1,4 +1,4 @@
-from ..instrument import Instrument
+from ..Instrument import Instrument
 
 class Unknown(Instrument):
     """."""
