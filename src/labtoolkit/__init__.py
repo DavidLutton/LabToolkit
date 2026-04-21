@@ -70,13 +70,6 @@ class Enumerate(metaclass=abc.ABCMeta):
             data = self.enumeration.iloc[index].drop(['IDN', 'inst'])
             self.enumeration.iloc[index].inst.description = data.to_dict()
 
-        # self.__post__()
-        # return self.enumeration
-
-    # def __post__(self):
-    #    """."""
-    #    pass
-
     def df(self):
         """."""
         return self.enumeration
