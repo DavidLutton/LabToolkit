@@ -24,12 +24,12 @@ class Instrument(metaclass=abc.ABCMeta):
         # https://discuss.python.org/t/add-a-post-method-equivalent-to-the-new-method-but-called-after-init/5449/2
         None
     
-    def write(self, *args, **kwargs):
+    def write(self, *args: str, **kwargs):
         """Wrap write to log it.."""
         self.logger.info(f'Write : {args[0]}')
         return self.inst.write(*args, **kwargs)
 
-    def query(self, *args, **kwargs):
+    def query(self, *args: str, **kwargs) -> str:
         """Wrap query to log it."""
         # self.logger.info(*args)
         self.logger.info(f'Query : {args[0]}')
@@ -37,7 +37,7 @@ class Instrument(metaclass=abc.ABCMeta):
         self.logger.info(f'Read  : {responce}')
         return responce
     
-    def query_ascii_values(self, *args, **kwargs):
+    def query_ascii_values(self, *args: str, **kwargs) -> list:
         """Wrap query_ascii_values to log it."""
         # self.logger.info(*args)
         self.logger.info(f'Query : {args[0]}')
@@ -45,7 +45,7 @@ class Instrument(metaclass=abc.ABCMeta):
         # self.logger.info(f'{responce}')
         # return responce
     
-    def query_binary_values(self, *args, **kwargs):
+    def query_binary_values(self, *args: str, **kwargs):
         """Wrap query_binary_values to log it."""
         # self.logger.info(*args)
         self.logger.info(f'Query : {args[0]}')
@@ -53,12 +53,12 @@ class Instrument(metaclass=abc.ABCMeta):
         # self.logger.info(f'{responce}')
         # return responce
         
-    def write_binary_values(self, *args, **kwargs):
+    def write_binary_values(self, *args: str, **kwargs):
         """Wrap write_binary_values to log it."""
         self.logger.info(f'Write binary {args[0]}')
         return self.inst.write_binary_values(*args, **kwargs)
 
-    def query_float(self, *args, **kwargs):
+    def query_float(self, *args: str, **kwargs) -> float:
         """Suitable for querys to instruments that return a single value float.
 
         Returns:
@@ -66,7 +66,7 @@ class Instrument(metaclass=abc.ABCMeta):
         """        
         return float(self.query(*args, **kwargs))
 
-    def query_int(self, *args, **kwargs):
+    def query_int(self, *args: str, **kwargs) -> int:
         """Suitable for querys to instruments that return a single value int.
 
         Returns:
@@ -74,7 +74,7 @@ class Instrument(metaclass=abc.ABCMeta):
         """
         return int(self.query(*args, **kwargs))
 
-    def query_bool(self, *args, **kwargs):
+    def query_bool(self, *args: str, **kwargs) -> bool:
         """Suitable for querys to instruments that return a '0' or '1' or '+1'.
 
         Returns:
@@ -83,7 +83,7 @@ class Instrument(metaclass=abc.ABCMeta):
         return bool(int(self.query(*args, **kwargs)))
     
     @property
-    def _listcommands(self):
+    def _listcommands(self) -> list:
         """List commands that the driver provides."""
         system = [
             'inst', 'query', 'write',
