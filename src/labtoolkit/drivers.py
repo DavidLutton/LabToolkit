@@ -5,6 +5,8 @@ import pandas as pd
 drivers = pd.DataFrame(
     [
         ['Marconi Instruments', '2187', 'Attenuator', 'MI2187'],
+        #
+        #
         ['MI Wave', '511', 'Attenuator', 'MIWave5nn'],
         ['Hewlett Packard', '8903B', 'AudioAnalyser', 'HP8903B'],
         ['Hewlett Packard', '34401A', 'DigitalMultimeter', 'HP34401A'],
@@ -150,6 +152,7 @@ drivers = pd.DataFrame(
         ['Hewlett Packard', '8116A', 'WaveformGenerator', 'HP8116A'],  # 'ID?'?
         ['Thurlby Thandar', 'PL330P', 'PowerSourceDC', 'TTIPL330P'],
         # ['', '', '', '']
+        ['ETS Lindgren', 'EMGen', 'SignalGenerator', 'ETSLindgrenEMGen'],
     ],
     columns=['Manufacturer', 'Model', 'Type', 'Driver'],
 )
