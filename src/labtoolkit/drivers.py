@@ -49,11 +49,11 @@ drivers = pd.DataFrame(
         ['Hewlett Packard', '83752B', 'SignalGenerator', 'HP83752B'],  # 0.01 - 20 GHz
         # ['Hewlett Packard', '83650B', 'SignalGenerator', 'HP83650B'],  # 0.01 - 50 GHz
         ['Hewlett Packard', '83650B', 'SignalGenerator', 'Agilent83650B'],  # 0.01 - 50 GHz
+        ['Hewlett Packard', '8648C', 'SignalGenerator', 'SCPISignalGenerator'],  # labeled Agilent, 8648C
+        ['Agilent Technologies', '8648C', 'SignalGenerator', 'SCPISignalGenerator'],  # not needed ? HP FW
         ['Hewlett Packard', 'ESG-3000A', 'SignalGenerator', 'SCPISignalGenerator'],
         ['Hewlett Packard', 'ESG-3000B', 'SignalGenerator', 'SCPISignalGenerator'],  # labeled HP, E4421B
         ['Hewlett Packard', 'ESG-4000B', 'SignalGenerator', 'SCPISignalGenerator'],  # labeled HP, E4422B
-        ['Hewlett Packard', '8648C', 'SignalGenerator', 'SCPISignalGenerator'],  # labeled Agilent, 8648C
-        ['Agilent Technologies', '8648C', 'SignalGenerator', 'SCPISignalGenerator'],  # not needed ? HP FW
         ['Hewlett Packard', 'E4421B', 'SignalGenerator', 'SCPISignalGenerator'],
         ['Agilent Technologies', 'E4422B', 'SignalGenerator', 'SCPISignalGenerator'],
         ['Agilent Technologies', 'E4438C', 'SignalGenerator', 'AgilentE4438C'],
@@ -87,8 +87,14 @@ drivers = pd.DataFrame(
         ['Keysight Technologies', 'N9040B', 'SpectrumAnalyser', 'KeysightN90nnB'],  # UXA
         ['Keysight Technologies', 'N9041B', 'SpectrumAnalyser', 'KeysightN90nnB'],  # UXA
         ['Keysight Technologies', 'N9042B', 'SpectrumAnalyser', 'KeysightN90nnB'],  # UXA
+        ['Keysight Technologies', 'N9038B', 'SpectrumAnalyser', 'KeysightN90nnB'],  # MXE
+        ['Keysight Technologies', 'N9048B', 'SpectrumAnalyser', 'KeysightN90nnB'],  # PXE
         ['Agilent Technologies', 'E4440A', 'SpectrumAnalyser', 'AgilentE44nn'],  # PSA 26.5 GHz
-        ['Agilent Technologies', 'E4443A', 'SpectrumAnalyser', 'AgilentE44nn'],  # PSA GHz
+        ['Agilent Technologies', 'E4443A', 'SpectrumAnalyser', 'AgilentE44nn'],  # PSA 6.7 GHz
+        ['Agilent Technologies', 'E4445A', 'SpectrumAnalyser', 'AgilentE44nn'],  # PSA 13.2 GHz
+        ['Agilent Technologies', 'E4447A', 'SpectrumAnalyser', 'AgilentE44nn'],  # PSA 42.98 GHz
+        ['Agilent Technologies', 'E4446A', 'SpectrumAnalyser', 'AgilentE44nn'],  # PSA 44 GHz
+        ['Agilent Technologies', 'E4448A', 'SpectrumAnalyser', 'AgilentE44nn'],  # PSA 50 GHz
         ['Hewlett Packard', 'E4406A', 'SpectrumAnalyser', 'AgilentE4406A'],  # VSA
         ['Rohde&Schwarz', 'ESW-8', 'SpectrumAnalyser', 'RaSESW'],
         ['Rohde&Schwarz', 'ESW-26', 'SpectrumAnalyser', 'RaSESW'],
