@@ -157,6 +157,13 @@ class Enumerate(metaclass=abc.ABCMeta):
                     logger.debug(mapping.loc[number])
                     # mapping.loc[number, 'Type'] = None
                     # mapping.loc[number, 'Driver'] = None
+                    #
+                if 'ETS Lindgren EMCenter' in IDN:
+                    mapping.loc[number, 'Resource'] = resource
+                    mapping.loc[number, 'IDN'] = 'ETS Lindgren, EMGen, 0, 0'
+                    mapping.loc[number, 'Manufacturer'] = 'ETS Lindgren'
+                    mapping.loc[number, 'Model'] = 'EMGen'
+                    mapping.loc[number, 'Serial'] = ''
 
                 if ', ' not in IDN and IDN[-1] == '\r':
                     # Found that some old equipment responds with '\r'

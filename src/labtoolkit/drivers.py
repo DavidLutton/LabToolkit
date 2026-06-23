@@ -79,6 +79,8 @@ drivers = pd.DataFrame(
         ['Anritsu', 'MS2668C', 'SpectrumAnalyser', 'AnritsuMS266nC'],
         # MG369nC Series
         # SCPI capable, may differ from A,B series
+        ['ETS Lindgren', 'EMGen', 'SignalGenerator', 'ETSLindgrenEMGen'],
+        #
         ['Keysight Technologies', 'N9000B', 'SpectrumAnalyser', 'KeysightN90nnB'],  # CXA
         ['Keysight Technologies', 'N9010B', 'SpectrumAnalyser', 'KeysightN90nnB'],  # EXA
         ['Keysight Technologies', 'N9020B', 'SpectrumAnalyser', 'KeysightN90nnB'],  # MXA
@@ -158,7 +160,6 @@ drivers = pd.DataFrame(
         ['Hewlett Packard', '8116A', 'WaveformGenerator', 'HP8116A'],  # 'ID?'?
         ['Thurlby Thandar', 'PL330P', 'PowerSourceDC', 'TTIPL330P'],
         # ['', '', '', '']
-        ['ETS Lindgren', 'EMGen', 'SignalGenerator', 'ETSLindgrenEMGen'],
     ],
     columns=['Manufacturer', 'Model', 'Type', 'Driver'],
 )
